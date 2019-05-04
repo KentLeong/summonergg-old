@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "concurrently \"nodemon server.js\" \"npm run build --watch\"",
-    "build": "ng build",
+    "start": "nodemon server.js",
+    "build": "ng build --watch=true",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

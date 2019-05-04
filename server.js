@@ -9,8 +9,6 @@ const mongoose = require("mongoose");
 const app = express();
 const db = config.mongoURI;
 
-console.log(db)
-
 mongoose
   .connect(db, {useNewUrlParser: true})
   .then(()=> console.log("Mongodb connected"))
