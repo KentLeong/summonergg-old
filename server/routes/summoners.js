@@ -18,8 +18,8 @@ router.get('/', (req, res) => {
     });
 });
 
-// GET summoner
-router.get('/:summoner', (req, res) => {
+// GET name
+router.get('/:name', (req, res) => {
   var regex = new RegExp(`^${req.params.name}$`, "i")
   Summoner.findOne({name: regex}, (err, summoner) => {
     if (err) return res.status(400).json(err)
@@ -30,9 +30,16 @@ router.get('/:summoner', (req, res) => {
 // POST new summoner
 router.post('/', (req, res) => {
   var newSummoner = new Summoner(req.body.summoner)
-  newSummoner.save((err, summoner) => {
-    if (err) return res.status(400).json(err)
-    res.status(200).json(summoner)
+  Summoner.findOne({name: newSummoner.name}, (err, summoner) => {
+    if (!summoner) {
+      newSummoner.save((err, summoner) => {
+        if (err) return res.status(400).json(err)
+        res.status(200).json(summoner)
+      })
+    } else {
+      res.status(400).json("already exists")
+    }
+
   })
 })
 

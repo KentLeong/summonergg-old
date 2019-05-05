@@ -8,7 +8,7 @@ var schema = new Schema({
   puuid: String,
   summonerLevel: Number,
   revisionDate: Date,
-  summonerId: String,
+  id: String,
   accountId: String
 })
 
