@@ -1,4 +1,12 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<h1>SummonerGG</h1>
-<app-summoner-search *ngIf="showSearch"></app-summoner-search>
+<nav class="nav">
+  <a routerLink="/" class="nav__logo">SummonerGG</a>
+  <div class="nav__right">
+    <app-summoner-search *ngIf="showSearch" class="summoner-search"></app-summoner-search>
+    <label for="nav__toggle" class="nav__button">
+      <span class="nav__icon">&nbsp;</span>
+      ree
+    </label>
+  </div>
+</nav>
 <router-outlet></router-outlet>

@@ -5,7 +5,7 @@ import { SummonerService } from './summoner.service';
 @Component({
   selector: 'app-summoner',
   templateUrl: './summoner.component.html',
-  styleUrls: ['./summoner.component.css']
+  styleUrls: ['./summoner.component.scss']
 })
 export class SummonerComponent implements OnInit {
 

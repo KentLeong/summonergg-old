@@ -1,0 +1,41 @@
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+.nav {
+  background-color: grey;
+  padding: .8rem;
+
+  &__logo {
+    font-size: 2rem;
+    text-decoration: none;
+    float: left;
+  }
+
+  &__right {
+    float: right;
+  }
+
+  &__icon {
+    position: relative;
+    // background-image: url(../assets/msn-user-profile.png);
+    height: 2rem;
+    width: 2rem;
+    background-color: black;
+  }
+
+  &__toggle {
+    background-image: url(../assets/msn-user-profile.png);
+    height: 2rem;
+    width: 2rem;
+  }
+  &__button {
+    height: 2rem;
+    width: 2rem;
+  }
+  @include clearfix();
+}

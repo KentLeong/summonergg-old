@@ -23,7 +23,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": [],
             "es5BrowserSupport": true
@@ -39,7 +39,7 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
+              "extractsCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -80,7 +80,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": [],
             "assets": [
@@ -135,7 +135,7 @@
   "defaultProject": "summonergg",
   "schematics": {
     "@schematics/angular:component": {
-      "styleext": "scss"
+      "styleext": "sscss"
     }
   }
 }

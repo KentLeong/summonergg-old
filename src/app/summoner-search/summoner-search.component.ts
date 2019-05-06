@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-summoner-search',
   templateUrl: './summoner-search.component.html',
-  styleUrls: ['./summoner-search.component.css']
+  styleUrls: ['./summoner-search.component.scss']
 })
 export class SummonerSearchComponent implements OnInit {
 
