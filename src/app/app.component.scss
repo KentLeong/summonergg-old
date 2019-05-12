@@ -1,3 +1,16 @@
+$break-small: 320px;
+$break-large: 1024px;
+
+@mixin respond-to($media) {
+  @if $media == handheld {
+
+  } @else if $media == medium-screen {
+
+  } @else if $media == large-screen {
+    
+  }
+}
+
 @mixin clearfix {
   &:after {
     content: "";
@@ -9,6 +22,8 @@
 .nav {
   background-color: grey;
   padding: .8rem;
+  position: fixed;
+  width: 100%;
 
   &__logo {
     font-size: 2rem;
@@ -38,4 +53,14 @@
     width: 2rem;
   }
   @include clearfix();
+}
+
+.container {
+  width: 500px;
+  margin: auto;
+  justify-content: center;
+}
+
+@media screen and (min-width: 500px) {
+
 }
