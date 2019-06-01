@@ -1,14 +1,17 @@
-$break-small: 320px;
-$break-large: 1024px;
-
-@mixin respond-to($media) {
-  @if $media == handheld {
-
-  } @else if $media == medium-screen {
-
-  } @else if $media == large-screen {
-    
-  }
+@mixin xsm {
+  @media (max-width: 599px) { @content; }
+}
+@mixin sm {
+  @media (min-width: 600px) { @content; }
+}
+@mixin md {
+  @media (min-width: 900px) { @content; }
+}
+@mixin lg {
+  @media (min-width: 1200px) { @content; }
+}
+@mixin xlg {
+  @media (min-width: 1800px) { @content; }
 }
 
 @mixin clearfix {
@@ -24,7 +27,24 @@ $break-large: 1024px;
   padding: .8rem;
   position: fixed;
   width: 100%;
-
+  &__content {
+    margin: auto;
+    @include xsm() {
+      width: 100%;
+    };
+    @include sm() {
+      width: 95%;
+    };
+    @include md() {
+      width: 80%;
+    };
+    @include lg() {
+      width: 70%;
+    };
+    @include xlg() {
+      width: 70%;
+    };
+  }
   &__logo {
     font-size: 2rem;
     text-decoration: none;
@@ -53,6 +73,21 @@ $break-large: 1024px;
     width: 2rem;
   }
   @include clearfix();
+  @include xsm() {
+    background-color: red;
+  };
+  @include sm() {
+    background-color: orange;
+  };
+  @include md() {
+    background-color: yellow;
+  };
+  @include lg() {
+    background-color: green;
+  };
+  @include xlg() {
+    background-color: blue;
+  };
 }
 
 .container {
