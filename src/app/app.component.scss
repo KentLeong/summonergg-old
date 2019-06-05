@@ -14,8 +14,6 @@
   @media (min-width: 1800px) { @content; }
 }
 
-//lol
-
 @mixin clearfix {
   &:after {
     content: "";
