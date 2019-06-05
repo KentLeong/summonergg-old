@@ -1,3 +1,4 @@
+<!--The content below is only a placeholder and can be replaced.-->
 <!-- <nav class="nav">
   <div class="nav__content">
       <a routerLink="/" class="nav__logo">SummonerGG</a>
@@ -12,15 +13,19 @@
 </nav> -->
 
 <nav class="nav">
-
+  <div class="nav__header">
+    <a routerLink="/" class="nav__header__logo">SummonerGG</a>
+    <a routerLink="/" class="nav__header__settings">Settings</a>
+  </div>
 </nav>
-<div class="nav-bar">
-  <ul class="nav-items">
+<div class="nav-menu">
+  <ul class="nav-menu__items">
     <li>Champions</li>
+    <li>Stats</li>  
     <li>Leaderboards</li>
   </ul>
+  <app-summoner-search *ngIf="showSearch" class="nav-menu__summoner-search"></app-summoner-search>
 </div>
-
 <div class="container">
   <router-outlet></router-outlet>
 </div>

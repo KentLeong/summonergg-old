@@ -14,90 +14,47 @@
   @media (min-width: 1800px) { @content; }
 }
 
-<<<<<<< HEAD
-
-=======
-@mixin clearfix {
-  &:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-}
-
 .nav {
-  background-color: grey;
-  padding: .8rem;
-  position: fixed;
+  height: 40px;
   width: 100%;
-  &__content {
+  background-color: grey;
+
+  &__header {
+    display: grid;
+    grid-template-columns: 150px auto 200px;
+    padding: 5px;
+    width:80%;
     margin: auto;
-    @include xsm() {
-      width: 100%;
-    };
-    @include sm() {
-      width: 95%;
-    };
-    @include md() {
-      width: 80%;
-    };
-    @include lg() {
-      width: 70%;
-    };
-    @include xlg() {
-      width: 70%;
-    };
+    &__logo {
+      grid-column-start: 1;
+    }
+  
+    &__settings {
+      text-align: right;
+      grid-column-start: 3;
+    }
   }
-  &__logo {
-    font-size: 2rem;
-    text-decoration: none;
-    float: left;
-  }
-
-  &__right {
-    float: right;
-  }
-
-  &__icon {
-    position: relative;
-    // background-image: url(../assets/msn-user-profile.png);
-    height: 2rem;
-    width: 2rem;
-    background-color: black;
-  }
-
-  &__toggle {
-    background-image: url(../assets/msn-user-profile.png);
-    height: 2rem;
-    width: 2rem;
-  }
-  &__button {
-    height: 2rem;
-    width: 2rem;
-  }
-  @include clearfix();
-  @include xsm() {
-    background-color: red;
-  };
-  @include sm() {
-    background-color: orange;
-  };
-  @include md() {
-    background-color: yellow;
-  };
-  @include lg() {
-    background-color: green;
-  };
-  @include xlg() {
-    background-color: blue;
-  };
 }
->>>>>>> b62ab8aadfad8fe845c5b53d977ae1b0769f8cc8
+.nav-menu {
+  display: grid;
+  grid-template-columns: 60% 40%;
+  padding: 5px;
+  width: 75%;
+  margin: auto;
+  &__items {
+    display: grid;
+    grid-template-columns: min-content min-content min-content;
+    grid-gap: 15px;
+    list-style-type: none;
+  }
+  &__summoner-search {
+    margin-left: auto;
+  }
+}
 
 .container {
-  width: 500px;
+  width: 75%;
   margin: auto;
-  justify-content: center;
 }
 
 @media screen and (min-width: 500px) {
