@@ -25,8 +25,21 @@ router.post('/update/profile-icons', (req, res) => {
 router.post('/update/champions', (req, res) => {
     rp("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/data/en_US/champion.json ")
     .then(data=>{
-      var championList = JSON.parse(data);
-      res.status(200).json(championList)
+      var championList = JSON.parse(data).data;
+      Object.keys(championList).forEach(champion => {
+        rp("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/data/en_US/champion/"+champion+".json")
+        .then(data=>{
+          var championData = JSON.parse(data).data[champion];
+          console.log(championData)
+          // var file = fs.createWriteStream("./src/assets/champion-squares/"+champion+".png");
+          // http.get("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/img/champion/"+champion+".png", function(response) {
+          //   response.pipe(file);
+          // });
+        })
+        .catch(err => {
+          res.status(400).json(err)
+        })
+      })
     })
     .catch(err => {
       res.status(400).json(err)
