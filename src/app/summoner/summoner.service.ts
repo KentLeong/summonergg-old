@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import * as config from '../../../config'
+
 const httpOptions = {
   headers: new HttpHeaders({
     "Content-Type": "application/json",
@@ -18,14 +20,14 @@ export class SummonerService {
   ) { }
 
   searchByName(name: string) {
-    return this.http.get("http://localhost:3000/api/summoners/"+name)
+    return this.http.get(config.host+"/api/summoners/"+name)
   }
 
   newSummoner(summoner: object) {
-    return this.http.post("http://localhost:3000/api/summoners/", {summoner: summoner}, httpOptions)
+    return this.http.post(config.host+"/api/summoners/", {summoner: summoner}, httpOptions)
   }
 
   riotSearchByName(name: string) {
-    return this.http.get("http://localhost:3000/api/summoners/riot/by-name/"+name)
+    return this.http.get(config.host+"/api/summoners/riot/by-name/"+name)
   }
 }

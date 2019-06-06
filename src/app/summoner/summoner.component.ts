@@ -27,7 +27,6 @@ export class SummonerComponent implements OnInit {
                   this.summoner = data
                   this.summonerService.newSummoner(data)
                     .subscribe(data => {
-                      console.log(data)
                     }, err => {
                       console.error(err)
                     })
@@ -46,6 +45,6 @@ export class SummonerComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    
   }
 }

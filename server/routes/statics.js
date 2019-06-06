@@ -1,21 +1,25 @@
 var express = require('express');
 var router = express.Router();
 var rp = require('request-promise');
+var StaticChampion = require('../models/static/champion');
+
 const config = require('../../config');
 const http = require('http');
 const fs = require('fs');
+
 
 router.post('/update/profile-icons', (req, res) => {
   rp("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/data/en_US/profileicon.json")
     .then(data=>{
       var iconList = JSON.parse(data);
-      Object.keys(iconList.data).forEach(key => {
-        var file = fs.createWriteStream("./src/assets/profile-icons/"+key+".png");
-        http.get("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/img/profileicon/"+key+".png", function(response) {
-          response.pipe(file);
-        });
+      Object.keys(iconList.data).forEach((key, i) => {
+        setTimeout(()=>{
+          var file = fs.createWriteStream("./src/assets/profile-icons/"+key+".png");
+          http.get("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/img/profileicon/"+key+".png", function(response) {
+            response.pipe(file);
+          });
+        }, 200*i)
       })
-      res.status(200).json(iconList)
     })
     .catch(err => {
       res.status(400).json(err)
@@ -30,11 +34,18 @@ router.post('/update/champions', (req, res) => {
         rp("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/data/en_US/champion/"+champion+".json")
         .then(data=>{
           var championData = JSON.parse(data).data[champion];
-          console.log(championData)
-          // var file = fs.createWriteStream("./src/assets/champion-squares/"+champion+".png");
-          // http.get("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/img/champion/"+champion+".png", function(response) {
-          //   response.pipe(file);
-          // });
+          StaticChampion.findOne({id: championData.id}, (err, champion) => {
+            if (err) return res.status(400).json(err);
+            if (champion) champion.remove();
+            var newStaticChampion = new StaticChampion(championData)
+            newStaticChampion.save((err, summoner) => {
+              if (err) return res.status(400).json(err)
+            })
+          })
+          var file = fs.createWriteStream("./src/assets/champion-squares/"+champion+".png");
+          http.get("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/img/champion/"+champion+".png", function(response) {
+            response.pipe(file);
+          });
         })
         .catch(err => {
           res.status(400).json(err)
