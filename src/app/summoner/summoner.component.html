@@ -1,9 +1,19 @@
-<p *ngIf="summoner">
-  <img src="../../assets/profile-icons/{{summoner.profileIconId}}.png" alt="">
-  {{summoner.name}}
-  {{summoner.id}}
-  {{summoner.accountId}}
-  {{summoner.puuid}}
-  {{summoner.revisonDate}}
-  {{summoner.summonerLevel}}
-</p>
+<div *ngIf="summoner" class="container">
+  <div class="container__profile">
+    <div class="container__profile__icon">
+      <img src="../../assets/profile-icons/{{summoner.profileIconId}}.png" alt="">
+      <span>{{summoner.summonerLevel}}</span>
+    </div>
+    <div class="container__profile__info">
+      <h4>{{summoner.name}}</h4>
+      <span>Ladder Rank 165,556 (top 14.84%)</span>
+      <br>
+      <button>Update</button>
+      <button>Live</button>
+    </div>
+  </div>
+
+  <div class="containter__match-history">
+
+  </div>
+</div>

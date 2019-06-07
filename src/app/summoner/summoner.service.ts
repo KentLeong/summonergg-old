@@ -28,6 +28,6 @@ export class SummonerService {
   }
 
   riotSearchByName(name: string) {
-    return this.http.get(config.host+"/api/summoners/riot/by-name/"+name)
+    return this.http.get(config.host+"/api/summoners/riot/by-name/"+encodeURI(name))
   }
 }

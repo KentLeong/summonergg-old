@@ -1,0 +1,58 @@
+.container { 
+  display: grid;
+  grid-template-columns: 38rem auto;
+  grid-template-rows: 18rem 40rem 50rem;
+  margin-top: 20px;
+  &__profile {
+    margin-top: 1.5rem;
+    justify-content: center;
+    &__icon {
+      margin-left: 1.5rem;
+      display: inline-block;
+      width: 12rem;
+      height: 12rem;
+      img {
+        width: inherit;
+        height: inherit;
+        position: absolute;
+        border-radius: 50%;
+      }
+      span {
+        position: absolute;
+        width: inherit;
+        height: 2.4rhem;
+        color: white;
+        text-align: center;
+        margin-top: 10.5rem;
+        font-size: 1.9rem;
+        background-image: url('../../assets/summoner/bg-levelbox.png');
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+    }
+    
+    &__info {
+      display: inline-block;
+      position: absolute;
+      margin-left: 2.5rem;
+      h4 {
+        font-size: 3rem;
+      }
+      span {
+        font-size: 1.25rem;
+        color: grey;
+      }
+
+      button {
+        display: inline-block;
+        height: 4rem;
+        width: 9rem;
+        margin-top: 1.2rem;
+      }
+    }
+  }
+
+  &__match-history {
+    width: inherit;
+  }
+}
