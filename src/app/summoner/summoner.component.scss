@@ -1,16 +1,20 @@
 .container { 
   display: grid;
-  grid-template-columns: 38rem auto;
-  grid-template-rows: 18rem 40rem 50rem;
+  grid-template-columns: 40.5rem auto;
+  grid-template-rows: 20rem 20.5rem 40rem 50rem;
   margin-top: 20px;
   &__profile {
-    margin-top: 1.5rem;
+    grid-row-start: 2;
+    border-radius: .5rem;
+    padding-top: 1.5rem;
+    margin: 1rem;
     justify-content: center;
+    background-color: white;
     &__icon {
       margin-left: 1.5rem;
       display: inline-block;
-      width: 12rem;
-      height: 12rem;
+      width: 15rem;
+      height: 15rem;
       img {
         width: inherit;
         height: inherit;
@@ -20,10 +24,10 @@
       span {
         position: absolute;
         width: inherit;
-        height: 2.4rhem;
+        height: 2.4rem;
         color: white;
         text-align: center;
-        margin-top: 10.5rem;
+        margin-top: 13.5rem;
         font-size: 1.9rem;
         background-image: url('../../assets/summoner/bg-levelbox.png');
         background-repeat: no-repeat;
@@ -34,7 +38,8 @@
     &__info {
       display: inline-block;
       position: absolute;
-      margin-left: 2.5rem;
+      margin-left: 2rem;
+      margin-top: 5rem;
       h4 {
         font-size: 3rem;
       }
