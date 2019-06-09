@@ -1,17 +1,28 @@
+.champion-image {
+  width: 100%;
+  height: 26rem;
+  border-bottom: 1.5rem solid white;
+  background-image: url("../../assets/Evelynn_Splash_7.5.jpg");
+  background-position: top;
+  background-position-y: -10rem;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
 .container { 
+  width: 75%;
+  margin: auto;
   display: grid;
-  grid-template-columns: 40.5rem auto;
-  grid-template-rows: 20rem 20.5rem 40rem 50rem;
-  margin-top: 20px;
+  grid-template-columns: 36rem auto;
+  grid-template-rows: 21rem 40rem 40rem 50rem;
   &__profile {
-    grid-row-start: 2;
-    border-radius: .5rem;
+    grid-area: profile;
     padding-top: 1.5rem;
     margin: 1rem;
     justify-content: center;
-    background-color: white;
     &__icon {
-      margin-left: 1.5rem;
+      position: relative;
+      top: -9rem;
+      margin-left: 1rem;
       display: inline-block;
       width: 15rem;
       height: 15rem;
@@ -19,6 +30,7 @@
         width: inherit;
         height: inherit;
         position: absolute;
+        border: .8rem solid white;
         border-radius: 50%;
       }
       span {
@@ -27,7 +39,7 @@
         height: 2.4rem;
         color: white;
         text-align: center;
-        margin-top: 13.5rem;
+        margin-top: 13.2rem;
         font-size: 1.9rem;
         background-image: url('../../assets/summoner/bg-levelbox.png');
         background-repeat: no-repeat;
@@ -36,10 +48,10 @@
     }
     
     &__info {
-      display: inline-block;
-      position: absolute;
-      margin-left: 2rem;
-      margin-top: 5rem;
+      display: block;
+      position: relative;
+      top: -8rem;
+      margin-left: 1rem;
       h4 {
         font-size: 3rem;
       }
@@ -56,8 +68,49 @@
       }
     }
   }
-
-  &__match-history {
-    width: inherit;
+  &__summoner-rank {
+    grid-area: sr;
+    background-color: white;
+    border-radius: .5rem;
+    margin: 1rem;
+    &__solo {
+      border-bottom: .5rem solid #e6ecf0;
+      img {
+        width: 9rem;
+        margin: 3rem;
+      }
+      div {
+        display: inline-block;
+        position: absolute;
+        margin-top: 3rem;
+        font-size: 1.5rem;
+      }
+    }
+    &__flex {
+      img {
+        display: inline-block;
+        width: 8rem;
+        margin: 1rem;
+        margin-left: 3rem;
+      }
+      div {
+        margin-left: 3rem;
+        display: inline-block;
+        position: absolute;
+        margin-top: 3rem;
+        font-size: 1.4rem;
+      }
+    }
   }
+  &__match-history {
+    grid-area: mh;
+    background-color: white;
+    border-radius: .5rem;
+    margin: 1rem;
+  }
+
+  grid-template-areas:
+    "profile mh"
+    "sr mh"
+    ". mh";
 }

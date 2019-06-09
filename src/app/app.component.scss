@@ -15,13 +15,14 @@
 }
 
 .nav {
+  position: fixed;
   height: 40px;
   width: 100%;
   background-color: grey;
-
+  z-index: 10;
   &__header {
     display: grid;
-    grid-template-columns: 150px auto 200px;
+    grid-template-columns: 150px auto 300px;
     padding: 5px;
     width:80%;
     margin: auto;
@@ -50,11 +51,6 @@
   &__summoner-search {
     margin-left: auto;
   }
-}
-
-.container {
-  width: 75%;
-  margin: auto;
 }
 
 @media screen and (min-width: 500px) {

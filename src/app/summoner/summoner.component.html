@@ -1,3 +1,6 @@
+<div *ngIf="summoner" class="champion-image">
+    
+</div>
 <div *ngIf="summoner" class="container">
   <div class="container__profile">
     <div class="container__profile__icon">
@@ -12,8 +15,32 @@
       <button>Live</button>
     </div>
   </div>
-
-  <div class="containter__match-history">
+  <div class="container__summoner-rank">
+    <div class="container__summoner-rank__solo">
+      <img src="../../assets/rank-icons/platinum_4.png" alt="">
+      <div>
+        <span>Ranked Solo</span><br>
+        <span>Platnium 3</span><br>
+        <span>7 LP <span>/ 62W 45L</span></span><br>
+        <span>Win Ratio 58%</span><br>
+        <span>Orianna's Executioners</span>
+      </div>
+    </div>
+    <div class="container__summoner-rank__flex">
+      <img src="../../assets/rank-icons/unranked.png" alt="">
+      <div>
+        <span>Flex 5v5</span><br>
+        <span>Unranked</span>
+      </div>
+      <br>
+      <img src="../../assets/rank-icons/unranked.png" alt="">
+      <div>
+        <span>Flex 3v3</span><br>
+        <span>Unranked</span>
+      </div>
+    </div>
+  </div>
+  <div class="container__match-history">
 
   </div>
 </div>
