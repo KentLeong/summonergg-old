@@ -39,9 +39,10 @@
 .nav-menu {
   display: grid;
   grid-template-columns: 60% 40%;
-  padding: 5px;
+  padding: .5rem;
   width: 75%;
   margin: auto;
+  padding-top: 5rem;
   &__items {
     display: grid;
     grid-template-columns: min-content min-content min-content;
