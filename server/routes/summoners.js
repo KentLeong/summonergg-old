@@ -16,7 +16,7 @@ router.use((req, res, next) => {
   if (ip.substr(0, 7) == "::ffff:") {
     ip = ip.substr(7)
   }
-  console.log(req.subdomains)
+  console.log(ip)
 })
 
 // GET all Summoners (probably not a good idea to use)
