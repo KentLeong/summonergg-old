@@ -2,12 +2,22 @@ var express = require('express');
 var router = express.Router();
 var rp = require('request-promise');
 var Summoner = require('../models/summoner');
+var Storage = require('node-storage');
+
 const config = require('../../config');
 String.prototype.capitalize = () => {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
 var region = "na1"
+
+router.use((req, res, next) => {
+  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  if (ip.substr(0, 7) == "::ffff:") {
+    ip = ip.substr(7)
+  }
+  console.log(req.subdomains)
+})
 
 // GET all Summoners (probably not a good idea to use)
 router.get('/', (req, res) => {
@@ -51,15 +61,22 @@ router.post('/', (req, res) => {
  */
 // Find summoner from api by name
 router.get('/riot/by-name/:name', (req, res) => {
-  rp(`https://${region}.api.riotgames.com/lol/summoner/v4/summoners/by-name/`+
-  `${encodeURI(req.params.name)}?api_key=${config.riot}`)
-    .then(data => {
-      var summoner = JSON.parse(data)
-      res.status(200).json(summoner)
-    })
-    .catch(err => {
-      res.status(400).json(err)
-    })
+  var store = new Storage('../../rate');
+  var rate = store.get("rate")
+  if (rate < config.rateLimit) {
+    store.put("rate", rate++)
+    rp(`https://${region}.api.riotgames.com/lol/summoner/v4/summoners/by-name/`+
+    `${encodeURI(req.params.name)}?api_key=${config.riot}`)
+      .then(data => {
+        var summoner = JSON.parse(data)
+        res.status(200).json(summoner)
+      })
+      .catch(err => {
+        res.status(400).json(err)
+      })
+  } else {
+    res.status(400).json("rate limit reached")
+  }
 })
 
 // Find summoner from api by account id

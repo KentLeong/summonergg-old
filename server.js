@@ -5,14 +5,19 @@ const fs = require("fs");
 const bodyParser = require("body-parser");
 const config = require("./config");
 const mongoose = require("mongoose");
+const Storage = require('node-storage');
 
 const app = express();
-const db = config.mongoURI;
 
-mongoose
-  .connect(db, {useNewUrlParser: true})
-  .then(()=> console.log("Mongodb connected"))
-  .catch(err => console.error(err))
+var store = new Storage('rate');
+store.put('rate', 0);
+
+config.mongoURI.forEach(region => {
+  mongoose
+    .connect("mongodb://localhost:27017/sgg_"+region, {useNewUrlParser: true})
+    .then(()=> console.log(region + " connected"))
+    .catch(err => console.error(err))
+})
 
 // Parsers for POST data
 app.use(bodyParser.json());
@@ -47,3 +52,7 @@ setTimeout(()=>{
   const server = http.createServer(app);
   server.listen(port, () => console.log("API runnning on localhost:"+port))
 }, 2000)
+
+setInterval(()=>{
+  store.put("rate", 0)
+},120000)
