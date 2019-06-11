@@ -13,12 +13,9 @@ module.exports = {
     "ru": "ru",
     "pbe": "pbe1"
   },
-  riot: "RGAPI-7985b1cf-cb8c-4df9-ae82-bf41748225f7",
+  riot: "RGAPI-e3308015-40e1-4b8a-b5fe-aa6c9f535a98",
   ver: "9.11.1",
   protocal: "http://",
   host: "summoner.gg",
   rateLimit: 100
 }
-
-//RGAPI-4c3e5b9d-b371-4492-bc32-bfe17bf2b300
-//RGAPI-7985b1cf-cb8c-4df9-ae82-bf41748225f7

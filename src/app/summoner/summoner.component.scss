@@ -14,7 +14,7 @@
   background-size: 100%;
 }
 .container { 
-  width: 75%;
+  width: 110rem;
   margin: auto;
   display: grid;
   grid-template-columns: 36rem auto;
@@ -202,7 +202,63 @@
   }
 
   &__recent {
-    
+    &__champions {
+      list-style-type: none;
+      li {
+        padding:1rem;
+        img {
+          border-radius: 50%;
+          width: 4rem;
+          height: 4rem;
+          display: inline-block;
+          vertical-align: middle;
+        }
+        h5 {
+          width: 7rem;
+        }
+        span {
+          width: 3rem;
+          font-size: 1.2rem;
+        }
+        .recent-center {
+          display: inline-block;
+          vertical-align: middle;
+          height:100%;
+          margin-left: .7rem;
+        }
+        .recent-center:first-child {
+          margin-left: .4rem;
+        }
+        .recent-graph {
+          width: 15rem;
+          div {
+            display: grid;
+            grid-template-columns: 50% 50%;
+            span {
+              padding-left: 1rem;
+            }
+            span:last-child {
+              text-align: right;
+              width: 100%;
+              padding-right: 1rem;
+            }
+          }
+          .bar {
+            width: 90%;
+            height: 1.2rem;
+            display: inline-block;
+            border-radius: .4rem 0 0 .4rem;
+            padding: .5rem;
+            background-color: lightblue;
+          }
+          .bar:last-child {
+            width: 10%;
+            border-radius: 0 .4rem .4rem 0;
+            background-color: lightcoral;
+          }
+        }
+      }
+    }
   }
 
   &__played-with {
