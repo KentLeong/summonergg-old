@@ -67,7 +67,7 @@ router.get('/riot/by-name/:name', (req, res) => {
   var rate = store.get("rate")
   if (rate < config.rateLimit) {
     store.put("rate", rate++)
-    rp(`https://${config.regions["region"]}.api.riotgames.com/lol/summoner/v4/summoners/by-name/`+
+    rp(`https://${config.regions[region]}.api.riotgames.com/lol/summoner/v4/summoners/by-name/`+
     `${encodeURI(req.params.name)}?api_key=${config.riot}`)
       .then(data => {
         var summoner = JSON.parse(data)
@@ -83,7 +83,7 @@ router.get('/riot/by-name/:name', (req, res) => {
 
 // Find summoner from api by account id
 router.get('/riot/by-account/:id', (req, res) => {
-  rp(`https://${config.regions["region"]}.api.riotgames.com/lol/summoner/v4/summoners/by-account/`+
+  rp(`https://${config.regions[region]}.api.riotgames.com/lol/summoner/v4/summoners/by-account/`+
   `${req.params.id}?api_key=${config.riot}`)
     .then(data => {
       var summoner = JSON.parse(data)
@@ -96,7 +96,7 @@ router.get('/riot/by-account/:id', (req, res) => {
 
 // Find summoner from api by puuid
 router.get('/riot/by-puuid/:id', (req, res) => {
-  rp(`https://${config.regions["region"]}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/`+
+  rp(`https://${config.regions[region]}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/`+
   `${req.params.id}?api_key=${config.riot}`)
     .then(data => {
       var summoner = JSON.parse(data)
