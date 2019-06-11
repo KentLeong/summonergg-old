@@ -16,7 +16,9 @@ router.use((req, res, next) => {
   if (ip.substr(0, 7) == "::ffff:") {
     ip = ip.substr(7)
   }
-  console.log(ip)
+  var region = req.headers.origin.split(".")[0].replace("http://", "")
+  console.log(region)
+  next();
 })
 
 // GET all Summoners (probably not a good idea to use)
