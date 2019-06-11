@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 })
 export class SummonerSearchComponent implements OnInit {
 
+  summoner: string;
+  
   constructor(
     private router: Router
   ) { }
