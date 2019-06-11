@@ -37,20 +37,25 @@
   }
 }
 .nav-menu {
-  display: grid;
-  grid-template-columns: 60% 40%;
-  padding: .5rem;
-  width: 75%;
-  margin: auto;
-  padding-top: 5rem;
+  position: fixed;
+  display: block;
+  padding: .2rem;
+  width: 100%;
+  padding-top: 4.2rem;
+  background-color: white;
+  z-index: 9;
   &__items {
-    display: grid;
-    grid-template-columns: min-content min-content min-content;
-    grid-gap: 15px;
     list-style-type: none;
-  }
-  &__summoner-search {
-    margin-left: auto;
+    width: 70%;
+    margin: auto;
+    li {
+      display: inline-block;
+      padding: 0.8rem;
+      margin-right: 0.5rem;
+    }
+    li:last-child {
+      margin-right: none;
+    }
   }
 }
 

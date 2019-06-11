@@ -2,12 +2,12 @@
     
 </div>
 <div *ngIf="summoner" class="container">
-  <div class="container__profile">
-    <div class="container__profile__icon">
+  <div class="profile">
+    <div class="profile__icon">
       <img src="../../assets/profile-icons/{{summoner.profileIconId}}.png" alt="">
       <span>{{summoner.summonerLevel}}</span>
     </div>
-    <div class="container__profile__info">
+    <div class="profile__info">
       <h4>{{summoner.name}}</h4>
       <span>Ladder Rank 165,556 (top 14.84%)</span>
       <br>
@@ -15,32 +15,159 @@
       <button>Live</button>
     </div>
   </div>
-  <div class="container__summoner-rank">
-    <div class="container__summoner-rank__solo">
-      <img src="../../assets/rank-icons/platinum_4.png" alt="">
-      <div>
-        <span>Ranked Solo</span><br>
-        <span>Platnium 3</span><br>
-        <span>7 LP <span>/ 62W 45L</span></span><br>
-        <span>Win Ratio 58%</span><br>
-        <span>Orianna's Executioners</span>
+  <div class="detail">
+    <div class="detail__ranks container-info">
+      <div class="detail__ranks__solo">
+        <img src="../../assets/rank-icons/platinum_4.png" alt="">
+        <div>
+          <span>Ranked Solo</span><br>
+          <span>Platnium 3</span><br>
+          <span>7 LP <span>/ 62W 45L</span></span><br>
+          <span>Win Ratio 58%</span><br>
+          <span>Orianna's Executioners</span>
+        </div>
+      </div>
+      <div class="detail__ranks__flex">
+        <img src="../../assets/rank-icons/unranked.png" alt="">
+        <div>
+          <span>Flex 5v5</span><br>
+          <span>Unranked</span>
+        </div>
+        <br>
+        <img src="../../assets/rank-icons/unranked.png" alt="">
+        <div>
+          <span>Flex 3v3</span><br>
+          <span>Unranked</span>
+        </div>
       </div>
     </div>
-    <div class="container__summoner-rank__flex">
-      <img src="../../assets/rank-icons/unranked.png" alt="">
-      <div>
-        <span>Flex 5v5</span><br>
-        <span>Unranked</span>
+    <div class="detail__champion container-info">
+      <h4>Season 9</h4>
+      <ul class="detail__champion__menu">
+        <li>Total</li>
+        <li>Solo</li>
+        <li>Flex 5v5</li>
+        <li>Flex 3v3</li>
+      </ul>
+      <ul class="detail__champion__content">
+        <li class="champion-item">
+          <ul>
+            <li>
+              <img src="../../assets/champion-squares/Evelynn.png" alt="">
+            </li>
+            <li>
+              <h5>Evelynn</h5>
+              <span>CS: 5.3</span>
+            </li>
+            <li>
+              <h5>3.49 KDA</h5>
+              <span>11.4 / 5.1 / 6.5</span>
+            </li>
+            <li>
+              <h5>66%</h5>
+              <span>85 Played</span>
+            </li>
+          </ul>
+        </li>
+        <li class="champion-item">
+          <ul>
+            <li>
+              <img src="../../assets/champion-squares/Leona.png" alt="">
+            </li>
+            <li>
+              <h5>Leona</h5>
+              <span>CS: 2.0</span>
+            </li>
+            <li>
+              <h5>2.90 KDA</h5>
+              <span>3.0 / 5.3 / 12.3</span>
+            </li>
+            <li>
+              <h5>75%</h5>
+              <span>4 Played</span>
+            </li>
+          </ul>
+        </li>
+        <li class="champion-item">
+          <ul>
+            <li>
+              <img src="../../assets/champion-squares/Alistar.png" alt="">
+            </li>
+            <li>
+              <h5>Alistar</h5>
+              <span>CS: 1.3</span>
+            </li>
+            <li>
+              <h5>2.27 KDA</h5>
+              <span>1.5 / 5.5 / 11.0</span>
+            </li>
+            <li>
+              <h5>25%</h5>
+              <span>4 Played</span>
+            </li>
+          </ul>
+        </li>
+        <li class="champion-item">
+          <ul>
+            <li>
+              <img src="../../assets/champion-squares/Twitch.png" alt="">
+            </li>
+            <li>
+              <h5>Twitch</h5>
+              <span>CS: 5.7</span>
+            </li>
+            <li>
+              <h5>3.91 KDA</h5>
+              <span>8.3 / 3.7 / 6.0</span>
+            </li>
+            <li>
+              <h5>67%</h5>
+              <span>3 Played</span>
+            </li>
+          </ul>
+        </li>
+        <li class="champion-item">
+          <ul>
+            <li>
+              <img src="../../assets/champion-squares/Hecarim.png" alt="">
+            </li>
+            <li>
+              <h5>Hecarim</h5>
+              <span>CS: 6.1</span>
+            </li>
+            <li>
+              <h5>2.31 KDA</h5>
+              <span>13.5 / 8.0 / 5.0</span>
+            </li>
+            <li>
+              <h5>50%</h5>
+              <span>2 Played</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <div class="detail__champion__more">
+        <span>Show More</span>
       </div>
-      <br>
-      <img src="../../assets/rank-icons/unranked.png" alt="">
-      <div>
-        <span>Flex 3v3</span><br>
-        <span>Unranked</span>
-      </div>
+    </div>
+    <div class="detail_recent container-info">
+      <h4>Recently Played</h4>
+      <ul class="detail__recent_champions">
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+    <div class="detail_played-with container-info">
+      <h4>Recently Played With</h4>
+      <ul class="detail_played-with_players">
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
     </div>
   </div>
-  <div class="container__match-history">
+  <div class="match-history">
 
   </div>
 </div>

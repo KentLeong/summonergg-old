@@ -1,6 +1,11 @@
+.container-info {
+  background-color: white;
+  border-radius: .5rem;
+  margin: 1rem;
+}
 .champion-image {
   width: 100%;
-  height: 26rem;
+  height: 35rem;
   border-bottom: 1.5rem solid white;
   background-image: url("../../assets/Evelynn_Splash_7.5.jpg");
   background-position: top;
@@ -13,66 +18,77 @@
   margin: auto;
   display: grid;
   grid-template-columns: 36rem auto;
-  grid-template-rows: 21rem 40rem 40rem 50rem;
-  &__profile {
-    grid-area: profile;
-    padding-top: 1.5rem;
-    margin: 1rem;
-    justify-content: center;
-    &__icon {
-      position: relative;
-      top: -9rem;
-      margin-left: 1rem;
-      display: inline-block;
-      width: 15rem;
-      height: 15rem;
-      img {
-        width: inherit;
-        height: inherit;
-        position: absolute;
-        border: .8rem solid white;
-        border-radius: 50%;
-      }
-      span {
-        position: absolute;
-        width: inherit;
-        height: 2.4rem;
-        color: white;
-        text-align: center;
-        margin-top: 13.2rem;
-        font-size: 1.9rem;
-        background-image: url('../../assets/summoner/bg-levelbox.png');
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-    }
-    
-    &__info {
-      display: block;
-      position: relative;
-      top: -8rem;
-      margin-left: 1rem;
-      h4 {
-        font-size: 3rem;
-      }
-      span {
-        font-size: 1.25rem;
-        color: grey;
-      }
+  grid-template-rows: 21rem 0rem 40rem 40rem 50rem;
+  grid-template-areas:
+    "profile profile"
+    ". ."
+    "sr mh"
+    "sr mh"
+    "sr mh";
+}
 
-      button {
-        display: inline-block;
-        height: 4rem;
-        width: 9rem;
-        margin-top: 1.2rem;
-      }
+.profile {
+  grid-area: profile;
+  padding-top: 1.5rem;
+  margin: 1rem;
+  justify-content: center;
+  &__icon {
+    position: relative;
+    top: -9rem;
+    margin-left: 1rem;
+    display: inline-block;
+    width: 15rem;
+    height: 15rem;
+    img {
+      width: inherit;
+      height: inherit;
+      position: absolute;
+      border: .8rem solid white;
+      border-radius: 50%;
+    }
+    span {
+      position: absolute;
+      width: inherit;
+      height: 2.4rem;
+      color: white;
+      text-align: center;
+      margin-top: 13.2rem;
+      font-size: 1.9rem;
+      background-image: url('../../assets/summoner/bg-levelbox.png');
+      background-repeat: no-repeat;
+      background-position: center;
     }
   }
-  &__summoner-rank {
-    grid-area: sr;
-    background-color: white;
-    border-radius: .5rem;
-    margin: 1rem;
+  
+  &__info {
+    display: block;
+    position: relative;
+    top: -8rem;
+    margin-left: 1rem;
+    h4 {
+      font-size: 3rem;
+    }
+    span {
+      font-size: 1.25rem;
+      color: grey;
+    }
+
+    button {
+      display: inline-block;
+      height: 4rem;
+      width: 9rem;
+      margin-top: 1.2rem;
+    }
+  }
+}
+
+.detail {
+  grid-area: sr;
+  h4 {
+    padding: 1rem;
+    font-weight: 500;
+  }
+  &__ranks {
     &__solo {
       border-bottom: .5rem solid #e6ecf0;
       img {
@@ -102,15 +118,103 @@
       }
     }
   }
-  &__match-history {
-    grid-area: mh;
-    background-color: white;
-    border-radius: .5rem;
-    margin: 1rem;
+
+  &__champion {
+    &__menu {
+      text-decoration: none;
+      ul {
+        width: 100%;
+      }
+      li {
+        display: inline-block;
+        padding: .5rem;
+        width: 8.5rem;
+        height: 3rem;
+        font-size: 1.3rem;
+        text-align: center;
+        vertical-align: top;
+      }
+    }
+    &__content {
+      min-height: 32rem;
+      list-style-type: none;
+
+      .champion-item {
+        margin-top: 0.5rem;
+        display: table;
+        height: 6rem;
+        ul {
+          display: table;
+          li {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            img {
+              display: table-cell;
+              vertical-align: middle;
+              width: 5rem;
+              height: 5rem;
+              border-radius: 50%;
+              border: .2rem solid black;
+              margin: 0 1rem 0 1rem;
+            }
+            h5 {
+              display: block;
+              font-size: 1.4rem;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            span {
+              font-size: 1.2rem;
+              margin-top: .4rem;
+              color: lightgrey;
+            }
+          }
+          li:nth-child(2) {
+            text-align: left;
+            width: 9rem;
+          }
+          li:nth-child(3) {
+            width: 9.5rem;
+          }
+          li:last-child {
+            width: 8.5rem;
+          }
+        }
+      }
+      .champion-item:after {
+        content: "";
+        display: block;
+        margin: 0 auto;
+        width: 90%;
+        padding-top: .7rem;
+        border-bottom: 1px solid lightgrey;
+      }
+      
+      .champion-item:last-child:after {
+        border: none;
+      }
+    }
+    &__more {
+      text-align: center;
+      padding: .8rem;
+    }
   }
 
-  grid-template-areas:
-    "profile mh"
-    "sr mh"
-    ". mh";
+  &__recent {
+    
+  }
+
+  &__played-with {
+
+  }
+}
+
+.match-history {
+  position: relative;
+  top:-21rem;
+  grid-area: mh;
+  background-color: white;
+  border-radius: .5rem;
+  margin: 1rem;
 }
