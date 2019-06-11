@@ -11,5 +11,7 @@ var schema = new Schema({
   id: String,
   accountId: String
 })
-
-module.exports = mongoose.model('Summoner', schema)
+module.exports = (region)=> {
+  mongoose.connect("mongodb://localhost:27017/sgg_"+region);
+  return mongoose.model('Summoner', schema);
+}

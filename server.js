@@ -12,13 +12,6 @@ const app = express();
 var store = new Storage('rate');
 store.put('rate', 0);
 
-Object.keys(config.regions).forEach(region => {
-  mongoose
-    .connect("mongodb://localhost:27017/sgg_"+region, {useNewUrlParser: true})
-    .then(()=> console.log(region + " connected"))
-    .catch(err => console.error(err))
-})
-
 // Parsers for POST data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));

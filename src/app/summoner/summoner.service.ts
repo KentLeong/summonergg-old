@@ -18,15 +18,18 @@ export class SummonerService {
     private http: HttpClient
   ) { }
 
-  searchByName(name: string, region: string) {
+  searchByName(name: string) {
+    var region = window.location.hostname.split(".")[0]
     return this.http.get(config.protocal+region+"."+config.host+"/api/summoners/"+name)
   }
 
-  newSummoner(summoner: object, region: string) {
+  newSummoner(summoner: object) {
+    var region = window.location.hostname.split(".")[0]
     return this.http.post(config.protocal+region+"."+config.host+"/api/summoners/", {summoner: summoner}, httpOptions)
   }
 
-  riotSearchByName(name: string, region: string) {
+  riotSearchByName(name: string) {
+    var region = window.location.hostname.split(".")[0]
     return this.http.get(config.protocal+region+"."+config.host+"/api/summoners/riot/by-name/"+name)
   }
 }

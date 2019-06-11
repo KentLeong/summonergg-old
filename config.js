@@ -1,5 +1,5 @@
 module.exports = {
-  regions: {
+  endpoints: {
     "br": "br1",
     "eune": "eun1",
     "euw": "euw1",
