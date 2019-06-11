@@ -63,6 +63,7 @@ router.post('/', (req, res) => {
 // Find summoner from api by name
 router.get('/riot/by-name/:name', (req, res) => {
   var store = new Storage('../../rate');
+  store.put("rate", 0)
   var rate = store.get("rate")
   if (rate < config.rateLimit) {
     store.put("rate", rate++)
