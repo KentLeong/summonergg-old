@@ -17,15 +17,16 @@ export class SummonerComponent implements OnInit {
   ) {
     const routerEvents = router.events.subscribe(route => {
       if (route.toString().split("(")[0] == "NavigationEnd") {
+        var region = window.location.hostname.split(".")[0]
         routerEvents.unsubscribe();
         var name = this.router.url.split("/")[2]
-        this.summonerService.searchByName(name)
+        this.summonerService.searchByName(name, region)
           .subscribe(data => {
             if (!data) {
-              this.summonerService.riotSearchByName(name)
+              this.summonerService.riotSearchByName(name, region)
                 .subscribe(data => {
                   this.summoner = data
-                  this.summonerService.newSummoner(data)
+                  this.summonerService.newSummoner(data, region)
                     .subscribe(data => {
                     }, err => {
                       console.error(err)

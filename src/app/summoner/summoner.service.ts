@@ -14,20 +14,19 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class SummonerService {
-
   constructor(
     private http: HttpClient
   ) { }
 
-  searchByName(name: string) {
-    return this.http.get(config.host+"/api/summoners/"+name)
+  searchByName(name: string, region: string) {
+    return this.http.get(config.protocal+region+"."+config.host+"/api/summoners/"+name)
   }
 
-  newSummoner(summoner: object) {
-    return this.http.post(config.host+"/api/summoners/", {summoner: summoner}, httpOptions)
+  newSummoner(summoner: object, region: string) {
+    return this.http.post(config.protocal+region+"."+config.host+"/api/summoners/", {summoner: summoner}, httpOptions)
   }
 
-  riotSearchByName(name: string) {
-    return this.http.get(config.host+"/api/summoners/riot/by-name/"+name)
+  riotSearchByName(name: string, region: string) {
+    return this.http.get(config.protocal+region+"."+config.host+"/api/summoners/riot/by-name/"+name)
   }
 }
