@@ -62,23 +62,15 @@ router.post('/', (req, res) => {
  */
 // Find summoner from api by name
 router.get('/riot/by-name/:name', (req, res) => {
-  var store = new Storage('../../rate');
-  store.put("rate", 0)
-  var rate = store.get("rate")
-  if (rate < config.rateLimit) {
-    store.put("rate", rate++)
-    rp(`https://${config.endpoints[region]}.api.riotgames.com/lol/summoner/v4/summoners/by-name/`+
-    `${encodeURI(req.params.name)}?api_key=${config.riot}`)
-      .then(data => {
-        var summoner = JSON.parse(data)
-        res.status(200).json(summoner)
-      })
-      .catch(err => {
-        res.status(400).json(err)
-      })
-  } else {
-    res.status(400).json("rate limit reached")
-  }
+  rp(`https://${config.endpoints[region]}.api.riotgames.com/lol/summoner/v4/summoners/by-name/`+
+  `${encodeURI(req.params.name)}?api_key=${config.riot}`)
+    .then(data => {
+      var summoner = JSON.parse(data)
+      res.status(200).json(summoner)
+    })
+    .catch(err => {
+      res.status(400).json(err)
+    })
 })
 
 // Find summoner from api by account id
@@ -122,3 +114,5 @@ router.get('/riot/by-summoner/:id', (req, res) => {
 
 
 module.exports = router
+
+1560392919000
