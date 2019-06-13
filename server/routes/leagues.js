@@ -3,6 +3,7 @@ var router = express.Router();
 var rp = require('request-promise');
 var Storage = require('node-storage');
 
+
 const config = require('../../config');
 String.prototype.capitalize = () => {
     return this.charAt(0).toUpperCase() + this.slice(1);
@@ -12,12 +13,32 @@ router.use((req, res, next) => {
   ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   if (ip.substr(0, 7) == "::ffff:") ip = ip.substr(7);
   region = req.headers.host.split(".")[0].replace("http://", "")
-  Summoner = require('../models/summoner')(region);
+  League = require('../models/league')(region);
   next();
 })
 
+//find leagues from user
+router.get('/:id', (req,res) => {
+  League.find({summonerId: req.params.id}, (err, leagues) => {
+    if (err) return res.status(400).json(err)
+    res.status(200).json(leagues)
+  })
+})
 
-
+//post new league for user
+router.post('/', (req,res) => {
+  var newLeague = new League(req.body.league)
+  League.findOne({queueType: newLeague.queueType, summonerId: newLeague.summonerId}, (err, league) => {
+    if (!league) {
+      newLeague.save((err, league) => {
+        if (err) return res.status(400).json(err)
+        res.status(200).json(league)
+      })
+    } else {
+      res.status(400).json("already exists")
+    }
+  })
+})
 /**
  * R I O T A P I
  * 
@@ -29,7 +50,7 @@ router.get('/riot/by-id/:id', (req, res) => {
   rp(`https://${config.endpoints[region]}.api.riotgames.com/lol/league/v4/entries/by-summoner/`+
   `${req.params.id}?api_key=${config.riot}`)
     .then(data => {
-      var league = JSON.parse(data)[0]
+      var league = JSON.parse(data)
       res.status(200).json(league)
     })
     .catch(err => {
@@ -52,11 +73,49 @@ router.get('/riot/league/:id', (req, res) => {
 
 //Find whole divison
 router.get('/riot/divison/:queue/:tier/:division', (req, res) => {
-  rp(`https://${config.endpoints[region]}.api.riotgames.com/lol/league/v4/leagues/`+
-  `${req.params.id}?api_key=${config.riot}`)
+  rp(`https://${config.endpoints[region]}.api.riotgames.com/lol/league/v4/entries/`+
+  `${req.params.queue}/${req.params.tier}/${req.params.division}?api_key=${config.riot}`)
     .then(data => {
       var divison = JSON.parse(data)
       res.status(200).json(divison)
+    })
+    .catch(err => {
+      res.status(400).json(err)
+    })
+})
+//Find challenger division by queue type
+router.get('/riot/challenger/:queue', (req, res) => {
+  rp(`https://${config.endpoints[region]}.api.riotgames.com/lol/league/v4/challengerleagues/by-queue/`+
+  `${req.params.queue}?api_key=${config.riot}`)
+    .then(data => {
+      var league = JSON.parse(data)
+      res.status(200).json(league)
+    })
+    .catch(err => {
+      res.status(400).json(err)
+    })
+})
+
+//Find challenger division by queue type
+router.get('/riot/grandmaster/:queue', (req, res) => {
+  rp(`https://${config.endpoints[region]}.api.riotgames.com/lol/league/v4/grandmasterleagues/by-queue/`+
+  `${req.params.queue}?api_key=${config.riot}`)
+    .then(data => {
+      var league = JSON.parse(data)
+      res.status(200).json(league)
+    })
+    .catch(err => {
+      res.status(400).json(err)
+    })
+})
+
+//Find challenger division by queue type
+router.get('/riot/master/:queue', (req, res) => {
+  rp(`https://${config.endpoints[region]}.api.riotgames.com/lol/league/v4/masterleagues/by-queue/`+
+  `${req.params.queue}?api_key=${config.riot}`)
+    .then(data => {
+      var league = JSON.parse(data)
+      res.status(200).json(league)
     })
     .catch(err => {
       res.status(400).json(err)

@@ -18,4 +18,7 @@ var schema = new Schema({
   leaguePoints: Number
 })
 
-module.exports = mongoose.model('League', schema)
+module.exports = (region)=> {
+  mongoose.connect("mongodb://localhost:27017/sgg_"+region, {useNewUrlParser: true});
+  return mongoose.model('League', schema);
+}

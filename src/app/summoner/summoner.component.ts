@@ -10,6 +10,7 @@ import { SummonerService } from './summoner.service';
 export class SummonerComponent implements OnInit {
 
   summoner: object;
+  leagues: object;
 
   constructor(
     private router: Router,
@@ -19,32 +20,47 @@ export class SummonerComponent implements OnInit {
       if (route.toString().split("(")[0] == "NavigationEnd") {
         routerEvents.unsubscribe();
         var name = this.router.url.split("/")[2]
-        this.summonerService.searchByName(name)
-          .subscribe(data => {
-            if (!data) {
-              this.summonerService.riotSearchByName(name)
-                .subscribe(data => {
-                  this.summoner = data
-                  this.summonerService.newSummoner(data)
-                    .subscribe(data => {
-                    }, err => {
-                      console.error(err)
-                    })
-                }, err => {
-                  console.log(err)
-                })
-            } else {
-              this.summoner = data
-            }
-          }, err => {
-            console.log(err)
-          })
-
+        this.getSummoner(name)
       }
     }, err => console.error(err))
   }
 
   ngOnInit() {
     
+  }
+
+  getSummoner(name: string) {
+    this.summonerService.summonerSearchByName(name).subscribe(data => {
+      if (!data) {
+        this.summonerService.riotSummonerSearchByName(name).subscribe(data => {
+          this.summoner = data
+          this.getLeague(this.summoner)
+          this.summonerService.newSummoner(data).subscribe(data => {
+          }, err => {
+            console.error(err)
+          })
+        }, err => {
+          console.log(err)
+        })
+      } else {
+        this.summoner = data
+        this.getLeague(this.summoner)
+      }
+    }, err => {
+      console.log(err)
+    })
+  }
+
+  getLeague(summoner: any) {
+    console.log(summoner)
+    this.summonerService.leagueSearchByID(summoner.id).subscribe((data: any[]) => {
+      if (data.length == 0) {
+       this.summonerService.riotLeagueSearchByID(summoner.id).subscribe((data: any[]) => {
+        console.log(data)
+       })
+      } else {
+
+      }
+    }, err=>{console.error(err)})
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import * as config from '../../../config'
+import { Observable } from 'rxjs';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -14,22 +15,32 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class SummonerService {
+
+  region: string = window.location.hostname.split(".")[0]
+
   constructor(
     private http: HttpClient
   ) { }
 
-  searchByName(name: string) {
-    var region = window.location.hostname.split(".")[0]
-    return this.http.get(config.protocal+region+"."+config.host+"/api/summoners/"+name)
+  // summoner
+  summonerSearchByName(name: string) {
+    return this.http.get(config.protocal+this.region+"."+config.host+"/api/summoners/"+name)
   }
 
   newSummoner(summoner: object) {
-    var region = window.location.hostname.split(".")[0]
-    return this.http.post(config.protocal+region+"."+config.host+"/api/summoners/", {summoner: summoner}, httpOptions)
+    return this.http.post(config.protocal+this.region+"."+config.host+"/api/summoners/", {summoner: summoner}, httpOptions)
   }
 
-  riotSearchByName(name: string) {
-    var region = window.location.hostname.split(".")[0]
-    return this.http.get(config.protocal+region+"."+config.host+"/api/summoners/riot/by-name/"+name)
+  riotSummonerSearchByName(name: string) {
+    return this.http.get(config.protocal+this.region+"."+config.host+"/api/summoners/riot/by-name/"+name)
+  }
+
+  // league
+  leagueSearchByID(id: string) {
+    return this.http.get(config.protocal+this.region+"."+config.host+"/api/leagues/"+id)
+  }
+
+  riotLeagueSearchByID(id: string) {
+    return this.http.get(config.protocal+this.region+"."+config.host+"/api/leagues/riot/by-id/"+id)
   }
 }
