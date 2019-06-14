@@ -17,7 +17,7 @@ router.use((req, res, next) => {
   next();
 })
 
-//find leagues from user
+//find league by id
 router.get('/:id', (req,res) => {
   League.find({summonerId: req.params.id}, (err, leagues) => {
     if (err) return res.status(400).json(err)
@@ -25,7 +25,16 @@ router.get('/:id', (req,res) => {
   })
 })
 
-//post new league for user
+//find league by name
+router.get('/by-name/:name', (req,res) => {
+  var regex = new RegExp(`^${req.params.name}$`, "i")
+  League.find({summonerName: regex}, (err, leagues) => {
+    if (err) return res.status(400).json(err)
+    res.status(200).json(leagues)
+  })
+})
+
+//post new league for user  
 router.post('/', (req,res) => {
   var newLeague = new League(req.body.league)
   League.findOne({queueType: newLeague.queueType, summonerId: newLeague.summonerId}, (err, league) => {

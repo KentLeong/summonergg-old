@@ -17,14 +17,13 @@
   </div>
   <div class="detail">
     <div class="detail__ranks container-info">
-      <div class="detail__ranks__solo">
-        <img src="../../assets/rank-icons/platinum_4.png" alt="">
+      <div class="detail__ranks__solo" *ngIf="solo">
+        <img src="../../assets/rank-icons/{{solo.tier}}_{{solo.rank}}.png" alt="">
         <div>
           <span>Ranked Solo</span><br>
-          <span>Platnium 3</span><br>
-          <span>7 LP <span>/ 62W 45L</span></span><br>
-          <span>Win Ratio 58%</span><br>
-          <span>Orianna's Executioners</span>
+          <span>{{solo.tier}} {{solo.rank}}</span><br>
+          <span>{{solo.leaguePoints}} LP <span>/ {{solo.wins}}W {{solo.losses}}L</span></span><br>
+          <span>Win Ratio {{solo.winRatio}}%</span><br>
         </div>
       </div>
       <div class="detail__ranks__flex">

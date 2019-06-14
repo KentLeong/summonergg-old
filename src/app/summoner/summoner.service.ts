@@ -35,12 +35,20 @@ export class SummonerService {
     return this.http.get(config.protocal+this.region+"."+config.host+"/api/summoners/riot/by-name/"+name)
   }
 
+  
   // league
+  leagueSearchByName(name: string) {
+    return this.http.get(config.protocal+this.region+"."+config.host+"/api/leagues/by-name/"+name)
+  }
   leagueSearchByID(id: string) {
     return this.http.get(config.protocal+this.region+"."+config.host+"/api/leagues/"+id)
   }
 
   riotLeagueSearchByID(id: string) {
     return this.http.get(config.protocal+this.region+"."+config.host+"/api/leagues/riot/by-id/"+id)
+  }
+
+  newLeague(league: object) {
+    return this.http.post(config.protocal+this.region+"."+config.host+"/api/leagues/", {league: league}, httpOptions)
   }
 }
