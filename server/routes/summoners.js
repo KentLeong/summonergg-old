@@ -17,6 +17,7 @@ router.use((req, res, next) => {
   if (ip.substr(0, 7) == "::ffff:") ip = ip.substr(7);
   region = req.headers.host.split(".")[0].replace("http://", "")
   Summoner = require('../models/summoner')(region);
+  console.log(ip)
   next();
 })
 
