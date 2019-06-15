@@ -13,11 +13,8 @@ var region;
 var ip;
 
 router.use((req, res, next) => {
-  ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  if (ip.substr(0, 7) == "::ffff:") ip = ip.substr(7);
   region = req.headers.host.split(".")[0].replace("http://", "")
   Summoner = require('../models/summoner')(region);
-  console.log(ip)
   next();
 })
 

@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 // Point static path to dist
 app.use(express.static(path.join(__dirname, "dist")));
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
@@ -36,6 +36,9 @@ fs.readdir("./server/routes", (err, files) => {
 
 setTimeout(()=>{
   app.get("*", (req, res) => {
+    ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    if (ip.substr(0, 7) == "::ffff:") ip = ip.substr(7);
+    console.log(ip)
     res.sendFile(path.join(__dirname, 'dist/index.html'));
   })
 

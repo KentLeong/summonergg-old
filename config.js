@@ -16,6 +16,6 @@ module.exports = {
   riot: "RGAPI-f56e42ef-0c34-4b99-97c9-b0d2fe42f4e6",
   ver: "9.11.1",
   protocal: "http://",
-  host: "localhost.gg",
+  host: "summoner.gg",
   rateLimit: 100
 }
