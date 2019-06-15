@@ -83,6 +83,7 @@ export class SummonerComponent implements OnInit {
   sortLeagues(leagues: any[]) {
     leagues.forEach(league => {
       league.winRatio = Math.round(100*(league.wins/(league.wins+league.losses)))
+      league.tier = league.tier.toLowerCase();
       if (league.queueType == "RANKED_SOLO_5x5") {
         this.solo = league
       } else if (league.queueType == "RANKED_FLEX_SR") {
