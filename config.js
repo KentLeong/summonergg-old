@@ -13,9 +13,9 @@ module.exports = {
     "ru": "ru",
     "pbe": "pbe1"
   },
-  riot: "RGAPI-c5e568f3-629f-41e5-95ec-62dd264ffed8",
+  riot: "RGAPI-f56e42ef-0c34-4b99-97c9-b0d2fe42f4e6",
   ver: "9.11.1",
   protocal: "http://",
-  host: "summoner.gg",
+  host: "localhost.gg",
   rateLimit: 100
 }

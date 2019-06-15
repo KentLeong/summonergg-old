@@ -32,7 +32,8 @@ router.get('/', (req, res) => {
 
 // GET name
 router.get('/:name', (req, res) => {
-  var regex = new RegExp(`^${req.params.name}$`, "i")
+  var name = req.params.name.split("").join("\\s*")
+  var regex = new RegExp(`^${name}$`, "i")
   Summoner.findOne({name: regex}, (err, summoner) => {
     if (err) return res.status(400).json(err)
     res.status(200).json(summoner)
@@ -55,6 +56,25 @@ router.post('/', (req, res) => {
   })
 })
 
+// PUT summoner
+router.put('/', (req, res) => {
+  var updatedSummoner = new Summoner(req.body.summoner)
+  Summoner.findOne({name: updatedSummoner.name}, (err, summoner) => {
+    if (summoner) {
+      summoner.delete();
+      updatedSummoner.save((err, summoner) => {
+        if (err) return res.status(400).json(err)
+        res.status(200).json(summoner)
+      })
+    } else {
+      updatedSummoner.save((err, summoner) => {
+        if (err) return res.status(400).json(err)
+        res.status(200).json(summoner)
+      })
+    }
+
+  })
+})
 /**
  * R I O T A P I
  * 

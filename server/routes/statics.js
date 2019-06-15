@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var rp = require('request-promise');
-var StaticChampion = require('../models/static/champion');
+var StaticChampion = require('../models/static/_champion');
 
 const config = require('../../config');
 const http = require('http');

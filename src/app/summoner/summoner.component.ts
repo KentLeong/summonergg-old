@@ -31,7 +31,19 @@ export class SummonerComponent implements OnInit {
     
   }
   updateSummoner() {
-    
+    var name = this.router.url.split("/")[2];
+
+    //update summoner
+    this.summonerService.riotSummonerSearchByName(name).subscribe((data: any) => {
+      this.summoner = data
+      this.summonerService.updateSummoner(data).subscribe(data=>{},err=>{console.error(err)})
+      this.summonerService.riotLeagueSearchBySummonerID(data.id).subscribe((data: any[]) => {
+        this.sortLeagues(data)
+        data.forEach(league => {
+          this.summonerService.updateLeague(league).subscribe(data=> {}, err => {console.error(err)})
+        })
+      })
+    })
   }
 
   getSummoner(name: string) {
@@ -53,7 +65,7 @@ export class SummonerComponent implements OnInit {
   getLeague(summoner: any, found: boolean) {
     this.summonerService.leagueSearchByID(summoner.id).subscribe((data: any[]) => {
       if (data.length == 0 && !found) {
-       this.summonerService.riotLeagueSearchByID(summoner.id).subscribe((data: any[]) => {
+       this.summonerService.riotLeagueSearchBySummonerID(summoner.id).subscribe((data: any[]) => {
         if (data.length != 0) {
           this.sortLeagues(data)
           data.forEach(league => {
@@ -64,7 +76,6 @@ export class SummonerComponent implements OnInit {
        })
       } else {
         this.sortLeagues(data)
-        console.log(data)
       }
     }, err=>{console.error(err)})
   }
@@ -80,5 +91,10 @@ export class SummonerComponent implements OnInit {
         this.flex_3v3 = league
       }
     })
+  }
+
+  // Match history
+  getMatchHistory() {
+    
   }
 }

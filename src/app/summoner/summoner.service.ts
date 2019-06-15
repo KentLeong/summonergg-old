@@ -31,6 +31,10 @@ export class SummonerService {
     return this.http.post(config.protocal+this.region+"."+config.host+"/api/summoners/", {summoner: summoner}, httpOptions)
   }
 
+  updateSummoner(summoner: object) {
+    return this.http.put(config.protocal+this.region+"."+config.host+"/api/summoners/", {summoner: summoner}, httpOptions)
+  }
+
   riotSummonerSearchByName(name: string) {
     return this.http.get(config.protocal+this.region+"."+config.host+"/api/summoners/riot/by-name/"+name)
   }
@@ -44,11 +48,14 @@ export class SummonerService {
     return this.http.get(config.protocal+this.region+"."+config.host+"/api/leagues/"+id)
   }
 
-  riotLeagueSearchByID(id: string) {
+  riotLeagueSearchBySummonerID(id: string) {
     return this.http.get(config.protocal+this.region+"."+config.host+"/api/leagues/riot/by-id/"+id)
   }
 
   newLeague(league: object) {
     return this.http.post(config.protocal+this.region+"."+config.host+"/api/leagues/", {league: league}, httpOptions)
+  }
+  updateLeague(league: object) {
+    return this.http.put(config.protocal+this.region+"."+config.host+"/api/leagues/", {league: league}, httpOptions) 
   }
 }

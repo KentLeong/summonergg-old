@@ -48,6 +48,25 @@ router.post('/', (req,res) => {
     }
   })
 })
+
+//put league for user
+router.put('/', (req,res) => {
+  var updatedLeague = new League(req.body.league)
+  League.findOne({queueType: updatedLeague.queueType, summonerId: updatedLeague.summonerId}, (err, league) => {
+    if (league) {
+      league.delete();
+      updatedLeague.save((err, league) => {
+        if (err) return res.status(400).json(err)
+        res.status(200).json(league)
+      })
+    } else {
+      updatedLeague.save((err, league) => {
+        if (err) return res.status(400).json(err)
+        res.status(200).json(league)
+      })
+    }
+  })
+})
 /**
  * R I O T A P I
  * 
