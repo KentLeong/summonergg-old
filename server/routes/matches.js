@@ -1,13 +1,18 @@
 var express = require('express');
 var router = express.Router();
 var rp = require('request-promise');
-var Match = require('../models/match');
 const riot = require('../riot');
 String.prototype.capitalize = () => {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
+var region
+var Match
 
-var region = "na1"
+router.use((req, res, next) => {
+  region = req.headers.host.split(".")[0].replace("http://", "")
+  Match = require('../models/match')(region);
+  next();
+})
 
 // GET all Matches (probably not a good idea to use)
 router.get('/', (req, res) => {
@@ -17,6 +22,27 @@ router.get('/', (req, res) => {
       res.status(200).json(matchs)
     });
 });
+
+// get match by id
+router.get('/:id', (req, res) => {
+  Match.findOne({gameId: req.params.id}, (err, match) => {
+    if (err) {return res.status(400).json(err);}
+    if (!match) {return res.status(400).json("match does not exist");}
+    res.status(200).json(match);
+  })
+})
+
+router.post('/', (req, res) => {
+  console.log(req.body.match)
+  Match.findOne({gameId: req.body.match.gameId}, (err, match) => {
+    if (match) {return res.status(400).json("match exists");}
+    var newMatch = new Match(req.body.match);
+    newMatch.save((err, match) => {
+      if (err) {return region.status(400).json(err);}
+      res.status(200).json(match)
+    })
+  })
+})
 /**
  * R I O T A P I
  * 
@@ -25,7 +51,7 @@ router.get('/', (req, res) => {
  */
 // Find match from api by id
 router.get('/riot/by-id/:id', (req, res) => {
-  rp(`https://${region}.api.riotgames.com/lol/match/v4/matches/`+
+  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/match/v4/matches/`+
   `${req.params.id}?api_key=${riot.key}`)
     .then(data => {
       var match = JSON.parse(data)
@@ -50,7 +76,7 @@ router.get('/riot/by-account/:id/:options', (req, res) => {
   **/
   var options = req.params.options;
   if (!options) options = "";
-  rp(`https://${region}.api.riotgames.com/lol/match/v4/matchlists/by-account/`+
+  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/match/v4/matchlists/by-account/`+
   `${req.params.id}?`+options+`api_key=${riot.key}`)
     .then(data => {
       var match = JSON.parse(data)

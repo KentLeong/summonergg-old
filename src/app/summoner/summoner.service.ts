@@ -65,11 +65,19 @@ export class SummonerService {
 
   // match
 
-  getMatches(id: string, options: string) {
+  riotGetMatches(id: string, options: string) {
     return this.http.get(this.protocal+"/api/matches/riot/by-account/"+id+"/"+options)
   }
   
-  getMatchData(id: string) {
+  riotGetMatchData(id: string) {
     return this.http.get(this.protocal+"/api/matches/riot/by-id/"+id)
+  }
+
+  getMatchData(id: string) {
+    return this.http.get(this.protocal+"/api/matches/"+id)
+  }
+
+  newMatch(match: object) {
+    return this.http.post(this.protocal+"/api/matches/", {match: match}, httpOptions)
   }
 }

@@ -63,8 +63,7 @@ export class SummonerComponent implements OnInit {
               this.summoner = data
               this.getLeague(this.summoner, false)
               this.getMatches(this.summoner);
-              this.summonerService.newSummoner(data).subscribe(data => {
-              }, err => {console.error(err)})
+              this.summonerService.newSummoner(data).subscribe(data => {}, err => {console.error(err)})
             }, err => {console.log(err)})
           }
         })
@@ -83,8 +82,7 @@ export class SummonerComponent implements OnInit {
           if (data.length != 0) {
             this.sortLeagues(data)
             data.forEach(league => {
-              this.summonerService.newLeague(league).subscribe(data => {
-              }, err=> {console.error(err)})
+              this.summonerService.newLeague(league).subscribe(data => {}, err=> {console.error(err)})
             })
           }
         })
@@ -96,16 +94,23 @@ export class SummonerComponent implements OnInit {
 
   getMatches(summoner: any) {
     var options = "beginIndex=0&endIndex=10&";
-    this.summonerService.getMatches(summoner.accountId, options).subscribe((data: any) => {
+    this.summonerService.riotGetMatches(summoner.accountId, options).subscribe((data: any) => {
       var matches = data.matches
       matches.forEach(match => {
-        this.summonerService.getMatchData(match.gameId).subscribe((data: object) => {
-          console.log(data)
-          this.matches.push(data)
+        this.summonerService.getMatchData(match.gameId).subscribe((data:object) => {
+        this.matches.push(data)
+        console.log("old")
+        }, err => {
+          this.summonerService.riotGetMatchData(match.gameId).subscribe((data: object) => {
+            this.summonerService.newMatch(data).subscribe(data=>{},err=>{console.error(err)});
+            this.matches.push(data)
+            console.log("new")
+          })
         })
       })
     })
   }
+  
   //algo
   sortLeagues(leagues: any[]) {
     leagues.forEach(league => {

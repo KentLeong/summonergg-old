@@ -1,4 +1,4 @@
 module.exports = {
   protocal: "http://",
-  host: "localhost.gg"
+  host: "summoner.gg"
 }
