@@ -21,6 +21,10 @@ export class SummonerService {
   constructor(
     private http: HttpClient
   ) { }
+  // check rate
+  checkRate(rate: Number) {
+    return this.http.put(config.protocal+this.region+"."+config.host+"/api/rates/check",{rate: rate}, httpOptions)
+  }
 
   // summoner
   summonerSearchByName(name: string) {

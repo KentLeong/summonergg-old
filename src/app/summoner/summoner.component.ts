@@ -32,29 +32,40 @@ export class SummonerComponent implements OnInit {
   }
   updateSummoner() {
     var name = this.router.url.split("/")[2];
-
     //update summoner
-    this.summonerService.riotSummonerSearchByName(name).subscribe((data: any) => {
-      this.summoner = data
-      this.summonerService.updateSummoner(data).subscribe(data=>{},err=>{console.error(err)})
-      this.summonerService.riotLeagueSearchBySummonerID(data.id).subscribe((data: any[]) => {
-        this.sortLeagues(data)
-        data.forEach(league => {
-          this.summonerService.updateLeague(league).subscribe(data=> {}, err => {console.error(err)})
+    this.summonerService.checkRate(2).subscribe(ok => {
+      if (!ok) {
+        console.log("riot api limit reached")
+      } else {
+        this.summonerService.riotSummonerSearchByName(name).subscribe((data: any) => {
+          this.summoner = data
+          this.summonerService.updateSummoner(data).subscribe(data=>{},err=>{console.error(err)})
+          this.summonerService.riotLeagueSearchBySummonerID(data.id).subscribe((data: any[]) => {
+            this.sortLeagues(data)
+            data.forEach(league => {
+              this.summonerService.updateLeague(league).subscribe(data=> {}, err => {console.error(err)})
+            })
+          })
         })
-      })
+      }
     })
   }
 
   getSummoner(name: string) {
     this.summonerService.summonerSearchByName(name).subscribe(data => {
       if (!data) {
-        this.summonerService.riotSummonerSearchByName(name).subscribe(data => {
-          this.summoner = data
-          this.getLeague(this.summoner, false)
-          this.summonerService.newSummoner(data).subscribe(data => {
-          }, err => {console.error(err)})
-        }, err => {console.log(err)})
+        this.summonerService.checkRate(1).subscribe(ok => {
+          if (!ok) {
+            console.log("riot api limit reached")
+          } else {
+            this.summonerService.riotSummonerSearchByName(name).subscribe(data => {
+              this.summoner = data
+              this.getLeague(this.summoner, false)
+              this.summonerService.newSummoner(data).subscribe(data => {
+              }, err => {console.error(err)})
+            }, err => {console.log(err)})
+          }
+        })
       } else {
         this.summoner = data
         this.getLeague(this.summoner, true)
@@ -65,15 +76,21 @@ export class SummonerComponent implements OnInit {
   getLeague(summoner: any, found: boolean) {
     this.summonerService.leagueSearchByID(summoner.id).subscribe((data: any[]) => {
       if (data.length == 0 && !found) {
-       this.summonerService.riotLeagueSearchBySummonerID(summoner.id).subscribe((data: any[]) => {
-        if (data.length != 0) {
-          this.sortLeagues(data)
-          data.forEach(league => {
-            this.summonerService.newLeague(league).subscribe(data => {
-            }, err=> {console.error(err)})
-          })
-        }
-       })
+        this.summonerService.checkRate(1).subscribe(ok => { 
+          if (!ok) {
+            console.log("riot api limit reached")
+          } else {
+            this.summonerService.riotLeagueSearchBySummonerID(summoner.id).subscribe((data: any[]) => {
+              if (data.length != 0) {
+                this.sortLeagues(data)
+                data.forEach(league => {
+                  this.summonerService.newLeague(league).subscribe(data => {
+                  }, err=> {console.error(err)})
+                })
+              }
+            })
+          }
+        })
       } else {
         this.sortLeagues(data)
       }

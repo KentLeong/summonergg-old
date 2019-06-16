@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-const config = require('../../../config');
 
 var schema = new Schema({
   id: String,
@@ -22,4 +21,8 @@ var schema = new Schema({
   recommended: [Object]
 })
 
-module.exports = mongoose.model('StaticChampion', schema)
+
+module.exports = (region) => {
+  mongoose.connect("mongodb://localhost:27017/sgg_"+region, {useNewUrlParser: true});
+  return mongoose.model('Static_champion', schema)
+}

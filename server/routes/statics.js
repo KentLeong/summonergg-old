@@ -1,21 +1,21 @@
 var express = require('express');
 var router = express.Router();
 var rp = require('request-promise');
-var StaticChampion = require('../models/static/_champion');
+var StaticChampion = require('../models/static/champion');
 
-const config = require('../../config');
+const riot = require('../riot');
 const http = require('http');
 const fs = require('fs');
 
 
 router.post('/update/profile-icons', (req, res) => {
-  rp("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/data/en_US/profileicon.json")
+  rp("http://ddragon.leagueoflegends.com/cdn/"+riot.ver+"/data/en_US/profileicon.json")
     .then(data=>{
       var iconList = JSON.parse(data);
       Object.keys(iconList.data).forEach((key, i) => {
         setTimeout(()=>{
           var file = fs.createWriteStream("./src/assets/profile-icons/"+key+".png");
-          http.get("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/img/profileicon/"+key+".png", function(response) {
+          http.get("http://ddragon.leagueoflegends.com/cdn/"+riot.ver+"/img/profileicon/"+key+".png", function(response) {
             response.pipe(file);
           });
         }, 200*i)
@@ -27,11 +27,11 @@ router.post('/update/profile-icons', (req, res) => {
 })
 
 router.post('/update/champions', (req, res) => {
-    rp("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/data/en_US/champion.json ")
+    rp("http://ddragon.leagueoflegends.com/cdn/"+riot.ver+"/data/en_US/champion.json ")
     .then(data=>{
       var championList = JSON.parse(data).data;
       Object.keys(championList).forEach(champion => {
-        rp("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/data/en_US/champion/"+champion+".json")
+        rp("http://ddragon.leagueoflegends.com/cdn/"+riot.ver+"/data/en_US/champion/"+champion+".json")
         .then(data=>{
           var championData = JSON.parse(data).data[champion];
           StaticChampion.findOne({id: championData.id}, (err, champion) => {
@@ -43,7 +43,7 @@ router.post('/update/champions', (req, res) => {
             })
           })
           var file = fs.createWriteStream("./src/assets/champion-squares/"+champion+".png");
-          http.get("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/img/champion/"+champion+".png", function(response) {
+          http.get("http://ddragon.leagueoflegends.com/cdn/"+riot.ver+"/img/champion/"+champion+".png", function(response) {
             response.pipe(file);
           });
         })
@@ -58,7 +58,7 @@ router.post('/update/champions', (req, res) => {
 })
 
 router.post('/update/champions/:champion', (req, res) => {
-    rp("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/data/en_US/champion/"+req.params.champion+".json")
+    rp("http://ddragon.leagueoflegends.com/cdn/"+riot.ver+"/data/en_US/champion/"+req.params.champion+".json")
     .then(data=>{
       var champion = JSON.parse(data);
       res.status(200).json(champion)
@@ -69,7 +69,7 @@ router.post('/update/champions/:champion', (req, res) => {
 })
 
 router.post('/update/items', (req, res) => {
-    rp("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/data/en_US/item.json")
+    rp("http://ddragon.leagueoflegends.com/cdn/"+riot.ver+"/data/en_US/item.json")
     .then(data=>{
       var items = JSON.parse(data);
       res.status(200).json(items)
@@ -80,7 +80,7 @@ router.post('/update/items', (req, res) => {
 })
 
 router.post('/update/summoners', (req, res) => {
-  rp("http://ddragon.leagueoflegends.com/cdn/"+config.ver+"/data/en_US/summoner.json")
+  rp("http://ddragon.leagueoflegends.com/cdn/"+riot.ver+"/data/en_US/summoner.json")
   .then(data=>{
     var iconList = JSON.parse(data);
     res.status(200).json(iconList)

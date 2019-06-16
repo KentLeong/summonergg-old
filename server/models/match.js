@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-const config = require('../../config');
 
 var schema = new Schema({
   gameId: Number,

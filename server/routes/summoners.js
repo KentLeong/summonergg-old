@@ -1,11 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var rp = require('request-promise');
-var Storage = require('node-storage');
 
-const config = require('../../config');
+const riot = require('../riot');
 String.prototype.capitalize = () => {
-    return this.charAt(0).toUpperCase() + this.slice(1);
+  return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
 var Summoner;
@@ -78,10 +77,12 @@ router.put('/', (req, res) => {
  * 
  * 
  */
+
+
 // Find summoner from api by name
 router.get('/riot/by-name/:name', (req, res) => {
-  rp(`https://${config.endpoints[region]}.api.riotgames.com/lol/summoner/v4/summoners/by-name/`+
-  `${encodeURI(req.params.name)}?api_key=${config.riot}`)
+  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/summoner/v4/summoners/by-name/`+
+  `${encodeURI(req.params.name)}?api_key=${riot.key}`)
     .then(data => {
       var summoner = JSON.parse(data)
       res.status(200).json(summoner)
@@ -93,8 +94,8 @@ router.get('/riot/by-name/:name', (req, res) => {
 
 // Find summoner from api by account id
 router.get('/riot/by-account/:id', (req, res) => {
-  rp(`https://${config.endpoints[region]}.api.riotgames.com/lol/summoner/v4/summoners/by-account/`+
-  `${req.params.id}?api_key=${config.riot}`)
+  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/summoner/v4/summoners/by-account/`+
+  `${req.params.id}?api_key=${riot.key}`)
     .then(data => {
       var summoner = JSON.parse(data)
       res.status(200).json(summoner)
@@ -106,8 +107,8 @@ router.get('/riot/by-account/:id', (req, res) => {
 
 // Find summoner from api by puuid
 router.get('/riot/by-puuid/:id', (req, res) => {
-  rp(`https://${config.endpoints[region]}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/`+
-  `${req.params.id}?api_key=${config.riot}`)
+  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/`+
+  `${req.params.id}?api_key=${riot.key}`)
     .then(data => {
       var summoner = JSON.parse(data)
       res.status(200).json(summoner)
@@ -119,8 +120,8 @@ router.get('/riot/by-puuid/:id', (req, res) => {
 
 // Find summoner from api by summoner id
 router.get('/riot/by-summoner/:id', (req, res) => {
-  rp(`https://${config.endpoints["region"]}.api.riotgames.com/lol/summoner/v4/summoners/`+
-  `${req.params.id}?api_key=${config.riot}`)
+  rp(`https://${riot.endpoints["region"]}.api.riotgames.com/lol/summoner/v4/summoners/`+
+  `${req.params.id}?api_key=${riot.key}`)
     .then(data => {
       var summoner = JSON.parse(data)
       res.status(200).json(summoner)
@@ -132,5 +133,3 @@ router.get('/riot/by-summoner/:id', (req, res) => {
 
 
 module.exports = router
-
-1560392919000

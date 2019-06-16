@@ -3,14 +3,8 @@ const path = require("path");
 const http = require("http");
 const fs = require("fs");
 const bodyParser = require("body-parser");
-const config = require("./config");
-const mongoose = require("mongoose");
-const Storage = require('node-storage');
 
 const app = express();
-
-var store = new Storage('rate');
-store.put('rate', 0);
 
 // Parsers for POST data
 app.use(bodyParser.json());
@@ -25,6 +19,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// import routes
 fs.readdir("./server/routes", (err, files) => {
   if (err) return console.error(err);
   files.forEach(file => {
@@ -48,7 +43,3 @@ setTimeout(()=>{
   const server = http.createServer(app);
   server.listen(port, () => console.log("API runnning on localhost:"+port))
 }, 2000)
-
-setInterval(()=>{
-  store.put("rate", 0)
-},120000)
