@@ -15,51 +15,61 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class SummonerService {
-
-  region: string = window.location.hostname.split(".")[0]
+  region: string = window.location.hostname.split(".")[0];
+  protocal: string = config.protocal+this.region+"."+config.host;
 
   constructor(
     private http: HttpClient
   ) { }
   // check rate
   checkRate(rate: Number) {
-    return this.http.put(config.protocal+this.region+"."+config.host+"/api/rates/check",{rate: rate}, httpOptions)
+    return this.http.put(this.protocal+"/api/rates/check",{rate: rate}, httpOptions)
   }
 
   // summoner
   summonerSearchByName(name: string) {
-    return this.http.get(config.protocal+this.region+"."+config.host+"/api/summoners/"+name)
+    return this.http.get(this.protocal+"/api/summoners/"+name)
   }
 
   newSummoner(summoner: object) {
-    return this.http.post(config.protocal+this.region+"."+config.host+"/api/summoners/", {summoner: summoner}, httpOptions)
+    return this.http.post(this.protocal+"/api/summoners/", {summoner: summoner}, httpOptions)
   }
 
   updateSummoner(summoner: object) {
-    return this.http.put(config.protocal+this.region+"."+config.host+"/api/summoners/", {summoner: summoner}, httpOptions)
+    return this.http.put(this.protocal+"/api/summoners/", {summoner: summoner}, httpOptions)
   }
 
   riotSummonerSearchByName(name: string) {
-    return this.http.get(config.protocal+this.region+"."+config.host+"/api/summoners/riot/by-name/"+name)
+    return this.http.get(this.protocal+"/api/summoners/riot/by-name/"+name)
   }
 
   
   // league
   leagueSearchByName(name: string) {
-    return this.http.get(config.protocal+this.region+"."+config.host+"/api/leagues/by-name/"+name)
+    return this.http.get(this.protocal+"/api/leagues/by-name/"+name)
   }
   leagueSearchByID(id: string) {
-    return this.http.get(config.protocal+this.region+"."+config.host+"/api/leagues/"+id)
+    return this.http.get(this.protocal+"/api/leagues/"+id)
   }
 
   riotLeagueSearchBySummonerID(id: string) {
-    return this.http.get(config.protocal+this.region+"."+config.host+"/api/leagues/riot/by-id/"+id)
+    return this.http.get(this.protocal+"/api/leagues/riot/by-id/"+id)
   }
 
   newLeague(league: object) {
-    return this.http.post(config.protocal+this.region+"."+config.host+"/api/leagues/", {league: league}, httpOptions)
+    return this.http.post(this.protocal+"/api/leagues/", {league: league}, httpOptions)
   }
   updateLeague(league: object) {
-    return this.http.put(config.protocal+this.region+"."+config.host+"/api/leagues/", {league: league}, httpOptions) 
+    return this.http.put(this.protocal+"/api/leagues/", {league: league}, httpOptions) 
+  }
+
+  // match
+
+  getMatches(id: string, options: string) {
+    return this.http.get(this.protocal+"/api/matches/riot/by-account/"+id+"/"+options)
+  }
+  
+  getMatchData(id: string) {
+    return this.http.get(this.protocal+"/api/matches/riot/by-id/"+id)
   }
 }

@@ -36,7 +36,7 @@ router.get('/riot/by-id/:id', (req, res) => {
     })
 })
 
-router.get('/riot/by-account/:id', (req, res) => {
+router.get('/riot/by-account/:id/:options', (req, res) => {
   /** 
   * OPTIONS***
   * champion
@@ -48,7 +48,7 @@ router.get('/riot/by-account/:id', (req, res) => {
   * 
   * format ex: "endtime=12&beginTime=0&"
   **/
-  var options = req.body.options;
+  var options = req.params.options;
   if (!options) options = "";
   rp(`https://${region}.api.riotgames.com/lol/match/v4/matchlists/by-account/`+
   `${req.params.id}?`+options+`api_key=${riot.key}`)

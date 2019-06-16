@@ -203,8 +203,8 @@
 
     </div>
     
-    <div class="match-history__games">
-      <div class="game">
+    <div class="match-history__games" *ngIf="matches">
+      <div class="game" *ngFor="let match of matches">
         <div class="game-detail">
           <span>Ranked Solo</span>
           <span>3 Days ago</span>
@@ -219,15 +219,6 @@
             <img src="" alt="">
           </div>
         </div>
-      </div>
-      <div class="game">
-        
-      </div>
-      <div class="game">
-        
-      </div>
-      <div class="game">
-        
       </div>
     </div>
   </div>

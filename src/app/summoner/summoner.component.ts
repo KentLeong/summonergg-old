@@ -13,6 +13,7 @@ export class SummonerComponent implements OnInit {
   solo: object;
   flex_5v5: object;
   flex_3v3: object;
+  matches: object[] = [];
 
   constructor(
     private router: Router,
@@ -54,21 +55,23 @@ export class SummonerComponent implements OnInit {
   getSummoner(name: string) {
     this.summonerService.summonerSearchByName(name).subscribe(data => {
       if (!data) {
-        this.summonerService.checkRate(1).subscribe(ok => {
+        this.summonerService.checkRate(2).subscribe(ok => {
           if (!ok) {
             console.log("riot api limit reached")
           } else {
             this.summonerService.riotSummonerSearchByName(name).subscribe(data => {
               this.summoner = data
               this.getLeague(this.summoner, false)
+              this.getMatches(this.summoner);
               this.summonerService.newSummoner(data).subscribe(data => {
               }, err => {console.error(err)})
             }, err => {console.log(err)})
           }
         })
       } else {
-        this.summoner = data
-        this.getLeague(this.summoner, true)
+        this.summoner = data;
+        this.getLeague(this.summoner, true);
+        this.getMatches(this.summoner);
       }
     }, err => {console.log(err)})
   }
@@ -76,18 +79,12 @@ export class SummonerComponent implements OnInit {
   getLeague(summoner: any, found: boolean) {
     this.summonerService.leagueSearchByID(summoner.id).subscribe((data: any[]) => {
       if (data.length == 0 && !found) {
-        this.summonerService.checkRate(1).subscribe(ok => { 
-          if (!ok) {
-            console.log("riot api limit reached")
-          } else {
-            this.summonerService.riotLeagueSearchBySummonerID(summoner.id).subscribe((data: any[]) => {
-              if (data.length != 0) {
-                this.sortLeagues(data)
-                data.forEach(league => {
-                  this.summonerService.newLeague(league).subscribe(data => {
-                  }, err=> {console.error(err)})
-                })
-              }
+        this.summonerService.riotLeagueSearchBySummonerID(summoner.id).subscribe((data: any[]) => {
+          if (data.length != 0) {
+            this.sortLeagues(data)
+            data.forEach(league => {
+              this.summonerService.newLeague(league).subscribe(data => {
+              }, err=> {console.error(err)})
             })
           }
         })
@@ -97,6 +94,19 @@ export class SummonerComponent implements OnInit {
     }, err=>{console.error(err)})
   }
 
+  getMatches(summoner: any) {
+    var options = "beginIndex=0&endIndex=10&";
+    this.summonerService.getMatches(summoner.accountId, options).subscribe((data: any) => {
+      var matches = data.matches
+      matches.forEach(match => {
+        this.summonerService.getMatchData(match.gameId).subscribe((data: object) => {
+          console.log(data)
+          this.matches.push(data)
+        })
+      })
+    })
+  }
+  //algo
   sortLeagues(leagues: any[]) {
     leagues.forEach(league => {
       league.winRatio = Math.round(100*(league.wins/(league.wins+league.losses)))
@@ -111,8 +121,4 @@ export class SummonerComponent implements OnInit {
     })
   }
 
-  // Match history
-  getMatchHistory() {
-    
-  }
 }
