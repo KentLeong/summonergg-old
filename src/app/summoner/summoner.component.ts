@@ -34,7 +34,7 @@ export class SummonerComponent implements OnInit {
   updateSummoner() {
     var name = this.router.url.split("/")[2];
     //update summoner
-    this.summonerService.checkRate(2).subscribe(ok => {
+    this.summonerService.checkRate(3).subscribe(ok => {
       if (!ok) {
         console.log("riot api limit reached")
       } else {
@@ -101,11 +101,15 @@ export class SummonerComponent implements OnInit {
         this.matches.push(data)
         console.log("old")
         }, err => {
-          this.summonerService.riotGetMatchData(match.gameId).subscribe((data: object) => {
-            this.summonerService.newMatch(data).subscribe(data=>{},err=>{console.error(err)});
-            this.matches.push(data)
-            console.log("new")
-          })
+          this.summonerService.checkRate(1).subscribe(ok => {
+            this.summonerService.riotGetMatchData(match.gameId).subscribe((data: object) => {
+              this.summonerService.newMatch(data).subscribe(data=>{},err=>{console.error(err)});
+              this.matches.push(data)
+              console.log("new")
+            })
+          }, err => {
+            console.log("riot api reached")
+          }) 
         })
       })
     })
