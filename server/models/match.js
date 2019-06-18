@@ -13,8 +13,7 @@ var schema = new Schema({
   gameMode: String,
   gameType: String,
   teams: Object,
-  participants: Object,
-  participantIdentities: Object
+  participants: Object
 })
 
 

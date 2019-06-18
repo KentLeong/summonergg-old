@@ -73,11 +73,21 @@ export class SummonerService {
     return this.http.get(this.protocal+"/api/matches/riot/by-id/"+id)
   }
 
+  getMatches(id: string, options: string) {
+    return this.http.post(this.protocal+"/api/matches/multi/"+id, {options: options}, httpOptions)
+  }
+
   getMatchData(id: string) {
     return this.http.get(this.protocal+"/api/matches/"+id)
   }
 
   newMatch(match: object) {
     return this.http.post(this.protocal+"/api/matches/", {match: match}, httpOptions)
+  }
+
+  // champion
+
+  getChampionNameByKey(key: number) {
+    return this.http.get(this.protocal+"/api/statics/champion/name-by-key/"+key)
   }
 }
