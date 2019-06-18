@@ -8,13 +8,17 @@ import { AppComponent } from './app.component';
 import { LandingComponent } from './landing/landing.component';
 import { SummonerComponent } from './summoner/summoner.component';
 import { SummonerSearchComponent } from './summoner-search/summoner-search.component';
+import { SummonerMatchHistoryComponent } from './summoner/summoner-match-history/summoner-match-history.component';
+import { SummonerDetailComponent } from './summoner/summoner-detail/summoner-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LandingComponent,
     SummonerComponent,
-    SummonerSearchComponent
+    SummonerSearchComponent,
+    SummonerMatchHistoryComponent,
+    SummonerDetailComponent
   ],
   imports: [
     BrowserModule,

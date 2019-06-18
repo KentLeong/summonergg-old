@@ -10,10 +10,6 @@ import { SummonerService } from './summoner.service';
 export class SummonerComponent implements OnInit {
 
   summoner: any;
-  solo: object;
-  flex_5v5: object;
-  flex_3v3: object;
-  matches: object[] = [];
 
   constructor(
     private router: Router,
@@ -31,6 +27,7 @@ export class SummonerComponent implements OnInit {
   ngOnInit() {
     
   }
+  
   updateSummoner() {
     var name = this.router.url.split("/")[2];
     //update summoner
@@ -42,7 +39,6 @@ export class SummonerComponent implements OnInit {
           this.summoner = data
           this.summonerService.updateSummoner(data).subscribe(data=>{},err=>{console.error(err)})
           this.summonerService.riotLeagueSearchBySummonerID(data.id).subscribe((data: any[]) => {
-            this.sortLeagues(data)
             data.forEach(league => {
               this.summonerService.updateLeague(league).subscribe(data=> {}, err => {console.error(err)})
             })
@@ -61,100 +57,17 @@ export class SummonerComponent implements OnInit {
           } else {
             this.summonerService.riotSummonerSearchByName(name).subscribe(data => {
               this.summoner = data
-              this.getLeague(this.summoner, false)
-              this.getMatches(this.summoner, false);
+              this.summonerService.summoner = data;
               this.summonerService.newSummoner(data).subscribe(data => {}, err => {console.error(err)})
             }, err => {console.log(err)})
           }
         })
       } else {
         this.summoner = data;
-        this.getLeague(this.summoner, true);
-        this.getMatches(this.summoner, true);
+        this.summonerService.summoner = data;
       }
     }, err => {console.log(err)})
   }
 
-  getLeague(summoner: any, found: boolean) {
-    this.summonerService.leagueSearchByID(summoner.id).subscribe((data: any[]) => {
-      if (data.length == 0 && !found) {
-        this.summonerService.riotLeagueSearchBySummonerID(summoner.id).subscribe((data: any[]) => {
-          if (data.length != 0) {
-            this.sortLeagues(data)
-            data.forEach(league => {
-              this.summonerService.newLeague(league).subscribe(data => {}, err=> {console.error(err)})
-            })
-          }
-        })
-      } else {
-        this.sortLeagues(data)
-      }
-    }, err=>{console.error(err)})
-  }
-
-  getMatches(summoner: any, found: boolean) {
-    var options;
-    if (found) {
-      options = {
-        championId: "",
-        skip: 0,
-        limit: 10,
-        seasonid: 13
-      }
-      this.summonerService.getMatches(summoner.accountId, options).subscribe((matches: any[]) => {
-        matches.forEach(match => {
-          this.sortMatches(match)
-        })
-      })
-    } else {
-      options = "beginIndex=0&endIndex=10&";
-      this.summonerService.riotGetMatches(summoner.accountId, options).subscribe((data: any) => {
-        var matches = data.matches
-        matches.forEach(match => {
-          this.summonerService.getMatchData(match.gameId).subscribe((data:object) => {
-          this.sortMatches(data)
-          }, err => {
-            this.summonerService.checkRate(1).subscribe(ok => {
-              this.summonerService.riotGetMatchData(match.gameId).subscribe((data: object) => {
-                this.summonerService.newMatch(data).subscribe(data=>{},err=>{console.error(err)});
-                this.sortMatches(data)
-              })
-            }, err => {
-              console.log("riot api reached")
-            }) 
-          })
-        })
-      })
-    }
-  }
-  
-  //algo
-  sortLeagues(leagues: any[]) {
-    leagues.forEach(league => {
-      league.winRatio = Math.round(100*(league.wins/(league.wins+league.losses)))
-      league.tier = league.tier.toLowerCase();
-      if (league.queueType == "RANKED_SOLO_5x5") {
-        this.solo = league
-      } else if (league.queueType == "RANKED_FLEX_SR") {
-        this.flex_5v5 = league
-      } else if (league.queueType == "RANKED_FLEX_TT") {
-        this.flex_3v3 = league
-      }
-    })
-  }
-
-  sortMatches(match: any) {
-    match.participants.forEach(participant => {
-      if (this.summoner.accountId == participant.currentAccountId) {
-        match.championId = participant.championId;
-        match.championName = participant.championName;
-      }
-    })
-    console.log(match)
-    this.matches.push(match)
-    this.matches.sort((a:any, b:any): any => {
-      return a.gameCreation - b.gameCreation
-    });
-  }
 
 }

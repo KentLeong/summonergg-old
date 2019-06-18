@@ -5,8 +5,10 @@ async function asyncForEach(array, callback) {
   }
 }
 
-Array.prototype.asyncForEach = function() {
-  console.log(this)
+Array.prototype.asyncForEach = async function(cb) {
+  for(let i=0; i<this.length; i++) {
+    await cb(this[i], i, this)
+  }
 }
 
 String.prototype.capitalize = () => {
@@ -14,22 +16,19 @@ String.prototype.capitalize = () => {
 }
 var a = [1,2,3,4,5,6,7,8,9,10]
 
-// asyncForEach(a, async num => {
-//   // await waitFor(1000);
 
-//   await new Promise(r => {
-//     setTimeout(r, 1000)
-//   })
+// let main = (a.asyncForEach(async num => {
+//   await waitFor(500)
 //   console.log(num)
-// })
+// }))();
 
-// a.forEach(async num => {
-//   await new Promise(r => {
-//     setTimeout(r, 1000)
-//   })
-//   console.log(num)
-// })
-a.asyncForEach();
-// a.forEach(num => {
-//   console.log(num)
-// }) 
+let main = (async ()=>{
+  await a.asyncForEach(async num => {
+    await waitFor(500)
+    console.log(num)
+    await a.asyncForEach(async num => {
+      await waitFor(500)
+      console.log(num)
+    })
+  })
+})();

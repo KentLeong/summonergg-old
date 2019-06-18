@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+//models
+import { Match } from './summoner-match-history/match.model';
+
 import * as config from '../../../config'
-import { Observable } from 'rxjs';
+// import { Observable } from 'rxjs';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -14,13 +17,17 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
+
 export class SummonerService {
+  summoner: any;
+  matches: Match[];
   region: string = window.location.hostname.split(".")[0];
   protocal: string = config.protocal+this.region+"."+config.host;
 
   constructor(
     private http: HttpClient
   ) { }
+
   // check rate
   checkRate(rate: Number) {
     return this.http.put(this.protocal+"/api/rates/check",{rate: rate}, httpOptions)

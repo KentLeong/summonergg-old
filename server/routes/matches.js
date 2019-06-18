@@ -3,6 +3,11 @@ var router = express.Router();
 var rp = require('request-promise');
 const riot = require('../riot');
 
+Array.prototype.asyncForEach = async function(cb) {
+  for(let i=0; i<this.length; i++) {
+    await cb(this[i], i, this)
+  }
+}
 var region
 var Match
 
@@ -58,23 +63,31 @@ router.post('/multi/:id', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  Match.findOne({gameId: req.body.match.gameId}, (err, match) => {
+  Match.findOne({gameId: req.body.match.gameId}, async (err, match) => {
     if (match) {return res.status(400).json("match exists");}
-    req.body.match.participantIdentities.forEach((id, i) => {
-      req.body.match.participants[i] = {...id.player, ...req.body.match.participants[i]};
-    })
-    delete req.body.match.participantIdentities;
-    req.body.match.participants.forEach(p => {
-      StaticChampion.findOne({key: p.championId}).select("id name").exec((err, champion) => {
-        p.championId = champion.id;
-        p.championName = champion.name;
+    const start = (async () => {
+      var newMatch;
+      await req.body.match.participantIdentities.asyncForEach((id, i) => {
+        console.log("merging: "+(i+1))
+        req.body.match.participants[i] = {...id.player, ...req.body.match.participants[i]};
       })
-    })
-    var newMatch = new Match(req.body.match);
-    newMatch.save((err, match) => {
-      if (err) {return region.status(400).json(err);}
-      res.status(200).json(match)
-    })
+      await delete req.body.match.participantIdentities;
+      await req.body.match.participants.asyncForEach(async (p, i) => {
+        console.log("saving: "+(i+1))
+        var promise = StaticChampion.findOne({key: p.championId}).select("id name").exec()
+        await promise.then(champion => {
+          console.log("switching: "+(i+1))
+          req.body.match.participants[i].championId = champion.id;
+          req.body.match.participants[i].championName = champion.name;
+        })
+      })
+      newMatch = await new Match(req.body.match);
+      await newMatch.save((err, match) => {
+        console.log("save")
+        if (err) {return region.status(400).json(err);}
+        res.status(200).json(match)
+      })
+    })();
   })
 })
 /**

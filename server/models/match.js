@@ -18,6 +18,7 @@ var schema = new Schema({
 
 
 module.exports = (region)=> {
+  mongoose.Promise = Promise;
   mongoose.connect("mongodb://localhost:27017/sgg_"+region, {useNewUrlParser: true});
   return mongoose.model('Match', schema);
 }

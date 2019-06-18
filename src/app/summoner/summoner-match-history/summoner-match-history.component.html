@@ -1,0 +1,26 @@
+<div class="search container-info">
+
+</div>
+
+<div class="games" *ngIf="matches">
+  <div class="game" *ngFor="let match of matches">
+    <div class="game-detail">
+      <span>Ranked Solo</span>
+      <span>3 Days ago</span>
+      <span>Victory</span>
+      <span>29m 37s</span>
+    </div>
+    <div>
+      <div>
+        <div>
+          <img src="../../assets/champion/tiles/{{match.championId}}_0.jpg" alt="" class="player-champ" style="transform: scale(1.5)">
+        </div>
+        <img src="" alt="">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="search container-info">
+
+</div>
