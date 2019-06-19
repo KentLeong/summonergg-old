@@ -18,12 +18,12 @@ export class SummonerMatchHistoryComponent implements OnInit {
 
   ngOnInit() {
     this.summoner = this.summonerService.summoner;
-    this.getMatches(this.summoner, false);
+    this.getMatches(this.summoner);
   }
 
-  getMatches(summoner: any, found: boolean) {
+  getMatches(summoner: any) {
     var options;
-    if (found) {
+    if (true) {
       options = {
         championId: "",
         skip: 0,
