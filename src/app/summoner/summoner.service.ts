@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 //models
+import { Summoner } from './summoner.model';
 import { Match } from './summoner-match-history/match.model';
 
 import * as config from '../../../config'
@@ -19,7 +20,7 @@ const httpOptions = {
 })
 
 export class SummonerService {
-  summoner: any;
+  summoner: Summoner;
   matches: Match[];
   region: string = window.location.hostname.split(".")[0];
   protocal: string = config.protocal+this.region+"."+config.host;

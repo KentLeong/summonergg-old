@@ -1,73 +1,68 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { SummonerService } from './summoner.service';
+
+// models
+import { Summoner } from './summoner.model';
 
 @Component({
   selector: 'app-summoner',
   templateUrl: './summoner.component.html',
   styleUrls: ['./summoner.component.scss']
 })
-export class SummonerComponent implements OnInit {
-
-  summoner: any;
+export class SummonerComponent implements OnInit, OnDestroy {
+  navigationSubscription;
+  summoner: Summoner;
 
   constructor(
     private router: Router,
     private summonerService: SummonerService
   ) {
-    const routerEvents = router.events.subscribe(route => {
-      if (route.toString().split("(")[0] == "NavigationEnd") {
-        routerEvents.unsubscribe();
-        var name = this.router.url.split("/")[2]
-        this.getSummoner(name)
+    this.navigationSubscription = this.router.events.subscribe((e: any) => {
+      // If it is a NavigationEnd event re-initalise the component
+      if (e instanceof NavigationEnd) {
+        this.initialise();
       }
-    }, err => console.error(err))
+    });
+  }
+  initialise() {
+    // Set default values and re-fetch any data you need.
+    this.summoner = new Summoner;
+    var name = this.router.url.split("/")[2];
+    this.getSummoner(name);
   }
 
   ngOnInit() {
-    
   }
   
-  updateSummoner() {
-    var name = this.router.url.split("/")[2];
-    //update summoner
-    this.summonerService.checkRate(3).subscribe(ok => {
-      if (!ok) {
-        console.log("riot api limit reached")
-      } else {
-        this.summonerService.riotSummonerSearchByName(name).subscribe((data: any) => {
-          this.summoner = data
-          this.summonerService.updateSummoner(data).subscribe(data=>{},err=>{console.error(err)})
-          this.summonerService.riotLeagueSearchBySummonerID(data.id).subscribe((data: any[]) => {
-            data.forEach(league => {
-              this.summonerService.updateLeague(league).subscribe(data=> {}, err => {console.error(err)})
-            })
-          })
-        })
-      }
-    })
+  ngOnDestroy() {
+    if (this.navigationSubscription) {  
+       this.navigationSubscription.unsubscribe();
+    }
   }
 
   getSummoner(name: string) {
-    this.summonerService.summonerSearchByName(name).subscribe(data => {
-      if (!data) {
-        this.summonerService.checkRate(2).subscribe(ok => {
-          if (!ok) {
-            console.log("riot api limit reached")
-          } else {
-            this.summonerService.riotSummonerSearchByName(name).subscribe(data => {
-              this.summoner = data
-              this.summonerService.summoner = data;
-              this.summonerService.newSummoner(data).subscribe(data => {}, err => {console.error(err)})
-            }, err => {console.log(err)})
-          }
-        })
+    this.summonerService.summonerSearchByName(name).subscribe((summoner: Summoner) => {
+      if (summoner) {
+        this.summonerFound(summoner)
       } else {
-        this.summoner = data;
-        this.summonerService.summoner = data;
+        this.summonerService.riotSummonerSearchByName(name).subscribe((summoner: Summoner) => {
+          if (summoner) {
+            this.summonerFound(summoner)
+          } else {
+            console.log("summoner does not exist")
+          }
+        }, err => {
+          console.log(err)
+        })
       }
-    }, err => {console.log(err)})
+    }, err => {
+      console.log(err)
+    })
   }
 
-
+  summonerFound(summoner: Summoner) {
+    this.summoner = summoner;
+    this.summonerService.summoner = summoner;
+  }
 }
