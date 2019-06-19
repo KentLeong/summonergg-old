@@ -12,7 +12,14 @@ import { Summoner } from './summoner.model';
 })
 export class SummonerComponent implements OnInit, OnDestroy {
   navigationSubscription;
+
   summoner: Summoner;
+  /**
+   * {
+   *    summoner: Summoner;
+   *    found: boolean;
+   * }
+   */
 
   constructor(
     private router: Router,
@@ -42,27 +49,15 @@ export class SummonerComponent implements OnInit, OnDestroy {
   }
 
   getSummoner(name: string) {
-    this.summonerService.summonerSearchByName(name).subscribe((summoner: Summoner) => {
-      if (summoner) {
-        this.summonerFound(summoner)
-      } else {
-        this.summonerService.riotSummonerSearchByName(name).subscribe((summoner: Summoner) => {
-          if (summoner) {
-            this.summonerFound(summoner)
-          } else {
-            console.log("summoner does not exist")
-          }
-        }, err => {
-          console.log(err)
-        })
-      }
-    }, err => {
-      console.log(err)
-    })
-  }
+    var ssbm = this.summonerService.summonerSearchByName(name);
+    var rssbm = this.summonerService.riotSummonerSearchByName(name);
 
-  summonerFound(summoner: Summoner) {
-    this.summoner = summoner;
-    this.summonerService.summoner = summoner;
+    ssbm.subscribe((summoner: Summoner) => {
+      if (summoner) return this.summoner = {...summoner, ...{found: true}}
+      rssbm.subscribe((summoner: Summoner) => {
+        if (!summoner) return console.log("summoner does not exist");
+        this.summoner = {...summoner, ...{found: false}}
+      }, err => {console.log(err)})
+    }, err => {console.log(err)})
   }
 }

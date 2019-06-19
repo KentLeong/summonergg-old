@@ -19,24 +19,30 @@ export class SummonerMatchHistoryComponent implements OnChanges {
 
   @Input() summoner: Summoner;
 
-  ngOnChanges(changes) {
+  ngOnChanges() {
     if (!this.summoner) return;
     // execute if summoner found
-    var options = "?championId=&seasonId=13&skip=0&limit=10";
-    this.summonerService.getMatches(this.summoner.accountId, options)
-      .subscribe((matches: Match[]) => {
-        this.formatMatch(matches)
-      })
+    if (this.summoner.found) {
+      var options = "?championId=&seasonId=13&skip=0&limit=10";
+      
+      this.summonerService.getMatches(this.summoner.accountId, options)
+        .subscribe((matches: Match[]) => {
+          if (matches.length > 0) this.formatMatch(matches);
+        })
+    } else {
+      console.log("not found")
+    }
   }
 
   formatMatch(matches: Match[]) {
     var sortMatches = async function(summoner: Summoner) {
       await matches.forEach((match: Match) => {
-        match.participants.forEach(p => {
+        match.participants.some(p => {
           if (p.currentAccountId == summoner.accountId) {
             match.championId = p.championId;
             match.championName = p.championName;
           }
+          return p.currentAccountId == summoner.accountId
         })
       })
       await matches.sort((a,b): number => {
