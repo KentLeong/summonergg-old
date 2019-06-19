@@ -82,7 +82,7 @@ export class SummonerService {
   }
 
   getMatches(id: string, options: string) {
-    return this.http.post(this.protocal+"/api/matches/multi/"+id, {options: options}, httpOptions)
+    return this.http.get(this.protocal+"/api/matches/multi/"+id+options)
   }
 
   getMatchData(id: string) {

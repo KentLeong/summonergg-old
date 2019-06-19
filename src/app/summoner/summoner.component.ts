@@ -27,7 +27,7 @@ export class SummonerComponent implements OnInit, OnDestroy {
   }
   initialise() {
     // Set default values and re-fetch any data you need.
-    this.summoner = new Summoner;
+    this.summoner = null;
     var name = this.router.url.split("/")[2];
     this.getSummoner(name);
   }

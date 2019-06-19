@@ -37,7 +37,7 @@ router.get('/:id', (req, res) => {
 })
 
 // get multi matches by id
-router.post('/multi/:id', (req, res) => {
+router.get('/multi/:id', (req, res) => {
 /** 
   * OPTIONS***
   * champion
@@ -45,7 +45,7 @@ router.post('/multi/:id', (req, res) => {
   * skip 
   * limit
   **/
-  var options = req.body.options;
+  var options = req.query;
   var query = {
     participants: {
       $elemMatch: {
@@ -55,7 +55,7 @@ router.post('/multi/:id', (req, res) => {
   }
   if (options.seasonId) query.seasonId = options.seasonId;
   if (options.championId) query.participants.$elemMatch.championId = options.championId;
-  Match.find(query).skip(options.skip).limit(options.limit).exec((err, matches) => {
+  Match.find(query).skip(+options.skip).limit(+options.limit).exec((err, matches) => {
     if (err) {return res.status(400).json(err);}
     res.status(200).json(matches)
   })
