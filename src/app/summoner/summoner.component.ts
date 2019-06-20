@@ -1,6 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { SummonerService } from './summoner.service';
+
+// components
+import { SummonerMatchHistoryComponent } from './summoner-match-history/summoner-match-history.component';
+import { SummonerDetailComponent } from './summoner-detail/summoner-detail.component';
 
 // models
 import { Summoner } from './summoner.model';
@@ -32,6 +36,9 @@ export class SummonerComponent implements OnInit, OnDestroy {
       }
     });
   }
+  @ViewChild(SummonerMatchHistoryComponent) matchHistory;
+  @ViewChild(SummonerDetailComponent) details;
+
   initialise() {
     // Set default values and re-fetch any data you need.
     this.summoner = null;
@@ -43,9 +50,12 @@ export class SummonerComponent implements OnInit, OnDestroy {
   }
   
   ngOnDestroy() {
-    if (this.navigationSubscription) {  
-       this.navigationSubscription.unsubscribe();
-    }
+    if (this.navigationSubscription) this.navigationSubscription.unsubscribe();
+  }
+
+  updateSummoner() {
+    this.matchHistory.update();
+    this.details.update();
   }
 
   getSummoner(name: string) {
@@ -56,8 +66,11 @@ export class SummonerComponent implements OnInit, OnDestroy {
       if (summoner) return this.summoner = {...summoner, ...{found: true}}
       rssbm.subscribe((summoner: Summoner) => {
         if (!summoner) return console.log("summoner does not exist");
+        this.summonerService.newSummoner(summoner)
+          .subscribe(summoner => {})
         this.summoner = {...summoner, ...{found: false}}
       }, err => {console.log(err)})
     }, err => {console.log(err)})
   }
+
 }

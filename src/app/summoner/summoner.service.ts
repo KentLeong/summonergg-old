@@ -89,7 +89,7 @@ export class SummonerService {
     return this.http.get(this.protocal+"/api/matches/"+id)
   }
 
-  newMatch(match: object) {
+  newMatch(match: Match) {
     return this.http.post(this.protocal+"/api/matches/", {match: match}, httpOptions)
   }
 

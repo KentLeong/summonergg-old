@@ -55,7 +55,7 @@ router.get('/multi/:id', (req, res) => {
   }
   if (options.seasonId) query.seasonId = options.seasonId;
   if (options.championId) query.participants.$elemMatch.championId = options.championId;
-  Match.find(query).skip(+options.skip).limit(+options.limit).exec((err, matches) => {
+  Match.find(query).sort({gameCreation: 'descending'}).skip(+options.skip).limit(+options.limit).exec((err, matches) => {
     if (err) {return res.status(400).json(err);}
     res.status(200).json(matches)
   })
@@ -110,6 +110,7 @@ router.get('/riot/by-id/:id', (req, res) => {
 })
 
 router.get('/riot/by-account/:id/:options', (req, res) => {
+  console.log("ran")
   /** 
   * OPTIONS***
   * champion
@@ -119,7 +120,7 @@ router.get('/riot/by-account/:id/:options', (req, res) => {
   * endIndex
   * beginIndex
   * 
-  * format ex: "endtime=12&beginTime=0&"
+  * format ex: ""?endtime=12&beginTime=0&"
   **/
   var options = req.params.options;
   if (!options) options = "";

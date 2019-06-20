@@ -9,17 +9,21 @@
         <span>Win Ratio {{solo.winRatio}}%</span><br>
       </div>
     </div>
-    <div class="ranks__flex">
-      <img src="../../assets/rank-icons/unranked.png" alt="">
-      <div>
-        <span>Flex 5v5</span><br>
-        <span>Unranked</span>
+    <div class="ranks__flex" *ngIf="flex_5v5 || flex_3v3">
+      <div *ngIf="flex_5v5">
+        <img src="../../assets/rank-icons/unranked.png" alt="">
+        <div>
+          <span>Flex 5v5</span><br>
+          <span>Unranked</span>
+        </div>
       </div>
       <br>
-      <img src="../../assets/rank-icons/unranked.png" alt="">
-      <div>
-        <span>Flex 3v3</span><br>
-        <span>Unranked</span>
+      <div *ngIf="flex_3v3">
+        <img src="../../assets/rank-icons/unranked.png" alt="">
+        <div>
+          <span>Flex 3v3</span><br>
+          <span>Unranked</span>
+        </div>
       </div>
     </div>
   </div>
