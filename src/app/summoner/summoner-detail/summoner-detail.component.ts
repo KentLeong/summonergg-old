@@ -18,10 +18,12 @@ export class SummonerDetailComponent implements OnChanges {
     private summonerService: SummonerService
   ) { }
 
+  @Input() leagues: Object[];
   @Input() summoner: Summoner;
 
   ngOnChanges() {
     if (!this.summoner) return;
+    if (this.summoner.profile) return this.sortLeagues(this.leagues);
     //execute if summoner found
     if (this.summoner.found) return this.getFromLocal();
 
@@ -37,7 +39,7 @@ export class SummonerDetailComponent implements OnChanges {
   getFromLocal() {
     this.summonerService.leagueSearchByID(this.summoner.id)
       .subscribe((leagues: any) => {
-        this.sortLeagues(leagues)
+        this.sortLeagues(leagues);
       })
   }
 
@@ -53,7 +55,7 @@ export class SummonerDetailComponent implements OnChanges {
   }
   //algo
   sortLeagues(leagues: any[]) {
-    leagues.forEach(league => {
+    leagues.forEach((league, i) => {
       league.winRatio = Math.round(100*(league.wins/(league.wins+league.losses)))
       league.tier = league.tier.toLowerCase();
       if (league.queueType == "RANKED_SOLO_5x5") {

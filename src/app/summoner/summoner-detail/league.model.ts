@@ -1,4 +1,4 @@
-export class Summoner {
+export class League {
   id: string;
   accountId: string;
   puuid: string;
@@ -7,5 +7,4 @@ export class Summoner {
   revisionDate: any;
   summonerLevel: number;
   found: boolean;
-  profile: boolean;
 }

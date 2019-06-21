@@ -32,6 +32,7 @@ router.get('/:name', (req, res) => {
   var regex = new RegExp(`^${name}$`, "i")
   Summoner.findOne({name: regex}, (err, summoner) => {
     if (err) return res.status(400).json(err)
+    if (!summoner) return res.status(400).json("not found")
     res.status(200).json(summoner)
   }) 
 })

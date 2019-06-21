@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, Output, OnChanges, EventEmitter } from '@angular/core';
 import { SummonerService } from '../summoner.service';
 // Models
 import { Summoner } from '../summoner.model';
@@ -11,20 +11,29 @@ import { Match } from './match.model';
 })
 export class SummonerMatchHistoryComponent implements OnChanges {
   
-  matches: Match[] = [];
+  
 
   constructor(
     private summonerService: SummonerService
   ) { }
 
+  @Input() matches: Match[] = [];
   @Input() summoner: Summoner;
+  @Output() matchUpdated = new EventEmitter();
 
   ngOnChanges() {
     if (!this.summoner) return;
+    if (this.summoner.profile) return this.setMatches();
     // execute if summoner found
-    if (this.summoner.found) return this.getFromLocal();
+    if (this.summoner.found) {
+      this.getFromLocal();
+    } else {
+      this.getFromRiot();
+    }
     
-    this.getFromRiot();
+  }
+
+  setMatches() {
   }
 
   update() {
@@ -40,8 +49,13 @@ export class SummonerMatchHistoryComponent implements OnChanges {
         matches.forEach((match: Match) => {
           this.formatMatch(match).then((match: Match) => {
             this.matches.push(match)
+            if (this.matches.length == 10) {
+              this.matchUpdated.emit();
+            }
           })
         })
+      }, err => {
+        console.log("no matches")
       })
   }
 

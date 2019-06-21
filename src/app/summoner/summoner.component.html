@@ -16,7 +16,10 @@
     </div>
   </div>
   <app-summoner-detail class="detail"
-                       [summoner]="summoner"></app-summoner-detail>
+                       [summoner]="summoner"
+                       [leagues]="leagues"></app-summoner-detail>
   <app-summoner-match-history class="match-history"
-                              [summoner]="summoner"></app-summoner-match-history>
+                              [summoner]="summoner"
+                              [matches]="matches"
+                              (matchUpdated)='checkProfile($event)'></app-summoner-match-history>
 </div>

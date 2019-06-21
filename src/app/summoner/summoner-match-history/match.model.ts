@@ -13,6 +13,7 @@ export class Match {
   participants: participant[];
   championId: string;
   championName: string;
+  _id: string;
 }
 
 class team {

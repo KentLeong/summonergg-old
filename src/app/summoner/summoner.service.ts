@@ -6,6 +6,7 @@ import { Summoner } from './summoner.model';
 import { Match } from './summoner-match-history/match.model';
 
 import * as config from '../../../config'
+import { SummonerProfile } from './summonerProfile.model';
 // import { Observable } from 'rxjs';
 
 const httpOptions = {
@@ -34,9 +35,18 @@ export class SummonerService {
     return this.http.put(this.protocal+"/api/rates/check",{rate: rate}, httpOptions)
   }
 
+  // profile
+  getProfile(name: string) {
+    return this.http.get(this.protocal+"/api/summonerProfiles/"+name);
+  }
+
+  newProfile(profile: object) {
+    return this.http.post(this.protocal+"/api/summonerProfiles/", {profile: profile}, httpOptions)
+  }
+
   // summoner
   summonerSearchByName(name: string) {
-    return this.http.get(this.protocal+"/api/summoners/"+name)
+    return this.http.get(this.protocal+"/api/summoners/"+name);
   }
 
   newSummoner(summoner: object) {
