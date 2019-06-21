@@ -71,6 +71,9 @@ export class SummonerMatchHistoryComponent implements OnChanges {
                 .subscribe((match: Match) => {
                   this.formatMatch(match).then(match => {
                     this.matches.push(match)
+                    if (this.matches.length == 10) {
+                      this.matchUpdated.emit();
+                    }
                   })
                 })
             })

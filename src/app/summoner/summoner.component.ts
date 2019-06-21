@@ -82,7 +82,7 @@ export class SummonerComponent implements OnInit, OnDestroy {
     this.matchHistory.matches.forEach((match: Match) => {
       var part = [];
       match.participants.forEach(p => {
-        part.unshift({
+        part.push({
           championId: p.championId,
           championName: p.championName,
           currentAccountId: p.currentAccountId,
@@ -90,7 +90,7 @@ export class SummonerComponent implements OnInit, OnDestroy {
           summonerName: p.summonerName
         })
       })
-      matches.unshift({
+      matches.push({
         gameId: match.gameId,
         participants: part,
         championId: match.championId,
