@@ -1,4 +1,4 @@
-<div *ngIf="summoner" class="champion-image">
+<div *ngIf="summoner" class="champion-image" [ngStyle]="{'background-image': lastPlayed}">
     
 </div>
 <div *ngIf="summoner" class="container">
@@ -9,7 +9,7 @@
     </div>
     <div class="profile__info">
       <h4>{{summoner.name}}</h4>
-      <span>Ladder Rank 165,556 (top 14.84%)</span>
+      <span>Rank 165,556 (top 14.84%)</span>
       <br>
       <button (click)="updateSummoner()">Update</button>
       <button>Live</button>

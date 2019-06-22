@@ -15,11 +15,13 @@
 }
 
 .nav {
-  position: fixed;
+  position: absolute;
   height: 40px;
   width: 100%;
-  background-color: grey;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
   z-index: 10;
+  background-color: transparent;
   &__header {
     display: grid;
     grid-template-columns: 150px auto 300px;
@@ -27,6 +29,10 @@
     width:80%;
     margin: auto;
     &__logo {
+      text-decoration: none;
+      font-weight: 900;
+      font-size: 1.8rem;
+      color: white;
       grid-column-start: 1;
     }
   

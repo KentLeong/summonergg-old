@@ -22,13 +22,14 @@
       vertical-align: middle;
       text-align: center;
       display: inline-block;
-      width: 8rem;
+      width: 8.5rem;
       span {
         display: block;
         padding: .3rem;
       }
     }
     .game-detail {
+      text-align: left;
       span:nth-child(2) {
         padding-bottom: .4rem;
       }
@@ -45,8 +46,8 @@
       }
     }
     .player-champ {
-      width: 7rem;
-      height: 7rem;
+      width: 8rem;
+      height: 8rem;
       border-radius: 50%;
     }
   }

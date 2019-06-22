@@ -48,7 +48,7 @@ export class SummonerDetailComponent implements OnChanges {
     .subscribe((leagues: any) => {
       this.sortLeagues(leagues)
       leagues.forEach(league => {
-        this.summonerService.newLeague(league)
+        this.summonerService.updateLeague(league)
           .subscribe(league => {})
       })
     })

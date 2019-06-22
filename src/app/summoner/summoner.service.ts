@@ -44,6 +44,10 @@ export class SummonerService {
     return this.http.post(this.protocal+"/api/summonerProfiles/", {profile: profile}, httpOptions)
   }
 
+  updateProfile(profile: object) {
+    return this.http.patch(this.protocal+"/api/summonerProfiles/", {profile: profile}, httpOptions)
+  }
+
   // summoner
   summonerSearchByName(name: string) {
     return this.http.get(this.protocal+"/api/summoners/"+name);
@@ -61,6 +65,9 @@ export class SummonerService {
     return this.http.get(this.protocal+"/api/summoners/riot/by-name/"+name)
   }
 
+  riotSummonerSearchByPUUID(id: string) {
+    return this.http.get(this.protocal+"/api/summoners/riot/by-puuid/"+id);
+  }
   
   // league
   leagueSearchByName(name: string) {

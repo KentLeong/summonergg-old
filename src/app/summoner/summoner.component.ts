@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { SummonerService } from './summoner.service';
 
@@ -16,9 +16,10 @@ import { SummonerProfile } from './summonerProfile.model';
   templateUrl: './summoner.component.html',
   styleUrls: ['./summoner.component.scss']
 })
-export class SummonerComponent implements OnInit, OnDestroy {
+export class SummonerComponent implements OnDestroy {
+  profileFound: boolean = false;
+  lastPlayed: string;
   navigationSubscription;
-  getProfileSub;
   profile;
   summoner: Summoner;
   leagues: object[]= [];
@@ -50,27 +51,30 @@ export class SummonerComponent implements OnInit, OnDestroy {
     var name = this.router.url.split("/")[2];
     this.getProfile(name);
   }
-
-  ngOnInit() {
-  }
   
   ngOnDestroy() {
     if (this.navigationSubscription) this.navigationSubscription.unsubscribe();
-    if (this.getProfileSub) this.getProfileSub.unsubscribe();
   }
 
   updateSummoner() {
     this.matchHistory.update();
     this.details.update();
+    this.summonerService.riotSummonerSearchByPUUID(this.summoner.puuid)
+      .subscribe((summoner: Summoner) => {
+        this.summoner = {...summoner, ...{profile: true}};
+        this.profile.summoner = summoner;
+      })
   }
 
   getProfile(name: string) {
-    this.getProfileSub = this.summonerService.getProfile(name)
+    this.summonerService.getProfile(name)
       .subscribe((profile: any) => {
         this.profile = profile;
         this.matches = profile.matchHistory;
         this.summoner = {...profile.summoner, ...{found: true, profile: true}};
         this.leagues = profile.leagues;
+        this.profileFound = true;
+        this.lastPlayed = 'url("../../assets/champion/splash/'+this.matches[0].championId+'_0.jpg")'
       }, err => {
         this.getSummoner(name)
       })
@@ -94,7 +98,8 @@ export class SummonerComponent implements OnInit, OnDestroy {
         gameId: match.gameId,
         participants: part,
         championId: match.championId,
-        championName: match.championName
+        championName: match.championName,
+        gameCreation: match.gameCreation
       })
     })
     var profile = {
@@ -103,24 +108,30 @@ export class SummonerComponent implements OnInit, OnDestroy {
       leagues: leagues,
       matches: matches
     }
-    this.summonerService.newProfile(profile)
-      .subscribe((profile: SummonerProfile) =>{})
+    this.lastPlayed = 'url("../../assets/champion/splash/'+profile.matches[0].championId+'_0.jpg")'
+    
+    if (this.profileFound) {
+      this.summonerService.updateProfile(profile)
+        .subscribe((profile: SummonerProfile) =>{})
+    } else {
+      this.summonerService.newProfile(profile)
+        .subscribe((profile: SummonerProfile) =>{})
+    }
   }
 
   getSummoner(name: string) {
-    var ssbm = this.summonerService.summonerSearchByName(name);
-    var rssbm = this.summonerService.riotSummonerSearchByName(name);
-
-    ssbm.subscribe((summoner: Summoner) => {
-      this.summoner = {...summoner, ...{found: true, profile: false}}
-    }, err => {
-      rssbm.subscribe((summoner: Summoner) => {
-        this.summonerService.newSummoner(summoner)
-          .subscribe(summoner => {})
-        this.summoner = {...summoner, ...{found: false, profile: false}}
+    this.summonerService.summonerSearchByName(name)
+      .subscribe((summoner: Summoner) => {
+        this.summoner = {...summoner, ...{found: true, profile: false}}
       }, err => {
-        console.log("summoner not found")
+        this.summonerService.riotSummonerSearchByName(name)
+          .subscribe((summoner: Summoner) => {
+            this.summonerService.newSummoner(summoner)
+              .subscribe(summoner => {})
+            this.summoner = {...summoner, ...{found: false, profile: false}}
+          }, err => {
+            console.log("summoner not found")
+          })
       })
-    })
   }
 }

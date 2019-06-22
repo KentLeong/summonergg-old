@@ -56,4 +56,33 @@ router.post('/', (req, res) => {
     })
   })
 })
+
+router.patch('/', (req, res) => {
+  var name = req.body.profile.name;
+  var summoner = req.body.profile.summoner;
+  var leagues = req.body.profile.leagues;
+  var matches = req.body.profile.matches;
+
+  var queryName = name.split("").join("\\s*")
+  var regex = new RegExp(`^${queryName}$`, "i")
+  SummonerProfile.findOne({name: regex }, (err, profile) => {
+    if (!profile) return res.status(400).json("profile doesnt exists");
+    profile.name = "";
+    profile.summoner = {};
+    profile.leagues = [];
+    profile.matchHistory = [];
+    profile.save((err, profile) => {
+      if (err) return res.status(400).json(err);
+      profile.name = name;
+      profile.summoner = summoner;
+      profile.leagues = leagues;
+      profile.matchHistory = matches;
+      profile.save((err, profile) => {
+        if (err) return res.status(400).json(err);
+        return res.status(200).json(profile)
+      })
+    })
+  })
+})
 module.exports = router
+

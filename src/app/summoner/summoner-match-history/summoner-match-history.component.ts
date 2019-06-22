@@ -23,21 +23,15 @@ export class SummonerMatchHistoryComponent implements OnChanges {
 
   ngOnChanges() {
     if (!this.summoner) return;
-    if (this.summoner.profile) return this.setMatches();
+    if (this.summoner.profile) return;
     // execute if summoner found
-    if (this.summoner.found) {
-      this.getFromLocal();
-    } else {
-      this.getFromRiot();
-    }
-    
-  }
-
-  setMatches() {
+    if (this.summoner.found) return this.getFromLocal();
+    this.getFromRiot();
   }
 
   update() {
     this.matches = null;
+    this.matches = [];
     this.getFromRiot();
   }
 
@@ -64,19 +58,29 @@ export class SummonerMatchHistoryComponent implements OnChanges {
 
     this.summonerService.riotGetMatches(this.summoner.accountId, options)
         .subscribe((data: any) => {
-          data.matches.forEach((match: any, i: number) => {
-            this.summonerService.riotGetMatchData(match.gameId)
-            .subscribe((match: Match) => {
-              this.summonerService.newMatch(match)
-                .subscribe((match: Match) => {
-                  this.formatMatch(match).then(match => {
-                    this.matches.push(match)
-                    if (this.matches.length == 10) {
-                      this.matchUpdated.emit();
-                    }
-                  })
+          data.matches.forEach((match: any) => {
+            this.summonerService.getMatchData(match.gameId)
+              .subscribe((match: Match) => {
+                this.formatMatch(match).then(match => {
+                  this.matches.push(match)
+                  if (this.matches.length == 10) {
+                    this.matchUpdated.emit();
+                  }
                 })
-            })
+              }, err => {
+                this.summonerService.riotGetMatchData(match.gameId)
+                .subscribe((match: Match) => {
+                  this.summonerService.newMatch(match)
+                    .subscribe((match: Match) => {
+                      this.formatMatch(match).then(match => {
+                        this.matches.push(match)
+                        if (this.matches.length == 10) {
+                          this.matchUpdated.emit();
+                        }
+                      })
+                    })
+                })
+              })
             
           })
         })
