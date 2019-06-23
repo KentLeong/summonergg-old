@@ -58,12 +58,14 @@ export class SummonerMatchHistoryComponent implements OnChanges {
 
     this.summonerService.riotGetMatches(this.summoner.accountId, options)
         .subscribe((data: any) => {
-          data.matches.forEach((match: any) => {
+          var matches = data.matches;
+          matches.forEach((match: any, i: number) => {
             this.summonerService.getMatchData(match.gameId)
               .subscribe((match: Match) => {
                 this.formatMatch(match).then(match => {
-                  this.matches.push(match)
-                  if (this.matches.length == 10) {
+                  matches[i] = match
+                  if (i+1 == 10) {
+                    this.matches = matches;
                     this.matchUpdated.emit();
                   }
                 })
@@ -73,8 +75,9 @@ export class SummonerMatchHistoryComponent implements OnChanges {
                   this.summonerService.newMatch(match)
                     .subscribe((match: Match) => {
                       this.formatMatch(match).then(match => {
-                        this.matches.push(match)
+                        matches[i] = match
                         if (this.matches.length == 10) {
+                          this.matches = matches;
                           this.matchUpdated.emit();
                         }
                       })
@@ -91,17 +94,19 @@ export class SummonerMatchHistoryComponent implements OnChanges {
       if (p.currentAccountId == this.summoner.accountId) {
         match.championId = p.championId;
         match.championName = p.championName;
+        // calculate role;
+        var role = p.timeline.role;
+        var lane = p.timeline.lane;
+        if (role == "DUO_CARRY") {
+          match.role = "ADC"
+        } else if (role == "DUO_SUPPORT") {
+          match.role = "SUPPORT"
+        } else if (role) {
+
+        }
       }
       return p.currentAccountId == this.summoner.accountId
     })
     return match
-  }
-
-  sort() {
-    this.matches.sort((a,b): number => {
-      var d1 = new Date(a.gameCreation).getTime();
-      var d2 = new Date(b.gameCreation).getTime();
-      return d2 - d1;
-    })
   }
 }

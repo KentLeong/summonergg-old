@@ -1,4 +1,5 @@
 export class Match {
+  _id: string;
   gameId: string;
   platformId: string;
   gameCreation: any;
@@ -11,9 +12,10 @@ export class Match {
   gameType: string;
   teams: team[];
   participants: participant[];
+  // indiv
   championId: string;
   championName: string;
-  _id: string;
+  role: string;
 }
 
 class team {
