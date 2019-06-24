@@ -14,18 +14,65 @@ var Match
 router.use((req, res, next) => {
   region = req.headers.host.split(".")[0].replace("http://", "")
   Match = require('../models/match')(region);
+  RiotMatch = require('../riot/match')(region);
   StaticChampion = require('../models/static/champion')(region);
   next();
 })
 
-// GET all Matches (probably not a good idea to use)
-router.get('/', (req, res) => {
-  Match.find()
-    .exec((err, matchs) => {
-      if (err) return res.status(400).json(err)
-      res.status(200).json(matchs)
-    });
-});
+router.get("/initialMatches/:id", (req, res) => {
+  var options = {
+    id: req.params.id,
+    query: "beginIndex=0&endIndex=10&season=13&"
+  }
+  RiotMatch.byAccount(options, matches => {
+    let main = (async function() {
+      await matches.asyncForEach((match, mIndex) => {
+        Match.findOne({gameId: match.gameId}, (err, data) => {
+          if (data) {
+            matches[mIndex] = data;
+            if (10 == mIndex+1) next(req.params.id, matches);
+          } else {
+            RiotMatch.byID(match.gameId, async game => {
+              matches[mIndex] = game;
+              var newMatch = await new Match(game);
+              await newMatch.save((err, match) => {
+                setTimeout(()=>{
+                  if (10 == mIndex+1) next(req.params.id, matches)
+                }, 100)
+              })
+            })
+          }
+        })
+      })
+      // format for profile
+      async function next(id, matches) {
+        await matches.asyncForEach(async (match, i) => {
+          await match.participants.some(p => {
+            if (p.currentAccountId == id) {
+              match.championId = p.championId;
+              match.championName = p.championName;
+              // calculate role;
+              var role = p.timeline.role;
+              var lane = p.timeline.lane;
+              if (role == "DUO_CARRY") {
+                match.role = "ADC"
+              } else if (role == "DUO_SUPPORT") {
+                match.role = "SUPPORT"
+              } else if (role) {
+
+              }
+            }
+            return p.currentAccountId == id
+          })
+        })
+        res.status(200).json(matches)
+      }
+    })();
+  })
+})
+
+
+
 
 // get match by id
 router.get('/:id', (req, res) => {
@@ -59,7 +106,6 @@ router.get('/multi/:id', (req, res) => {
     if (err) {return res.status(400).json(err);}
     res.status(200).json(matches)
   })
-
 })
 
 router.post('/', (req, res) => {
@@ -68,70 +114,23 @@ router.post('/', (req, res) => {
     const start = (async () => {
       var newMatch;
       await req.body.match.participantIdentities.asyncForEach((id, i) => {
-        console.log("merging: "+(i+1))
         req.body.match.participants[i] = {...id.player, ...req.body.match.participants[i]};
       })
       await delete req.body.match.participantIdentities;
       await req.body.match.participants.asyncForEach(async (p, i) => {
-        console.log("saving: "+(i+1))
         var promise = StaticChampion.findOne({key: p.championId}).select("id name").exec()
         await promise.then(champion => {
-          console.log("switching: "+(i+1))
           req.body.match.participants[i].championId = champion.id;
           req.body.match.participants[i].championName = champion.name;
         })
       })
       newMatch = await new Match(req.body.match);
       await newMatch.save((err, match) => {
-        console.log("save")
         if (err) {return region.status(400).json(err);}
         res.status(200).json(match)
       })
     })();
   })
 })
-/**
- * R I O T A P I
- * 
- * 
- * 
- */
-// Find match from api by id
-router.get('/riot/by-id/:id', (req, res) => {
-  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/match/v4/matches/`+
-  `${req.params.id}?api_key=${riot.key}`)
-    .then(data => {
-      var match = JSON.parse(data)
-      res.status(200).json(match)
-    })
-    .catch(err => {
-      res.status(400).json(err)
-    })
-})
 
-router.get('/riot/by-account/:id/:options', (req, res) => {
-  console.log("ran")
-  /** 
-  * OPTIONS***
-  * champion
-  * season
-  * endTime - miliseconds 
-  * beginTime - miliseconds
-  * endIndex
-  * beginIndex
-  * 
-  * format ex: ""?endtime=12&beginTime=0&"
-  **/
-  var options = req.params.options;
-  if (!options) options = "";
-  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/match/v4/matchlists/by-account/`+
-  `${req.params.id}?`+options+`api_key=${riot.key}`)
-    .then(data => {
-      var match = JSON.parse(data)
-      res.status(200).json(match)
-    })
-    .catch(err => {
-      res.status(400).json(err)
-    })
-})
 module.exports = router

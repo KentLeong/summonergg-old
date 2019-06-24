@@ -23,18 +23,16 @@ export class SummonerDetailComponent implements OnChanges {
 
   ngOnChanges() {
     if (!this.summoner) return;
-    if (this.summoner.profile) return this.sortLeagues(this.leagues);
-    //execute if summoner found
-    if (this.summoner.found) return this.getFromLocal();
-
-    this.getFromRiot();
+    if (this.summoner.profile) return;
+    //execute if summoner founds
+    this.getFromLocal();
   }
   
   update() {
+    this.leagues = [];
     this.solo = null;
     this.flex_5v5 = null;
     this.flex_3v3 = null;
-    this.getFromRiot();
   }
   getFromLocal() {
     this.summonerService.leagueSearchByID(this.summoner.id)
@@ -42,22 +40,12 @@ export class SummonerDetailComponent implements OnChanges {
         this.sortLeagues(leagues);
       })
   }
-
-  getFromRiot() {
-    this.summonerService.riotLeagueSearchBySummonerID(this.summoner.id)
-    .subscribe((leagues: any) => {
-      this.sortLeagues(leagues)
-      leagues.forEach(league => {
-        this.summonerService.updateLeague(league)
-          .subscribe(league => {})
-      })
-    })
-  }
   //algo
   sortLeagues(leagues: any[]) {
+    this.leagues = [];
     leagues.forEach((league, i) => {
       league.winRatio = Math.round(100*(league.wins/(league.wins+league.losses)))
-      league.tier = league.tier.toLowerCase();
+      this.leagues.push(league);
       if (league.queueType == "RANKED_SOLO_5x5") {
         this.solo = league
       } else if (league.queueType == "RANKED_FLEX_SR") {

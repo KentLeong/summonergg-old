@@ -4,23 +4,36 @@ var rp = require('request-promise');
 
 
 const riot = require('../riot');
-String.prototype.capitalize = () => {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-}
 
 router.use((req, res, next) => {
   ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   if (ip.substr(0, 7) == "::ffff:") ip = ip.substr(7);
   region = req.headers.host.split(".")[0].replace("http://", "")
   League = require('../models/league')(region);
+  RiotLeague = require('../riot/league')(region);
   next();
 })
 
 //find league by id
 router.get('/:id', (req,res) => {
-  League.find({summonerId: req.params.id}, (err, leagues) => {
-    if (err) return res.status(400).json(err)
-    res.status(200).json(leagues)
+  var id = req.params.id;
+  League.find({summonerId: id}, (err, leagues) => {
+    if (leagues > 0) {
+      res.status(200).json(leagues)
+    } else {
+      RiotLeague.bySummonerID(id, leagues => {
+        if (leagues) {
+          leagues.forEach(league => {
+            //format league
+            var newLeague = new League(league)
+            newLeague.save((err, league) => {})
+          })
+          res.status(200).json(leagues)
+        } else {
+          res.status(400).json("not found")
+        }
+      })
+    }
   })
 })
 
@@ -65,87 +78,5 @@ router.put('/', (req,res) => {
       })
     }
   })
-})
-/**
- * R I O T A P I
- * 
- * 
- * 
- */
-// Find league from api by id
-router.get('/riot/by-id/:id', (req, res) => {
-  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/league/v4/entries/by-summoner/`+
-  `${req.params.id}?api_key=${riot.key}`)
-    .then(data => {
-      var league = JSON.parse(data)
-      res.status(200).json(league)
-    })
-    .catch(err => {
-      res.status(400).json(err)
-    })
-})
-
-//Find division by League id
-router.get('/riot/league/:id', (req, res) => {
-  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/league/v4/leagues/`+
-  `${req.params.id}?api_key=${riot.key}`)
-    .then(data => {
-      var league = JSON.parse(data)
-      res.status(200).json(league)
-    })
-    .catch(err => {
-      res.status(400).json(err)
-    })
-})
-
-//Find whole divison
-router.get('/riot/divison/:queue/:tier/:division', (req, res) => {
-  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/league/v4/entries/`+
-  `${req.params.queue}/${req.params.tier}/${req.params.division}?api_key=${riot.key}`)
-    .then(data => {
-      var divison = JSON.parse(data)
-      res.status(200).json(divison)
-    })
-    .catch(err => {
-      res.status(400).json(err)
-    })
-})
-//Find challenger division by queue type
-router.get('/riot/challenger/:queue', (req, res) => {
-  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/league/v4/challengerleagues/by-queue/`+
-  `${req.params.queue}?api_key=${riot.key}`)
-    .then(data => {
-      var league = JSON.parse(data)
-      res.status(200).json(league)
-    })
-    .catch(err => {
-      res.status(400).json(err)
-    })
-})
-
-//Find challenger division by queue type
-router.get('/riot/grandmaster/:queue', (req, res) => {
-  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/league/v4/grandmasterleagues/by-queue/`+
-  `${req.params.queue}?api_key=${riot.key}`)
-    .then(data => {
-      var league = JSON.parse(data)
-      res.status(200).json(league)
-    })
-    .catch(err => {
-      res.status(400).json(err)
-    })
-})
-
-//Find challenger division by queue type
-router.get('/riot/master/:queue', (req, res) => {
-  rp(`https://${riot.endpoints[region]}.api.riotgames.com/lol/league/v4/masterleagues/by-queue/`+
-  `${req.params.queue}?api_key=${riot.key}`)
-    .then(data => {
-      var league = JSON.parse(data)
-      res.status(200).json(league)
-    })
-    .catch(err => {
-      res.status(400).json(err)
-    })
 })
 module.exports = router

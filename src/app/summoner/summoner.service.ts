@@ -40,7 +40,7 @@ export class SummonerService {
     return this.http.get(this.protocal+"/api/summonerProfiles/"+name);
   }
 
-  newProfile(profile: object) {
+  newProfile(profile: SummonerProfile) {
     return this.http.post(this.protocal+"/api/summonerProfiles/", {profile: profile}, httpOptions)
   }
 
@@ -53,20 +53,8 @@ export class SummonerService {
     return this.http.get(this.protocal+"/api/summoners/"+name);
   }
 
-  newSummoner(summoner: object) {
-    return this.http.post(this.protocal+"/api/summoners/", {summoner: summoner}, httpOptions)
-  }
-
   updateSummoner(summoner: object) {
     return this.http.put(this.protocal+"/api/summoners/", {summoner: summoner}, httpOptions)
-  }
-
-  riotSummonerSearchByName(name: string) {
-    return this.http.get(this.protocal+"/api/summoners/riot/by-name/"+name)
-  }
-
-  riotSummonerSearchByPUUID(id: string) {
-    return this.http.get(this.protocal+"/api/summoners/riot/by-puuid/"+id);
   }
   
   // league
@@ -77,10 +65,6 @@ export class SummonerService {
     return this.http.get(this.protocal+"/api/leagues/"+id)
   }
 
-  riotLeagueSearchBySummonerID(id: string) {
-    return this.http.get(this.protocal+"/api/leagues/riot/by-id/"+id)
-  }
-
   newLeague(league: object) {
     return this.http.post(this.protocal+"/api/leagues/", {league: league}, httpOptions)
   }
@@ -89,25 +73,8 @@ export class SummonerService {
   }
 
   // match
-
-  riotGetMatches(id: string, options: string) {
-    return this.http.get(this.protocal+"/api/matches/riot/by-account/"+id+"/"+options)
-  }
-  
-  riotGetMatchData(id: string) {
-    return this.http.get(this.protocal+"/api/matches/riot/by-id/"+id)
-  }
-
-  getMatches(id: string, options: string) {
-    return this.http.get(this.protocal+"/api/matches/multi/"+id+options)
-  }
-
-  getMatchData(id: string) {
-    return this.http.get(this.protocal+"/api/matches/"+id)
-  }
-
-  newMatch(match: Match) {
-    return this.http.post(this.protocal+"/api/matches/", {match: match}, httpOptions)
+  initMatches(id: string) {
+    return this.http.get(this.protocal+"/api/matches/initialMatches/"+id)
   }
 
   // champion

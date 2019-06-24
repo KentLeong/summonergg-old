@@ -6,10 +6,12 @@ export class SummonerProfile {
   summoner: Summoner;
   leagues: [League];
   matches: [Match];
+  lastUpdated: Date;
+  lastPlayed: String;
 
-  constructor(summoner: Summoner, leagues: [League], matches: [Match]) {
-    this.summoner = summoner;
-    this.leagues = leagues;
-    this.matches = matches;
+  constructor(profile) {
+    this.summoner = profile.summoner;
+    this.leagues = profile.leagues;
+    this.matches = profile.matches;
   }
 }

@@ -27,7 +27,7 @@ router.use((req, res, next) => {
 router.get('/:name', (req, res) => {
   var name = req.params.name.split("").join("\\s*")
   var regex = new RegExp(`^${name}$`, "i")
-  SummonerProfile.findOne({name: regex}, (err, profile) => {
+  SummonerProfile.findOne({'summoner.name': regex}, (err, profile) => {
     if (err) return res.status(500).json(err);
     if (!profile) return res.status(404).json("not found");
     res.status(200).json(profile);
@@ -35,20 +35,20 @@ router.get('/:name', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  var name = req.body.profile.name;
+  var name = req.body.profile.summoner.name;
   var summoner = req.body.profile.summoner;
   var leagues = req.body.profile.leagues;
   var matches = req.body.profile.matches;
 
   var queryName = name.split("").join("\\s*")
   var regex = new RegExp(`^${queryName}$`, "i")
-  SummonerProfile.findOne({name: regex }, (err, profile) => {
+  SummonerProfile.findOne({'summoner.name': regex }, (err, profile) => {
     if (profile) return res.status(400).json("profile exists");
     var newProfile = new SummonerProfile({
-      name: name,
       summoner: summoner,
       leagues: leagues,
-      matchHistory: matches
+      matches: matches,
+      lastUpdated: new Date()
     })
     newProfile.save((err, profile) => {
       if (err) return res.status(400).json(err);
@@ -65,7 +65,7 @@ router.patch('/', (req, res) => {
 
   var queryName = name.split("").join("\\s*")
   var regex = new RegExp(`^${queryName}$`, "i")
-  SummonerProfile.findOne({name: regex }, (err, profile) => {
+  SummonerProfile.findOne({'summoner.name': regex }, (err, profile) => {
     if (!profile) return res.status(400).json("profile doesnt exists");
     profile.name = "";
     profile.summoner = {};

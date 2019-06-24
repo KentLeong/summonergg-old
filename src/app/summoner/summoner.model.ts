@@ -6,6 +6,5 @@ export class Summoner {
   profileIconId: string;
   revisionDate: any;
   summonerLevel: number;
-  found: boolean;
   profile: boolean;
 }
