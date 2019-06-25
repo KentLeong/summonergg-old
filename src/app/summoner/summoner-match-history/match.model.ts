@@ -13,9 +13,15 @@ export class Match {
   teams: team[];
   participants: participant[];
   // indiv
+  victory: string;
+  bg: string;
   championId: string;
   championName: string;
   role: string;
+  spell1: string;
+  spell2: string;
+  perk1: string;
+  perk2: string;
 }
 
 class team {

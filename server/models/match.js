@@ -15,8 +15,14 @@ var schema = new Schema({
   teams: Object,
   participants: Object,
   //for profile
+  victory: String,
   championId: String,
-  championName: String
+  championName: String,
+  role: String,
+  spell1: String,
+  spell2: String,
+  perk1: String,
+  perk2: String
 })
 
 

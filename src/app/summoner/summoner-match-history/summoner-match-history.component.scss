@@ -14,14 +14,15 @@
     height: 11rem;
     margin: 1rem;
     .outcome {
-      width: 2rem;
+      width: 1.5rem;
       height: 100%;
       background-color: lightblue;
       display: inline-block;
       border-radius: .5rem 0 0 .5rem;
-      filter: saturate(1.6);
+      filter: saturate(1);
     }
     .detail {
+      filter: saturate(.7);
       display: inline-block;
       position: absolute;
       font-size: 1.2rem;
@@ -66,6 +67,13 @@
           display: block;
           text-align: center;
           font-weight: 600;
+        }
+      }
+      &__role {
+        display: inline-block;
+        .role {
+          width: 3.5rem;
+          height: 3.5rem;
         }
       }
     }

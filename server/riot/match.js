@@ -59,6 +59,7 @@ module.exports = (region) => {
 
       // switch champion ID to the actual champion
       await match.participants.asyncForEach(async (p, i) => {
+        // get champion key and name
         var promise = StaticChampion.findOne({key: p.championId}).select("id name").exec()
         await promise.then(champion => {
           match.participants[i].championId = champion.id;

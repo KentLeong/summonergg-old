@@ -4,18 +4,21 @@
 
 <div class="games" *ngIf="matches">
   <div class="game" *ngFor="let match of matches">
-    <div class="outcome">
+    <div class="outcome" [ngStyle]="{'background-color': match.bg}">
     </div>
-    <div class="detail">
+    <div class="detail" [ngStyle]="{'background-color': match.bg}">
       <div class="detail__type">
         <span>Ranked Solo</span>
         <span>3 Days ago</span>
-        <span>Victory</span>
+        <span>{{match.victory}}</span>
         <span>29m 37s</span>
       </div>
       <div class="detail__champion">
-        <img src="../../assets/champion/tiles/{{match.championId}}_0.jpg" alt="">
+        <img src="../../assets/champion/tiles/{{match.championId}}_0.jpg" alt="champion">
         <span>{{match.championName}}</span>
+      </div>
+      <div class="detail__role">
+        <img src="../../assets/roles/{{match.role}}.png" alt="role" class="role">
       </div>
     </div>
   </div>

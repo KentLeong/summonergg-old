@@ -43,7 +43,9 @@ router.post('/', (req, res) => {
   var queryName = name.split("").join("\\s*")
   var regex = new RegExp(`^${queryName}$`, "i")
   SummonerProfile.findOne({'summoner.name': regex }, (err, profile) => {
-    if (profile) return res.status(400).json("profile exists");
+    if (profile) {
+      profile.delete();
+    }
     var newProfile = new SummonerProfile({
       summoner: summoner,
       leagues: leagues,

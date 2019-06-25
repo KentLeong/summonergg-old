@@ -18,15 +18,6 @@ router.use((req, res, next) => {
   next();
 })
 
-// GET all Summoners (probably not a good idea to use)
-router.get('/', (req, res) => {
-  Summoner.find()
-    .exec((err, summoners) => {
-      if (err) return res.status(400).json(err)
-      res.status(200).json(summoners)
-    });
-});
-
 // GET name
 router.get('/:name', (req, res) => {
   var name = req.params.name.split("").join("\\s*")

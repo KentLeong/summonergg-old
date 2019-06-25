@@ -47,20 +47,55 @@ router.get("/initialMatches/:id", (req, res) => {
       // format for profile
       async function next(id, matches) {
         await matches.asyncForEach(async (match, i) => {
+          var blueTeamWin
+          if (match.teams[0].win == "Win") {
+            blueTeamWin = true;
+          } else {
+            blueTeamWin = false;
+          }
           await match.participants.some(p => {
             if (p.currentAccountId == id) {
+              //calc game outcome
+              if (p.teamId == 100) {
+                if (blueTeamWin) {
+                  match.victory = "Victory";
+                } else {
+                  match.victory = "Defeat";
+                }
+              } else {
+                if (blueTeamWin) {
+                  match.victory = "Defeat";
+                } else {
+                  match.victory = "Victory";
+                }
+              }
               match.championId = p.championId;
               match.championName = p.championName;
-              // calculate role;
+              // calculate role
               var role = p.timeline.role;
               var lane = p.timeline.lane;
-              if (role == "DUO_CARRY") {
-                match.role = "ADC"
-              } else if (role == "DUO_SUPPORT") {
-                match.role = "SUPPORT"
-              } else if (role) {
-
+              if (lane == "MIDDLE") {
+                match.role = "middle"
+              } else if (lane == "JUNGLE") {
+                match.role = "jungle"
+              } else if (lane == "TOP") {
+                if (role == "DUO_SUPPORT") {
+                  match.role = "support"
+                } else {
+                  match.role = "top"
+                }
+              } else if (lane == "BOTTOM") {
+                if (role == "DUO_SUPPORT") {
+                  match.role = "support"
+                } else {
+                  match.role = "bottom"
+                }
               }
+              // spells and perks
+              match.spell1 = p.spell1Id
+              match.spell2 = p.spell2Id
+              match.perk1 = p.stats.perkPrimaryStyle
+              match.perk2 = p.stats.perkSubStyle
             }
             return p.currentAccountId == id
           })

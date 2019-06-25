@@ -23,16 +23,13 @@ export class SummonerDetailComponent implements OnChanges {
 
   ngOnChanges() {
     if (!this.summoner) return;
-    if (this.summoner.profile) return;
+    if (this.summoner.found == "local") return;
     //execute if summoner founds
+    if (this.summoner.found == "update") return this.update();
     this.getFromLocal();
   }
   
   update() {
-    this.leagues = [];
-    this.solo = null;
-    this.flex_5v5 = null;
-    this.flex_3v3 = null;
   }
   getFromLocal() {
     this.summonerService.leagueSearchByID(this.summoner.id)
