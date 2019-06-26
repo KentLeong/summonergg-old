@@ -19,10 +19,8 @@
       background-color: lightblue;
       display: inline-block;
       border-radius: .5rem 0 0 .5rem;
-      filter: saturate(1);
     }
     .detail {
-      filter: saturate(.7);
       display: inline-block;
       position: absolute;
       font-size: 1.2rem;
@@ -71,9 +69,33 @@
       }
       &__role {
         display: inline-block;
+        vertical-align: middle;
+        margin-left: 1rem;
+        height: 100%;
+        width: 8rem;
+        .role-bg {
+        }
         .role {
-          width: 3.5rem;
-          height: 3.5rem;
+          margin: auto;
+          margin-top: 1rem;
+          width: 4rem;
+          height: 4rem;
+          div {
+            position: absolute;
+            content: '';
+            height: inherit;
+            width: inherit;
+            border-radius: 50%;
+            background-color: white;
+            margin: 0;
+          }
+          img {
+            padding: .4rem;
+            position: absolute;
+            width: inherit;
+            height: inherit;
+            margin: 0;
+          }
         }
       }
     }

@@ -58,7 +58,7 @@ export class SummonerComponent implements OnDestroy {
       .subscribe((profile: SummonerProfile) => {
         let difference = (new Date()).getTime() - new Date(profile.lastUpdated).getTime();
         // 30 minutes
-        this.formatProfile(profile);
+        this.setProfile(profile);
         if (difference > 1800000) {
           this.updateProfile(profile.summoner);
         } else {
@@ -76,13 +76,13 @@ export class SummonerComponent implements OnDestroy {
       })
   }
 
-  formatProfile(profile: SummonerProfile) {
+  setProfile(profile: SummonerProfile) {
     //matches profile
     profile.matches.forEach(match => {
       if (match.victory == "Victory") {
-        match.bg = "lightblue"
+        match.bg = "#bee0eb"
       } else {
-        match.bg = "lightcoral"
+        match.bg = "#f0bcbc"
       }
     })
 
@@ -104,7 +104,7 @@ export class SummonerComponent implements OnDestroy {
     profile.leagues = this.details.leagues
     this.summonerService.newProfile(profile)
       .subscribe((profile: SummonerProfile) => {
-        this.formatProfile(profile)
+        this.setProfile(profile)
       })
   }
 
