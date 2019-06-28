@@ -73,27 +73,25 @@
         margin-left: 1rem;
         height: 100%;
         width: 6  rem;
-        .role {
+        .runes {
           margin: auto;
           margin-top: .5rem;
           width: 5rem;
-          height: 5rem;
-          div {
-            position: absolute;
-            content: '';
-            height: inherit;
-            width: inherit;
+          height: 4rem;
+          &__primary {
             border-radius: 50%;
-            background-color: white;
-            margin: 0;
+            display: block;
+            margin: auto;
           }
+        }
+        .role {
+          margin: auto;
+          margin-top: .5rem;
+          width: 4.5rem;
+          height: 4.5rem;
           img {
-            filter: brightness(4);
-            padding: .4rem;
-            position: absolute;
             width: inherit;
-            height: inherit;
-            margin: 0;
+            filter: brightness(4);
           }
         }
       }

@@ -18,8 +18,11 @@
         <span>{{match.championName}}</span>
       </div>
       <div class="detail__role">
+        <div class="runes">
+          <img src="https://via.placeholder.com/40" alt="" class="runes__primary">
+        </div>
         <div class="role">
-            <img src="../../assets/roles/{{match.role}}.png" alt="role" class="role" *ngIf="match.role">
+          <img src="../../assets/roles/{{match.role}}.png" alt="role" *ngIf="match.role">
         </div>
       </div>
     </div>
