@@ -72,14 +72,12 @@
         vertical-align: middle;
         margin-left: 1rem;
         height: 100%;
-        width: 8rem;
-        .role-bg {
-        }
+        width: 6  rem;
         .role {
           margin: auto;
-          margin-top: 1rem;
-          width: 4rem;
-          height: 4rem;
+          margin-top: .5rem;
+          width: 5rem;
+          height: 5rem;
           div {
             position: absolute;
             content: '';
@@ -90,6 +88,7 @@
             margin: 0;
           }
           img {
+            filter: brightness(4);
             padding: .4rem;
             position: absolute;
             width: inherit;

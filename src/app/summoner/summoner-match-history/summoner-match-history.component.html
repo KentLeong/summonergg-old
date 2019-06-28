@@ -19,8 +19,7 @@
       </div>
       <div class="detail__role">
         <div class="role">
-            <div class="role-bg"></div>
-            <img src="../../assets/roles/{{match.role}}.png" alt="role" class="role">
+            <img src="../../assets/roles/{{match.role}}.png" alt="role" class="role" *ngIf="match.role">
         </div>
       </div>
     </div>
