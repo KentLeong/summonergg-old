@@ -3,26 +3,110 @@
 </div>
 
 <div class="games" *ngIf="matches">
-  <div class="game" *ngFor="let match of matches">
-    <div class="outcome" [ngStyle]="{'background-color': match.bg}">
+  <div class="game" *ngFor="let match of matches" [ngStyle]="{'background-color': match.bg}">
+    <div class="outcome" [ngStyle]="{'backgrou  nd-color': match.bg}">
     </div>
-    <div class="detail" [ngStyle]="{'background-color': match.bg}">
-      <div class="detail__type">
-        <span>Ranked Solo</span>
-        <span>3 Days ago</span>
-        <span>{{match.victory}}</span>
-        <span>29m 37s</span>
+    <div class="type">
+      <span>Ranked Solo</span>
+      <span>3 Days ago</span>
+      <span>{{match.victory}}</span>
+      <span>29m 37s</span>
+    </div>
+
+    <div class="champion">
+      <div class="cimage">
+        <img src="../../assets/champion/tiles/{{match.championId}}_0.jpg" alt="champion" class="cimage__image">
+        <div class="cimage__level">
+          <img src="https://via.placeholder.com/30" alt="">
+          <span>11</span>
+        </div>
       </div>
-      <div class="detail__champion">
-        <img src="../../assets/champion/tiles/{{match.championId}}_0.jpg" alt="champion">
-        <span>{{match.championName}}</span>
+      <span class="champion__name">{{match.championName}}</span>
+    </div>
+
+    <div class="detail">
+      <div class="detail__summoners">
+          <img src="../../assets/summoners/{{match.spell1}}.png" alt="">
+          <img src="../../assets/summoners/{{match.spell2}}.png" alt="">
       </div>
-      <div class="detail__role">
+      <div class="detail__right">
         <div class="runes">
-          <img src="https://via.placeholder.com/40" alt="" class="runes__primary">
+          <img src="https://via.placeholder.com/50" alt="" class="runes__primary">
+          <img src="https://via.placeholder.com/25" alt="" class="runes__secondary">
         </div>
         <div class="role">
           <img src="../../assets/roles/{{match.role}}.png" alt="role" *ngIf="match.role">
+        </div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stats__items">
+        <img src="https://via.placeholder.com/30" alt="">
+        <img src="https://via.placeholder.com/30" alt="">
+        <img src="https://via.placeholder.com/30" alt="">
+        <img src="https://via.placeholder.com/30" alt="">
+        <img src="https://via.placeholder.com/30" alt="">
+        <img src="https://via.placeholder.com/30" alt="">
+        <img src="https://via.placeholder.com/30" alt="">
+      </div>
+      <div class="stats__details">
+        <div class="stat-format">
+          <span>7 / 11 / 3</span>
+          <span>0.91:1 KDA</span>
+          <span>66% k.part</span>
+        </div>
+        <div class="stat-format">
+          <span>Control Wards 2</span>
+          <span>125 (4.5) CS</span>
+          <span>Diamond 2</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="players">
+      <div class="team">
+        <div class="player">
+          <img src="https://via.placeholder.com/18" alt="">
+          <span>bluebirdroller</span>
+        </div>
+        <div class="player">
+          <img src="https://via.placeholder.com/18" alt="">
+          <span>Pass</span>
+        </div>
+        <div class="player">
+          <img src="https://via.placeholder.com/18" alt="">
+          <span>Alan Loves Her</span>
+        </div>
+        <div class="player">
+          <img src="https://via.placeholder.com/18" alt="">
+          <span>Maiden Beckett</span>
+        </div>
+        <div class="player">
+          <img src="https://via.placeholder.com/18" alt="">
+          <span>GreenTeaNoMilk</span>
+        </div>
+      </div>
+      <div class="team">
+        <div class="player">
+          <img src="https://via.placeholder.com/18" alt="">
+          <span>BronzeVg</span>
+        </div>
+        <div class="player">
+          <img src="https://via.placeholder.com/18" alt="">
+          <span>gexxpls</span>
+        </div>
+        <div class="player">
+          <img src="https://via.placeholder.com/18" alt="">
+          <span>Àlexander</span>
+        </div>
+        <div class="player">
+          <img src="https://via.placeholder.com/18" alt="">
+          <span>Mata Dog</span>
+        </div>
+        <div class="player">
+          <img src="https://via.placeholder.com/18" alt="">
+          <span>KatLoL</span>
         </div>
       </div>
     </div>

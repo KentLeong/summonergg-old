@@ -9,92 +9,279 @@
   height: 8rem;
 }
 
-.games {
-  .game {
-    height: 11rem;
-    margin: 1rem;
-    .outcome {
-      width: 1.5rem;
-      height: 100%;
-      background-color: lightblue;
-      display: inline-block;
-      border-radius: .5rem 0 0 .5rem;
-    }
-    .detail {
-      display: inline-block;
+.game {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  background-color: lightblue;
+  border-radius: 0 .5rem .5rem 0;
+  margin-left: .5rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2rem 9rem 9.1rem 9rem 22.5rem auto;
+  grid-template-rows: 12rem;
+  grid-template-areas: "outcome type champion detail stats players"
+}
+
+
+.outcome {
+  grid-area: outcome;
+  border-radius: .5rem 0 0 .5rem;
+  border-right: .3rem #e6ecf0 solid;
+}
+
+.type {
+  grid-area: type;
+  margin: auto;
+  span {
+    display: block;
+    padding-bottom: .4rem;
+  }
+  span:first-child {
+    font-weight: 700;
+  }
+  span:nth-child(3) {
+    padding-top: 1rem;
+    font-weight: 700;
+  }
+  span:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.champion {
+  grid-area: champion;
+  .cimage {
+    display: block;
+    margin-top: .5rem;
+    &__image {
       position: absolute;
-      font-size: 1.2rem;
-      width: 100%;
-      height: 11rem;
-      background-color: lightblue;
-      border-radius: 0 .5rem .5rem 0;
-      margin-left: .5rem;
-      &__type {
-        display: inline-block;
-        text-align: left;
-        vertical-align: middle;
-        margin-left: 1rem;
-        width: 8rem;
-        span {
-          display: block;
-          padding-bottom: .4rem;
-        }
-        span:first-child {
-          font-weight: 700;
-        }
-        span:nth-child(3) {
-          padding-top: 1rem;
-          font-weight: 700;
-        }
-        span:last-child {
-          padding-bottom: 0;
-        }
+      width: 9.2rem;
+      padding: .3rem;
+      border-radius: 50%;
+    }
+    &__level {
+      position: absolute;
+      margin-left: 5.5rem;
+      margin-top: 6rem;
+      img {
+        position: absolute;
+        border-radius: 50%;
       }
-      &__champion {
-        display: inline-block;
-        vertical-align: middle;
-        margin-left: 1rem;
-        padding-top: .6rem;
-        height: 100%;
-        width: 8rem;
-        img {
-          width: 100%;
-          border-radius: 50%;
-        }
-        span {
-          display: block;
-          text-align: center;
-          font-weight: 600;
-        }
-      }
-      &__role {
-        display: inline-block;
-        vertical-align: middle;
-        margin-left: 1rem;
-        height: 100%;
-        width: 6  rem;
-        .runes {
-          margin: auto;
-          margin-top: .5rem;
-          width: 5rem;
-          height: 4rem;
-          &__primary {
-            border-radius: 50%;
-            display: block;
-            margin: auto;
-          }
-        }
-        .role {
-          margin: auto;
-          margin-top: .5rem;
-          width: 4.5rem;
-          height: 4.5rem;
-          img {
-            width: inherit;
-            filter: brightness(4);
-          }
-        }
+      span {
+        margin: auto;
+        position: absolute;
+        width: 3rem;
+        margin-top: .7rem;
+        font-size: 1.4rem;
+        text-align: center;
       }
     }
   }
-} 
+  &__name {
+    display: block;
+    text-align:center;
+    margin-top: 9.8rem;
+  }
+}
+
+.detail {
+  grid-area: detail;
+  margin: auto;
+  margin-left: .3rem;
+  &__summoners {
+    vertical-align: middle;
+    display: inline-block;
+    padding-bottom: 2rem;
+    img { 
+      display: block;
+      width: 2.7rem;
+      height: 2.7rem;
+      border-radius: .3rem;
+    }
+    img:last-child {
+      margin-top: .5rem;
+    }
+  }
+  &__right {
+    width: 5.5rem;
+    height: 9rem;
+    vertical-align: middle;
+    display: inline-block;
+    .runes {
+      height: 5rem;
+      margin-left: .3rem;
+      &__primary {
+        position: absolute;
+        border-radius: 50%;
+      }
+      &__secondary {
+        position: absolute;
+        border-radius: 50%;
+        margin-top: 2.7rem;
+        margin-left: 2.7rem;
+      }
+    }
+    .role {
+      text-align: center;
+      img {
+        width: 4rem;
+      }
+    }
+  }
+}
+
+.stats {
+  grid-area: stats;
+  margin: auto;
+  &__items {
+    display: block;
+    img {
+      margin-left: .2rem;
+      border-radius: .3rem;
+      display: inline;
+    }
+    img:first-child {
+      margin: 0;
+    }
+  }
+  &__details {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    .stat-format {
+      margin-left: 3rem;
+      display: inline-block;
+      text-align: center;
+      span {
+        display: block;
+      }
+    }
+    .stat-format:first-child {
+      margin: 0;
+    }
+  }
+}
+
+.players {
+  grid-area: players;
+  margin: auto;
+  .team {
+    display: inline-block;
+    margin-left: .4rem;
+    .player {
+      display: block;
+      margin: auto;
+      margin-top: .2rem;
+      margin-bottom: .2rem;
+      img, span {
+        font-size: 1.2rem;
+        vertical-align: middle;
+        display: inline;
+      }
+      span {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 8.8rem;
+        height: 1.5rem;
+        margin-left: .2rem;
+      }
+    }
+  }
+}
+
+.more-info {
+  grid-area: more-info;
+  border-left: .1rem grey solid;
+}
+
+// .games {
+//   .game {
+//     height: 11rem;
+//     margin: 1rem;
+//     .outcome {
+//       width: 1.5rem;
+//       height: 100%;
+//       background-color: lightblue;
+//       display: inline-block;
+//       border-radius: .5rem 0 0 .5rem;
+//     }
+//     .detail {
+//       display: inline-block;
+//       position: absolute;
+//       font-size: 1.2rem;
+//       width: 100%;
+//       height: 11rem;
+//       background-color: lightblue;
+//       border-radius: 0 .5rem .5rem 0;
+//       margin-left: .5rem;
+//       &__type {
+//         display: inline-block;
+//         text-align: left;
+//         vertical-align: middle;
+//         margin-left: 1rem;
+//         width: 8rem;
+//         span {
+//           display: block;
+//           padding-bottom: .4rem;
+//         }
+//         span:first-child {
+//           font-weight: 700;
+//         }
+//         span:nth-child(3) {
+//           padding-top: 1rem;
+//           font-weight: 700;
+//         }
+//         span:last-child {
+//           padding-bottom: 0;
+//         }
+//       }
+//       &__champion {
+//         display: inline-block;
+//         vertical-align: middle;
+//         margin-left: 1rem;
+//         padding-top: .6rem;
+//         height: 100%;
+//         width: 8rem;
+//         img {
+//           width: 100%;
+//           border-radius: 50%;
+//         }
+//         span {
+//           display: block;
+//           text-align: center;
+//           font-weight: 600;
+//         }
+//       }
+//       &__role {
+//         display: inline-block;
+//         vertical-align: middle;
+//         margin-left: 1rem;
+//         height: 100%;
+//         width: 6  rem;
+//         .runes {
+//           margin: auto;
+//           margin-top: .5rem;
+//           width: 5rem;
+//           height: 4rem;
+//           &__primary {
+//             border-radius: 50%;
+//             display: block;
+//             margin: auto;
+//           }
+//         }
+//         .role {
+//           margin: auto;
+//           margin-top: .5rem;
+//           width: 4.5rem;
+//           height: 4.5rem;
+//           img {
+//             width: inherit;
+//             filter: brightness(4);
+//           }
+//         }
+//       }
+//     }
+//   }
+// } 

@@ -90,6 +90,7 @@ export class SummonerComponent implements OnDestroy {
     this.matches = profile.matches;
     this.summoner = {...profile.summoner, ...{found: "local"}};
     this.leagues = profile.leagues;
+    console.log(profile)
   }
 
   updateProfile(summoner: Summoner) {
