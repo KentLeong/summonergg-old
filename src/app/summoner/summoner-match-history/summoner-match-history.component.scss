@@ -140,9 +140,6 @@
       border-radius: .3rem;
       display: inline;
     }
-    img:first-child {
-      margin: 0;
-    }
   }
   &__details {
     display: block;
@@ -162,12 +159,12 @@
   }
 }
 
-.players {
+.players {  
   grid-area: players;
   margin: auto;
   .team {
     display: inline-block;
-    margin-left: .4rem;
+    margin-right: .4rem;
     .player {
       display: block;
       margin: auto;
@@ -177,6 +174,11 @@
         font-size: 1.2rem;
         vertical-align: middle;
         display: inline;
+      }
+      img {
+        width: 1.8rem;
+        height: 1.8rem;
+        border-radius: .3rem;
       }
       span {
         display: inline-block;
@@ -188,6 +190,9 @@
         margin-left: .2rem;
       }
     }
+  }
+  .team:last-child {
+    margin-right: .4rem;
   }
 }
 

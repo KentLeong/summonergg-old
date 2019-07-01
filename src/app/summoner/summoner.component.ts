@@ -86,6 +86,7 @@ export class SummonerComponent implements OnDestroy {
       }
     })
 
+      
     this.lastPlayed = 'url("../../assets/champion/splash/'+profile.matches[0].championId+'_0.jpg")'
     this.matches = profile.matches;
     this.summoner = {...profile.summoner, ...{found: "local"}};
