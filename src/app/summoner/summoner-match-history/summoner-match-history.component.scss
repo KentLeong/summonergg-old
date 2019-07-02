@@ -91,7 +91,7 @@
   &__summoners {
     vertical-align: middle;
     display: inline-block;
-    padding-bottom: 2rem;
+    padding-bottom: 3.3rem;
     img { 
       display: block;
       width: 2.7rem;
@@ -133,6 +133,8 @@
 .stats {
   grid-area: stats;
   margin: auto;
+  margin-left: 0;
+  
   &__items {
     display: block;
     img {

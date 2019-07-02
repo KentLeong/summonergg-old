@@ -32,10 +32,6 @@ export class SummonerDetailComponent implements OnChanges {
   update() {
   }
   getFromLocal() {
-    this.summonerService.leagueSearchByID(this.summoner.id)
-      .subscribe((leagues: any) => {
-        this.sortLeagues(leagues);
-      })
   }
   //algo
   sortLeagues(leagues: any[]) {

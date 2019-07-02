@@ -1,25 +1,21 @@
-<div *ngIf="summoner" class="champion-image">
-  <img src="../../assets/champion/splash/{{matches[0].championId}}_0.jpg" alt="">
+<div *ngIf="profile" class="champion-image">
+  <img src="../../assets/champion/splash/{{profile.matches[0].championId}}_0.jpg" alt="">
 </div>
-<div *ngIf="summoner" class="container">
+<div *ngIf="profile" class="container">
   <div class="profile">
     <div class="profile__icon">
-      <img src="../../assets/profileicon/{{summoner.profileIconId}}.png" alt="">
-      <span>{{summoner.summonerLevel}}</span>
+      <img src="../../assets/profileicon/{{profile.summoner.profileIconId}}.png" alt="">
+      <span>{{profile.summoner.summonerLevel}}</span>
     </div>
     <div class="profile__info">
-      <h4>{{summoner.name}}</h4>
+      <h4>{{profile.summoner.name}}</h4>
       <span>Rank 165,556 (top 14.84%)</span>
       <br>
       <button (click)="updateSummoner()">Update</button>
       <button>Live</button>
     </div>
   </div>
-  <app-summoner-detail class="detail"
-                       [summoner]="summoner"
-                       [leagues]="leagues"></app-summoner-detail>
+  <app-summoner-detail class="detail"></app-summoner-detail>
   <app-summoner-match-history class="match-history"
-                              [summoner]="summoner"
-                              [matches]="matches"
                               (matchUpdated)='matchUpdated($event)'></app-summoner-match-history>
 </div>

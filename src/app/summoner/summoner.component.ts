@@ -18,10 +18,8 @@ import { SummonerProfile } from './summonerProfile.model';
 })
 export class SummonerComponent implements OnDestroy {
   navigationSubscription;
+  profile: SummonerProfile;
   summoner: Summoner;
-  leagues: object[]= [];
-  matches: Match[] = [];
-
   // css
   lastPlayed: String = "";
 
@@ -50,64 +48,45 @@ export class SummonerComponent implements OnDestroy {
   }
 
   updateSummoner() {
-    this.updateProfile(this.summoner);
-  }a
+  }
 
   getProfile(name: string) {
     this.summonerService.getProfile(name)
       .subscribe((profile: SummonerProfile) => {
-        let difference = (new Date()).getTime() - new Date(profile.lastUpdated).getTime();
-        // 30 minutes
+        var lastUpdated = new Date(profile.lastUpdated).getTime();
+        let difference = (new Date()).getTime() - lastUpdated;
+
         this.setProfile(profile);
+        // Update profile if 30 minutes past since last update;
         if (difference > 1800000) {
           this.updateProfile(profile.summoner);
-        } else {
         }
       }, err => {
-        this.newProfile(name)
+        this.newSummoner(name)
       })
   }
 
-  newProfile(name: string) {
-    this.summonerService.summonerSearchByName(name)
-      .subscribe((summoner: Summoner) => {
-        if (summoner) return this.summoner = {...summoner, ...{found: "new"}};
-        this.summoner = {...new Summoner(), ...{found: "none"}}
+  newSummoner(name: string) {
+    this.summonerService.newSummoner(name)
+      .subscribe((profile: SummonerProfile) => {
+        this.setProfile(profile)
       })
   }
 
   setProfile(profile: SummonerProfile) {
-    //matches profile
-    profile.matches.forEach(match => {
-      if (match.victory == "Victory") {
-        match.bg = "#bee0eb"
-      } else {
-        match.bg = "#f0bcbc"
-      }
-    })
-
-      
     this.lastPlayed = 'url("../../assets/champion/splash/'+profile.matches[0].championId+'_0.jpg")'
-    this.matches = profile.matches;
-    this.summoner = {...profile.summoner, ...{found: "local"}};
-    this.leagues = profile.leagues;
     console.log(profile)
+    this.profile = profile;
   }
 
   updateProfile(summoner: Summoner) {
-    this.summonerService.updateSummoner(summoner)
-      .subscribe((summoner:Summoner) => {
-        if (summoner) return this.summoner = {...summoner, ...{found: "update"}};
-        this.summoner = {...new Summoner(), ...{profile: "none"}}
-      })
-  }
-
-  matchUpdated(profile: SummonerProfile) {
-    profile.leagues = this.details.leagues
-    this.summonerService.newProfile(profile)
+    this.summonerService.updateProfile(summoner)
       .subscribe((profile: SummonerProfile) => {
         this.setProfile(profile)
       })
+  }
+
+  matchUpdated() {
   }
 
 }

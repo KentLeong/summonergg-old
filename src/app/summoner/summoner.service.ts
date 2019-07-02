@@ -41,45 +41,14 @@ export class SummonerService {
   }
 
   newProfile(profile: SummonerProfile) {
-    return this.http.post(this.protocal+"/api/summonerProfiles/", {profile: profile}, httpOptions)
+    return this.http.post(this.protocal+"/api/summonerProfiles/", {profile: profile}, httpOptions);
   }
 
-  updateProfile(profile: object) {
-    return this.http.patch(this.protocal+"/api/summonerProfiles/", {profile: profile}, httpOptions)
+  updateProfile(summoner: Summoner) {
+    return this.http.patch(this.protocal+"/api/summonerProfiles/", {summoner: summoner}, httpOptions );
   }
 
-  // summoner
-  summonerSearchByName(name: string) {
+  newSummoner(name: string) {
     return this.http.get(this.protocal+"/api/summoners/"+name);
-  }
-
-  updateSummoner(summoner: object) {
-    return this.http.put(this.protocal+"/api/summoners/", {summoner: summoner}, httpOptions)
-  }
-  
-  // league
-  leagueSearchByName(name: string) {
-    return this.http.get(this.protocal+"/api/leagues/by-name/"+name)
-  }
-  leagueSearchByID(id: string) {
-    return this.http.get(this.protocal+"/api/leagues/"+id)
-  }
-
-  newLeague(league: object) {
-    return this.http.post(this.protocal+"/api/leagues/", {league: league}, httpOptions)
-  }
-  updateLeague(league: object) {
-    return this.http.put(this.protocal+"/api/leagues/", {league: league}, httpOptions) 
-  }
-
-  // match
-  initMatches(id: string) {
-    return this.http.get(this.protocal+"/api/matches/initialMatches/"+id)
-  }
-
-  // champion
-
-  getChampionNameByKey(key: number) {
-    return this.http.get(this.protocal+"/api/statics/champion/name-by-key/"+key)
   }
 }
