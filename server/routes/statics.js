@@ -23,11 +23,12 @@ router.use((req, res, next) => {
 
 router.post('/update/champions', async (req, res) => {
   var champions = [];
+  console.log(`${language} champion is being updated...`)
   await DdragonChampion.getList(list => {
     champions = list
   })
-  await champions.asyncForEach(champion => {
-    StaticChampion.findOne({name: champion.name}, (err, old) => {
+  await champions.asyncForEach(async champion => {
+    await StaticChampion.findOne({name: champion.name}, (err, old) => {
       if (old) old.delete();
       var newChampion = new StaticChampion(champion)
       newChampion.save((err, champion)=> {
@@ -38,8 +39,9 @@ router.post('/update/champions', async (req, res) => {
   res.status(200).json(champions)
 })
 
-router.get('/champion/name-by-key/:key', (req, res) => {
-  StaticChampion.findOne({key: req.params.key}).select("id name").exec((err, champion) => {
+router.get('/champion/key/:key', (req, res) => {
+  console.log(req.params.key)
+  StaticChampion.findOne({key: req.params.key}).exec((err, champion) => {
     if (err) return res.status(400).json(err);
     res.status(200).json(champion);
   })

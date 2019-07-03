@@ -7,6 +7,11 @@ const riot = require('../config/riot');
 String.prototype.capitalize = () => {
   return this.charAt(0).toUpperCase() + this.slice(1);
 }
+Array.prototype.asyncForEach = async function(cb) {
+  for(let i=0; i<this.length; i++) {
+    await cb(this[i], i, this)
+  }
+}
 
 var region;
 //models
@@ -23,6 +28,7 @@ var MatchService;
 // riot
 var RiotSummoner;
 var RiotLeague;
+var RiotMatch;
 
 router.use((req, res, next) => {
   region = req.headers.host.split(".")[0].replace("http://", "");
@@ -41,12 +47,15 @@ router.use((req, res, next) => {
   //riot
   RiotSummoner = require("../riot/summoner")(region);
   RiotLeague = require('../riot/league')(region);
+  RiotMatch = require('../riot/match')(region);
   next();
 })
 
 // GET SummonerProfile
 router.get('/:name', (req, res) => {
-  SummonerProfile.findOne({name: req.params.name}, (err, summonerProfile) => {
+  var name = req.params.name.split("").join("\\s*")
+  var regex = new RegExp(`^${name}$`, "i")
+  SummonerProfile.findOne({'summoner.name': regex}, (err, summonerProfile) => {
     if (err) {
       res.status(500).json(err)
     } else if (!summonerProfile) {
@@ -102,6 +111,7 @@ router.put('/', (req, res) => {
 router.post('/generateProfile', async (req, res) => {
   var name = req.body.name;
   var profile = {};
+  profile.matches = [];
 
   // GET Summoner
   // by local
@@ -142,72 +152,23 @@ router.post('/generateProfile', async (req, res) => {
 
     // GET Matches
     // by local
-    await RiotMatch.get()
+    let options = {
+      accountId: profile.summoner.accountId,
+      query: `beginIndex=0&endIndex=10&season=${riot.season}&`
+    }
+    var matches = [];
+    await RiotMatch.getMatches(options, list => {
+      matches = list
+    })
+    if (matches.length > 0) {
+      await matches.asyncForEach(async match => {
+        await RiotMatch.byID(match.gameId, match => {
+          profile.matches.push(match)
+        })
+      })
+    }
   }
   await res.status(200).json(profile)
-})
-
-router.get('/:name', (req, res) => {
-  var name = req.params.name.split("").join("\\s*")
-  var regex = new RegExp(`^${name}$`, "i")
-  SummonerProfile.findOne({'summoner.name': regex}, (err, profile) => {
-    if (err) return res.status(500).json(err);
-    if (!profile) return res.status(404).json("not found");
-    res.status(200).json(profile);
-  })
-})
-
-router.post('/', (req, res) => {
-  var name = req.body.profile.summoner.name;
-  var summoner = req.body.profile.summoner;
-  var leagues = req.body.profile.leagues;
-  var matches = req.body.profile.matches;
-
-  var queryName = name.split("").join("\\s*")
-  var regex = new RegExp(`^${queryName}$`, "i")
-  SummonerProfile.findOne({'summoner.name': regex }, (err, profile) => {
-    if (profile) {
-      profile.delete();
-    }
-    var newProfile = new SummonerProfile({
-      summoner: summoner,
-      leagues: leagues,
-      matches: matches,
-      lastUpdated: new Date()
-    })
-    newProfile.save((err, profile) => {
-      if (err) return res.status(400).json(err);
-      res.status(200).json(profile);
-    })
-  })
-})
-
-router.patch('/', (req, res) => {
-  var name = req.body.profile.name;
-  var summoner = req.body.profile.summoner;
-  var leagues = req.body.profile.leagues;
-  var matches = req.body.profile.matches;
-
-  var queryName = name.split("").join("\\s*")
-  var regex = new RegExp(`^${queryName}$`, "i")
-  SummonerProfile.findOne({'summoner.name': regex }, (err, profile) => {
-    if (!profile) return res.status(400).json("profile doesnt exists");
-    profile.name = "";
-    profile.summoner = {};
-    profile.leagues = [];
-    profile.matchHistory = [];
-    profile.save((err, profile) => {
-      if (err) return res.status(400).json(err);
-      profile.name = name;
-      profile.summoner = summoner;
-      profile.leagues = leagues;
-      profile.matchHistory = matches;
-      profile.save((err, profile) => {
-        if (err) return res.status(400).json(err);
-        return res.status(200).json(profile)
-      })
-    })
-  })
 })
 module.exports = router
 

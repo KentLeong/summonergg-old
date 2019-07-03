@@ -1,6 +1,12 @@
 const axios = require('axios');
 const MatchService = require('./server/service/match')("na");
 const RiotMatch = require('./server/riot/match')("na");
+var await = (async ()=> {
+  var Champion = await require('./server/models/static/champion')("en_US");
+  Champion.findOne({name: "Evelynn"}, (err, champion) => {
+    console.log(champion.name)
+  })
+})();
 
 const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
 async function asyncForEach(array, callback) {
@@ -20,9 +26,8 @@ String.prototype.capitalize = () => {
 }
 var a = [1,2,3,4,5,6,7,8,9,10]
 
-RiotMatch.byID("", match => {
-  console.log(match)
-})
+
+
 // let main = (a.asyncForEach(async num => {
 //   await waitFor(500)
 //   console.log(num)

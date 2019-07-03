@@ -83,6 +83,7 @@ module.exports = {
       "Czech Republic": "cs_CZ"
     }
   },
+  season: 13,
   key: "RGAPI-f56e42ef-0c34-4b99-97c9-b0d2fe42f4e6",
   ver: "9.13.1",
   secondRate: 500,
