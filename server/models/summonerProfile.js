@@ -8,7 +8,6 @@ var schema = new Schema({
   matches: [Object],
   lastUpdated: Date
 })
-module.exports = (region)=> {
-  mongoose.connect("mongodb://localhost:27017/sgg_"+region, {useNewUrlParser: true});
-  return mongoose.model('Summoner_profile', schema);
+module.exports = (mongo)=> {
+  return mongo.model('Summoner_profile', schema);
 }

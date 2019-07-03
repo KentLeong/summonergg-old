@@ -12,7 +12,6 @@ var schema = new Schema({
 
 schema.plugin(uniqueValidator);
 
-module.exports = (region) => {
-  mongoose.connect("mongodb://localhost:27017/sgg_"+region, {useNewUrlParser: true});
-  return mongoose.model('Rate', schema)
+module.exports = (mongo) => {
+  return mongo.model('Rate', schema)
 }

@@ -1,7 +1,6 @@
 const riot = require('../config/riot');
 
 module.exports = (region) => {
-  const static = require('../service/static')(region);
   const client = require('../config/riotClient')(region)
   return {
     async getMatches(options, callback) {
@@ -60,15 +59,6 @@ module.exports = (region) => {
       })      
 
       await delete match.participantIdentities;
-
-      // switch champion ID to the actual champion
-      await match.participants.asyncForEach(async (p, i) => {
-        // get champion key and name
-        await static.getChampionByKey(p.championId, champion => {
-          match.participants[i].championId = champion.id;
-          match.participants[i].championName = champion.name;
-        })
-      })
       return match
     }
   }

@@ -22,7 +22,6 @@ var schema = new Schema({
 })
 
 
-module.exports = (language) => {
-  mongoose.connect("mongodb://localhost:27017/static_"+language, {useNewUrlParser: true});
-  return mongoose.model('champion', schema)
+module.exports = (mongo) => {
+  return mongo.model('champion', schema)
 }
