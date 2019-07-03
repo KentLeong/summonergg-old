@@ -1,4 +1,5 @@
 module.exports = {
   protocal: "http://",
-  host: "localhost.gg"
+  host: "localhost.gg",
+  dev: true
 }

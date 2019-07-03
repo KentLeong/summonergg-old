@@ -54,20 +54,24 @@ export class SummonerComponent implements OnDestroy {
     this.summonerService.getProfile(name)
       .subscribe((profile: SummonerProfile) => {
         var lastUpdated = new Date(profile.lastUpdated).getTime();
-        let difference = (new Date()).getTime() - lastUpdated;
+        let minutes = ((new Date()).getTime() - lastUpdated)/60000;
 
         this.setProfile(profile);
         // Update profile if 30 minutes past since last update;
-        if (difference > 1800000) {
+        if (minutes > 30) {
           this.updateProfile(profile.summoner);
         }
-      }, err => {
-        this.newSummoner(name)
+      }, res => {
+        if (res.error == "not found") {
+          this.newProfile(name)
+        } else {
+          console.error(res) 
+        }
       })
   }
 
-  newSummoner(name: string) {
-    this.summonerService.newSummoner(name)
+  newProfile(name: string) {
+    this.summonerService.newProfile(name)
       .subscribe((profile: SummonerProfile) => {
         this.setProfile(profile)
       })

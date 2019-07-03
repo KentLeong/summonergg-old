@@ -22,30 +22,10 @@ export class SummonerDetailComponent implements OnChanges {
   @Input() summoner: Summoner;
 
   ngOnChanges() {
-    if (!this.summoner) return;
-    if (this.summoner.found == "local") return;
-    //execute if summoner founds
-    if (this.summoner.found == "update") return this.update();
-    this.getFromLocal();
   }
   
   update() {
   }
   getFromLocal() {
-  }
-  //algo
-  sortLeagues(leagues: any[]) {
-    this.leagues = [];
-    leagues.forEach((league, i) => {
-      league.winRatio = Math.round(100*(league.wins/(league.wins+league.losses)))
-      this.leagues.push(league);
-      if (league.queueType == "RANKED_SOLO_5x5") {
-        this.solo = league
-      } else if (league.queueType == "RANKED_FLEX_SR") {
-        this.flex_5v5 = league
-      } else if (league.queueType == "RANKED_FLEX_TT") {
-        this.flex_3v3 = league
-      }
-    })
   }
 }

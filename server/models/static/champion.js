@@ -22,7 +22,7 @@ var schema = new Schema({
 })
 
 
-module.exports = (region) => {
-  mongoose.connect("mongodb://localhost:27017/sgg_"+region, {useNewUrlParser: true});
-  return mongoose.model('Static_champion', schema)
+module.exports = (language) => {
+  mongoose.connect("mongodb://localhost:27017/static_"+language, {useNewUrlParser: true});
+  return mongoose.model('champion', schema)
 }

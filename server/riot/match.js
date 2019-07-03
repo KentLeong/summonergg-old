@@ -1,17 +1,10 @@
-const axios = require('axios');
-var riot = require('../riot');
-
-Array.prototype.asyncForEach = async function(cb) {
-  for(let i=0; i<this.length; i++) {
-    await cb(this[i], i, this)
-  }
-}
 module.exports = (region) => {
-  var StaticChampion = require('../models/static/champion')(region)
+  const client = require('../config/riotClient')(region)
+  const StaticChampion = require('../models/static/champion')(region)
   return {
     async byID(id, callback) {
       try {
-        var res = await axios.get(`https://${riot.endpoints[region]}.api.riotgames.com/lol/match/v4/matches/`+
+        var res = await client.get(`/lol/match/v4/matches/`+
         `${id}?api_key=${riot.key}`)
         var match = res.data
         this.formatMatch(match).then(match => {

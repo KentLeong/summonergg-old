@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var rp = require('request-promise');
-const riot = require('../riot');
+const riot = require('../config/riot');
 
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
@@ -17,6 +17,58 @@ router.use((req, res, next) => {
   RiotMatch = require('../riot/match')(region);
   StaticChampion = require('../models/static/champion')(region);
   next();
+})
+
+// GET Match
+router.get('/:id', (req, res) => {
+  Match.findOne({matchId: req.params.id}, (err, match) => {
+    if (err) {
+      res.status(500).json(err)
+    } else {
+      res.status(200).json(match)
+    }
+  })
+})
+
+// POST Match
+router.post('/', (req, res) => {
+  var newMatch = new Match(req.body.match)
+  Match.findOne({matchId: newMatch.matchId}, (err, match) => {
+    if (match) {
+      res.status(400).json("exists")
+    } else {
+      newMatch.save((err, match) => {
+        if (err) {
+          res.status(500).json(err)
+        } else {
+          res.status(200).json(match)
+        }
+      })
+    }
+  })
+})
+
+// DELETE Match
+router.delete('/:id', (req, res) => {
+  Match.findOneAndDelete({matchId: req.params.id}, (err, match) => {
+    if (err) {
+      res.status(500).json("could not delete")
+    } else {
+      res.status(200).json("deleted")
+    }
+  })
+})
+
+// PUT match
+router.put('/', (req, res) => {
+  var match = req.body.match
+  Match.findOneAndUpdate({matchId: match.matchId}, match, {new: true}, (err, match) => {
+    if (err) {
+      res.status(500).json(err)
+    } else {
+      res.status(200).json(match)
+    }
+  })
 })
 
 router.get("/initialMatches/:id", (req, res) => {

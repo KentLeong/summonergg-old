@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const riot = require('../riot');
+const riot = require('../config/riot');
 String.prototype.capitalize = () => {
   return this.charAt(0).toUpperCase() + this.slice(1);
 }

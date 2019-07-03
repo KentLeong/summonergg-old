@@ -1,45 +1,42 @@
-var rp = require('request-promise');
-var riot = require('../riot');
+const riot = require('../config/riot')
 module.exports = (region) => {
-  var region = riot.endpoints[region];
+  var client = require('../config/riotClient')(region);
   return {
-    getByName(name, callback) {
-      rp(`https://${region}.api.riotgames.com/lol/summoner/v4/summoners/by-name/`+
-      `${encodeURI(name)}?api_key=${riot.key}`)
-        .then(data => {
-          var summoner = JSON.parse(data);
-          callback(summoner);
-        })
-        .catch(err => {callback(false)})
+    async getByName(name, callback) {
+      try {
+        var res = await client.get(`/lol/summoner/v4/summoners/by-name/`+
+        `${encodeURI(name)}?api_key=${riot.key}`)
+        callback(res.data)
+      } catch(err) {
+        callback(false)
+      }
     },
-    getByAccountID(id, callback) {
-      rp(`https://${region}.api.riotgames.com/lol/summoner/v4/summoners/by-account/`+
-      `${id}?api_key=${riot.key}`)
-        .then(data => {
-          var summoner = JSON.parse(data);
-          callback(summoner);
-        })
-        .catch(err => {callback(false)})
-
+    async getByAccountID(id, callback) {
+      try {
+        var res = await client.get(`/lol/summoner/v4/summoners/by-account/`+
+        `${id}?api_key=${riot.key}`)
+        callback(res.data)
+      } catch(err) {
+        calllback(false)
+      }
     },
-    getByPUUID(id, callback) {
-      rp(`https://${region}.api.riotgames.com/lol/summoner/v4/summoners/by-account/`+
-      `${id}?api_key=${riot.key}`)
-        .then(data => {
-          var summoner = JSON.parse(data);
-          callback(summoner);
-        })
-        .catch(err => {callback(false)})
-
+    async getByPUUID(id, callback) {
+      try {
+        var res = await client.get(`/lol/summoner/v4/summoners/by-PUUID/`+
+        `${id}?api_key=${riot.key}`)
+        callback(res.data)
+      } catch(err) {
+        calllback(false)
+      }
     },
-    getBySummonerID(id, callback){
-      rp(`https://${region}.api.riotgames.com/lol/summoner/v4/summoners/by-account/`+
-      `${id}?api_key=${riot.key}`)
-        .then(data => {
-          var summoner = JSON.parse(data);
-          callback(summoner);
-        })
-        .catch(err => {callback(false)})
+    async getBySummonerID(id, callback){
+      try {
+        var res = await client.get(`/lol/summoner/v4/summoners/by-summoner/`+
+        `${id}?api_key=${riot.key}`)
+        callback(res.data)
+      } catch(err) {
+        calllback(false)
+      }
     }
   }
 }

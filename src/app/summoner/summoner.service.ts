@@ -40,15 +40,11 @@ export class SummonerService {
     return this.http.get(this.protocal+"/api/summonerProfiles/"+name);
   }
 
-  newProfile(profile: SummonerProfile) {
-    return this.http.post(this.protocal+"/api/summonerProfiles/", {profile: profile}, httpOptions);
+  newProfile(name: string) {
+    return this.http.post(this.protocal+"/api/summonerProfiles/generateProfile", {name: name}, httpOptions);
   }
 
   updateProfile(summoner: Summoner) {
     return this.http.patch(this.protocal+"/api/summonerProfiles/", {summoner: summoner}, httpOptions );
-  }
-
-  newSummoner(name: string) {
-    return this.http.get(this.protocal+"/api/summoners/"+name);
   }
 }
