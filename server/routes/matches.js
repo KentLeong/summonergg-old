@@ -1,7 +1,6 @@
 module.exports = (main, static) => {
   var express = require('express');
   var router = express.Router();
-  var rp = require('request-promise');
   const riot = require('../config/riot');
   
   Array.prototype.asyncForEach = async function(cb) {
@@ -22,7 +21,7 @@ module.exports = (main, static) => {
   
   // GET Match
   router.get('/:id', (req, res) => {
-    Match.findOne({matchId: req.params.id}, (err, match) => {
+    Match.findOne({gameId: req.params.id}, (err, match) => {
       if (err) {
         res.status(500).json(err)
       } else {
@@ -34,7 +33,7 @@ module.exports = (main, static) => {
   // POST Match
   router.post('/', (req, res) => {
     var newMatch = new Match(req.body.match)
-    Match.findOne({matchId: newMatch.matchId}, (err, match) => {
+    Match.findOne({gameId: newMatch.gameId}, (err, match) => {
       if (match) {
         res.status(400).json("exists")
       } else {

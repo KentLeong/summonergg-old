@@ -1,9 +1,10 @@
+const log = require('../config/log');
 module.exports = (language) => {
   var ddragon = require('../config/ddragonClient')(language);
 
   return {
     async getList(callback) {
-      console.log("run")
+      log('Retrieving champion list..', 'info')
       try {
         var res = await ddragon.get('/champion.json')
         var nameList = res.data.data
@@ -11,9 +12,10 @@ module.exports = (language) => {
         await Object.keys(nameList).forEach(champion => {
           championList.push(nameList[champion])
         })
+        log('Retrieved champion list', 'success')
         callback(championList)
       } catch(err) {
-        console.error(err)
+        log('could not get champion list', 'error')
       }
     }
   }

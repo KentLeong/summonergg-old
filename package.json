@@ -20,6 +20,7 @@
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
     "axios": "^0.19.0",
+    "chalk": "^2.4.2",
     "core-js": "^2.5.4",
     "express": "^4.16.4",
     "fs": "0.0.1-security",

@@ -1,4 +1,4 @@
-const config = require('../../config');
+const log = require('../config/log');
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
     await cb(this[i], i, this)
@@ -12,20 +12,20 @@ module.exports = (region) => {
     async updateChampionList(language) {
       try {
         var res = await local.post(`/statics/update/champions?language=${language}`)
+        log('Updated champion list for '+language, 'success')
         callback(res.data)
       } catch(err) {
-        if (err.response.data == []) {
-          if (config.dev) console.error(`error: champion list was not updated for ${language}: service/static updateChampionList()`)
-        }
+        log('Failed to update champion list for '+language, 'error')
         callback(false)
       }
     },
     async getChampionByKey(key, callback) {
       try {
         var res = await local.get(`/statics/champion/key/${key}?language=${language}`)
+        log(`${res.data.name} was retrived from static assets ${language}`, 'success')
         callback(res.data)
       } catch(err) {
-        console.log(err)
+        log(`Failed to find ${key} from ${language} static data`, 'error')
         callback(false)
       }
     }

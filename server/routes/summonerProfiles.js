@@ -1,7 +1,8 @@
+const log = require('../config/log');
+
 module.exports = (main, static) => {
   var express = require('express');
   var router = express.Router();
-  var rp = require('request-promise');
   
   
   const riot = require('../config/riot');
@@ -25,6 +26,7 @@ module.exports = (main, static) => {
   var SummonerService;
   var LeagueService;
   var MatchService;
+  var SummonerProfileService;
   
   // riot
   var RiotSummoner;
@@ -44,6 +46,7 @@ module.exports = (main, static) => {
     SummonerService = require('../service/summoner')(region);
     LeagueService = require('../service/league')(region);
     MatchService = require('../service/match')(region);
+    SummonerProfileService = require('../service/summonerProfile')(region);
   
     //riot
     RiotSummoner = require("../riot/summoner")(region);
@@ -70,7 +73,7 @@ module.exports = (main, static) => {
   // POST SummonerProfile
   router.post('/', (req, res) => {
     var newSummonerProfile = new SummonerProfile(req.body.summonerProfile)
-    SummonerProfile.findOne({summonerId: newSummonerProfile.summonerId}, (err, summonerProfile) => {
+    SummonerProfile.findOne({'summoner.accountId': newSummonerProfile.summoner.accountId}, (err, summonerProfile) => {
       if (summonerProfile) {
         res.status(400).json("exists")
       } else {
@@ -87,7 +90,7 @@ module.exports = (main, static) => {
   
   // DELETE SummonerProfile
   router.delete('/:id', (req, res) => {
-    SummonerProfile.findOneAndDelete({summonerId: req.params.id}, (err, summonerProfile) => {
+    SummonerProfile.findOneAndDelete({'summoner.accountId': req.params.id}, (err, summonerProfile) => {
       if (err) {
         res.status(500).json("could not delete")
       } else {
@@ -109,67 +112,110 @@ module.exports = (main, static) => {
   })
   
   // Generate New Profile
-  router.post('/generateProfile', async (req, res) => {
+  router.post('/generateProfile', async (req, res) => { 
     var name = req.body.name;
+    var profileFound = false;
     var profile = {};
+
     profile.matches = [];
   
-    // GET Summoner
-    // by local
-    await SummonerService.getByName(name, async(summoner) => {
-      if (summoner) profile.summoner = summoner;
+    await SummonerProfileService.get(name, profile => {
+      if (profile) profileFound = true;
     })
-    if (!profile.summoner) {
-      // by riot
-      await RiotSummoner.getByName(name, summoner => {
-        if (summoner) {
-          profile.summoner = summoner;
-          SummonerService.new(summoner);
-        }
-      })
-    }
-    if (!profile.summoner) {
-      res.status(400).json("summoner does not exist")
+    
+    if (profileFound) {        
+      log(`Summoner Profile exists, profile generation aborted`, 'warning')
+      res.status(400).json('exists')
     } else {
-      /**
-       * Finds League and Matches if Summoner is found
-       */
-      // GET League
+        // GET Summoner
       // by local
-      await LeagueService.getByName(name, leagues => {
-        if (leagues) profile.leagues = leagues
+      log(`Generating ${name} profile..`, "info")
+      log(`Retrieving summoner data..`, "info")
+      await SummonerService.getByName(name, async(summoner) => {
+        if (summoner) {
+          profile.summoner = summoner
+        };
       })
-      if (!profile.leagues) {
+      if (!profile.summoner) {
         // by riot
-        await RiotLeague.bySummonerID(profile.summoner.id, leagues => {
-          if (leagues) {
-            profile.leagues = leagues;
-            leagues.forEach(league => {
-              LeagueService.new(league);
-            })
+        await RiotSummoner.getByName(name, summoner => {
+          if (summoner) {
+            profile.summoner = summoner;
+            SummonerService.new(summoner);
           }
         })
       }
-  
-      // GET Matches
-      // by local
-      let options = {
-        accountId: profile.summoner.accountId,
-        query: `beginIndex=0&endIndex=10&season=${riot.season}&`
-      }
-      var matches = [];
-      await RiotMatch.getMatches(options, list => {
-        matches = list
-      })
-      if (matches.length > 0) {
-        await matches.asyncForEach(async match => {
-          await RiotMatch.byID(match.gameId, match => {
-            profile.matches.push(match)
-          })
+      if (!profile.summoner) {
+        res.status(400).json("summoner does not exist")
+      } else {
+        /**
+         * Finds League and Matches if Summoner is found
+         */
+        // GET League
+        // by local
+        log(`Retrieving league data..`, "info")
+        await LeagueService.getByName(name, leagues => {
+          if (leagues) {
+            profile.leagues = leagues
+          }
         })
+        if (!profile.leagues) {
+          // by riot
+          await RiotLeague.bySummonerID(profile.summoner.id, leagues => {
+            if (leagues) {
+              profile.leagues = leagues;
+              leagues.forEach(league => {
+                LeagueService.new(league);
+              })
+            }
+          })
+        }
+    
+        // GET Matches
+        // by local
+        log('Retrieving last 10 matches from riot..', 'info')
+        let options = {
+          accountId: profile.summoner.accountId,
+          query: `beginIndex=0&endIndex=10&season=${riot.season}&`
+        }
+        var matches = [];
+        await RiotMatch.getMatches(options, list => {
+          matches = list
+        })
+        if (matches.length > 0) {
+          // get each match data
+          await matches.asyncForEach(async data => {
+            var found = false
+            await MatchService.getById(data.gameId, async match => {
+              if (match){
+                profile.matches.push(match);
+                found = true
+              }
+            })
+            if (!found) {
+              await RiotMatch.byID(data.gameId, match => {
+                if (match) {
+                  MatchService.new(match)
+                  profile.matches.push(match);
+                };
+              })
+            } 
+          })
+          // format match for summoner profile
+          log(`Formating matches for profile..`, 'info')
+          await SummonerProfileService.formatMatches(profile.summoner, profile.matches, matches => {
+            profile.matches = matches
+          })
+        }
+      }
+      if (profile.summoner) {
+        log('Saving '+profile.summoner.name+' summoner profile..', 'info')
+        SummonerProfileService.new(profile);
+        res.status(200).json(profile)
+      } else {
+        res.status(400).json("not found")
       }
     }
-    await res.status(200).json(profile)
   })
   return router
 }

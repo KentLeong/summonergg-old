@@ -1,7 +1,6 @@
 module.exports = (main, static) => {
   var express = require('express');
   var router = express.Router();
-  var rp = require('request-promise');
   
   const riot = require('../config/riot');
   String.prototype.capitalize = () => {

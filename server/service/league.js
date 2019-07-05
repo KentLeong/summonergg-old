@@ -1,4 +1,5 @@
-const config = require('../../config');
+const log = require('../config/log');
+
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
     await cb(this[i], i, this)
@@ -11,20 +12,19 @@ module.exports = (region) => {
     async getByName(name, callback) {
       try {
         var res = await local.get(`/leagues/name/${name}`)
+        log(`Found league for ${name}!`, 'success')
         callback(res.data)
       } catch(err) {
-        if (err.response.data == []) {
-          if (config.dev) console.error(`error: no leagues found for ${name}: service/league getByName()`)
-        }
+        log(`League not found for ${name}`, "warning")
         callback(false)
       }
     },
     async new(league) {
       try {
         var res = await local.post('/leagues/', {league: league})
-        if (config.dev) console.log("league created")
+        log(`League for ${league.summonerName} was created`, 'success')
       } catch(err) {
-        if (config.dev) console.error(err)
+        log('Failed to save League for '+league.summonerName, 'error')
       }
     }
   }
