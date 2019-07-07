@@ -57,6 +57,7 @@ module.exports = (main, static) => {
   
   // GET SummonerProfile
   router.get('/:name', (req, res) => {
+    var language = req.query.language;
     var name = req.params.name.split("").join("\\s*")
     var regex = new RegExp(`^${name}$`, "i")
     SummonerProfile.findOne({'summoner.name': regex}, (err, summonerProfile) => {
@@ -65,7 +66,9 @@ module.exports = (main, static) => {
       } else if (!summonerProfile) {
         res.status(400).json("not found")
       } else {
-        res.status(200).json(summonerProfile)
+        SummonerProfileService.translate(summonerProfile, language, profile => {
+          res.status(200).json(profile)
+        })
       }
     })
   })
@@ -210,8 +213,14 @@ module.exports = (main, static) => {
       }
       if (profile.summoner) {
         log('Saving '+profile.summoner.name+' summoner profile..', 'info')
-        SummonerProfileService.new(profile);
-        res.status(200).json(profile)
+        await SummonerProfileService.new(profile);
+        if (profile.matches.length > 0) {
+          await SummonerProfileService.translate(profile, "Russian", profile => {
+            res.status(200).json(profile)
+          })
+        } else {
+          res.status(200).json(profile)
+        }
       } else {
         res.status(400).json("not found")
       }

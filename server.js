@@ -41,12 +41,6 @@ var connnect = (async () => {
     console.log(endPoint+" connected")
   })
 
-  // connect to static mongo db
-  await Object.keys(languages).asyncForEach(async (language, i) => {
-    static[language] = await mongoose.createConnection("mongodb://localhost:27017/static_"+language, {useNewUrlParser: true})
-    console.log("static_"+language+" connected")
-  })
-
   fs.readdir("./server/routes", (err, files) => {
     if (err) return console.error(err);
     files.forEach(file => {

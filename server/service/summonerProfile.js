@@ -1,4 +1,5 @@
 const log = require('../config/log');
+const champions = require('../static/champions');
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
     await cb(this[i], i, this)
@@ -6,6 +7,7 @@ Array.prototype.asyncForEach = async function(cb) {
 }
 module.exports = (region) => {
   var local = require('../config/localClient')(region);
+  var static = require('./static')(region)
   return {
     async get(name, callback) {
       try {
@@ -50,6 +52,11 @@ module.exports = (region) => {
             matches[i].goldEarned = part.stats.goldEarned;
             matches[i].mainPerk = part.stats.perk0;
             matches[i].secondaryPerk = part.stats.perkSubStyle;
+            if (part.teamId == 100 && match.teams[0].win == "Win") {
+              matches[i].outcome = "Victory";
+            } else {
+              matches[i].outcome = "Defeat";
+            }
           }
           delete part.stats;
           delete part.timeline;
@@ -58,6 +65,22 @@ module.exports = (region) => {
         })
       })
       callback(matches)
+    },
+    async translate(profile, language, callback) {
+      await profile.matches.asyncForEach(async (match, i) => {
+        let key = match.championId;
+        profile.matches[i].championId = {
+          id: champions[language][key].id,
+          name: champions[language][key].name
+        }
+        await match.participants.asyncForEach(async (part, p) => {
+          profile.matches[i].participants[p].championId = {
+            id: champions[language][key].id,
+            name: champions[language][key].name
+          }
+        })
+      })
+      callback(profile)
     }
   }
 }

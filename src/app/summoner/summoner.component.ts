@@ -51,7 +51,7 @@ export class SummonerComponent implements OnDestroy {
   }
 
   getProfile(name: string) {
-    this.summonerService.getProfile(name)
+    this.summonerService.getProfile(name, "English")
       .subscribe((profile: SummonerProfile) => {
         var lastUpdated = new Date(profile.lastUpdated).getTime();
         let minutes = ((new Date()).getTime() - lastUpdated)/60000;

@@ -5,11 +5,10 @@ Array.prototype.asyncForEach = async function(cb) {
   }
 }
 
-module.exports = (region) => {
+module.exports = (region, language) => {
   var local = require('../config/localClient')(region);
-  var language = "en_US"
   return {
-    async updateChampionList(language) {
+    async updateChampionList() {
       try {
         var res = await local.post(`/statics/update/champions?language=${language}`)
         log('Updated champion list for '+language, 'success')

@@ -36,8 +36,8 @@ export class SummonerService {
   }
 
   // profile
-  getProfile(name: string) {
-    return this.http.get(this.protocal+"/api/summonerProfiles/"+name);
+  getProfile(name: string, language: string) {
+    return this.http.get(this.protocal+"/api/summonerProfiles/"+name+"?language="+language);
   }
 
   newProfile(name: string) {

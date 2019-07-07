@@ -15,7 +15,6 @@ module.exports = (main, static) => {
     region = req.headers.host.split(".")[0].replace("http://", "")
     Match = require('../models/match')(main[region]);
     RiotMatch = require('../riot/match')(main[region]);
-    StaticChampion = require('../models/static/champion')(static["English"]);
     next();
   })
   
@@ -204,13 +203,6 @@ module.exports = (main, static) => {
           req.body.match.participants[i] = {...id.player, ...req.body.match.participants[i]};
         })
         await delete req.body.match.participantIdentities;
-        await req.body.match.participants.asyncForEach(async (p, i) => {
-          var promise = StaticChampion.findOne({key: p.championId}).select("id name").exec()
-          await promise.then(champion => {
-            req.body.match.participants[i].championId = champion.id;
-            req.body.match.participants[i].championName = champion.name;
-          })
-        })
         newMatch = await new Match(req.body.match);
         await newMatch.save((err, match) => {
           if (err) {return region.status(400).json(err);}
