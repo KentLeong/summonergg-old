@@ -18,8 +18,7 @@ export class SummonerDetailComponent implements OnChanges {
     private summonerService: SummonerService
   ) { }
 
-  @Input() leagues: Object[];
-  @Input() summoner: Summoner;
+  @Input() leagues: any;
 
   ngOnChanges() {
   }

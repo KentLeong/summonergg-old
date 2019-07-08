@@ -12,17 +12,17 @@ import { TemplateParseError } from '@angular/compiler';
   styleUrls: ['./summoner-match-history.component.scss']
 })
 export class SummonerMatchHistoryComponent implements OnChanges {
-  matches: Match[] = [];
-  
 
   constructor(
     private summonerService: SummonerService
   ) { }
   
   @Input() profile: SummonerProfile;
+  @Input() matches: any[];
   @Output() matchUpdated = new EventEmitter();
 
   ngOnChanges() {
+    console.log(this.matches)
   }
 
   initMatches() {

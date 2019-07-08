@@ -19,6 +19,14 @@ module.exports = (region) => {
         callback(false)
       }
     },
+    async update(profile) {
+      try {
+        var res = await local.put('/summonerProfiles/', {summonerProfile: profile})
+        log(`${profile.summoner.name} summoner profile was updated`, 'success')
+      } catch(err) {
+        log(`${profile.summoner.name} summoner profile was not created`, 'error')
+      }
+    },
     async new(profile) {
       try {
         var res = await local.post('/summonerProfiles/', {summonerProfile: profile})
@@ -74,6 +82,7 @@ module.exports = (region) => {
           name: champions[language][key].name
         }
         await match.participants.asyncForEach(async (part, p) => {
+          let key = part.championId;
           profile.matches[i].participants[p].championId = {
             id: champions[language][key].id,
             name: champions[language][key].name

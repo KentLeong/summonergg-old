@@ -103,6 +103,7 @@
     }
   }
   &__right {
+    margin-left: .3rem;
     width: 5.5rem;
     height: 9rem;
     vertical-align: middle;
@@ -111,15 +112,29 @@
       height: 5rem;
       margin-left: .3rem;
       &__primary {
+        width: 4rem;
         position: absolute;
         border-radius: 50%;
+        background-color: black;
       }
       &__secondary {
+        padding: .2rem;
+        width: 2.5rem;
         position: absolute;
         border-radius: 50%;
-        margin-top: 2.7rem;
-        margin-left: 2.7rem;
+        margin-top: 2rem;
+        margin-left: 2rem;
       }
+      &__back {
+        display: inline-block;
+        background-color: black;
+        border: .2rem black solid;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        margin-top: 2rem;
+        margin-left: 2rem;
+      };
     }
     .role {
       text-align: center;
@@ -137,10 +152,20 @@
   
   &__items {
     display: block;
-    img {
+    div {
       margin-left: .2rem;
       border-radius: .3rem;
       display: inline;
+    }
+    div:first-child {
+      margin-left: 0;
+    }
+    .trinket {
+      margin-left: .2rem;
+    }
+    img {
+      width: 2.9rem;
+      border-radius: .3rem;
     }
   }
   &__details {

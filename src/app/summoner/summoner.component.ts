@@ -58,36 +58,27 @@ export class SummonerComponent implements OnDestroy {
 
         this.setProfile(profile);
         // Update profile if 30 minutes past since last update;
-        if (minutes > 30) {
-          this.updateProfile(profile.summoner);
-        }
+        if (minutes > 60) this.generateProfile(name);
       }, res => {
         if (res.error == "not found") {
-          this.newProfile(name)
+          this.generateProfile(name)
         } else {
           console.error(res) 
         }
       })
   }
 
-  newProfile(name: string) {
-    this.summonerService.newProfile(name)
+  generateProfile(name: string) {
+    this.summonerService.generateProfile(name)
       .subscribe((profile: SummonerProfile) => {
         this.setProfile(profile)
       })
   }
 
   setProfile(profile: SummonerProfile) {
-    this.lastPlayed = 'url("../../assets/champion/splash/'+profile.matches[0].championId+'_0.jpg")'
+    this.lastPlayed = 'url("../../assets/champion/splash/'+profile.matches[0].championId.id+'_0.jpg")'
     console.log(profile)
     this.profile = profile;
-  }
-
-  updateProfile(summoner: Summoner) {
-    this.summonerService.updateProfile(summoner)
-      .subscribe((profile: SummonerProfile) => {
-        this.setProfile(profile)
-      })
   }
 
   matchUpdated() {

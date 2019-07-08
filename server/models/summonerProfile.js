@@ -6,7 +6,7 @@ var schema = new Schema({
   summoner: Object,
   leagues: [Object],
   matches: [Object],
-  lastUpdated: Date
+  lastUpdated: {type: Date, default: Date.now()}
 })
 module.exports = (mongo)=> {
   return mongo.model('Summoner_profile', schema);

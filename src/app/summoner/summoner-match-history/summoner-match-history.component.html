@@ -4,35 +4,36 @@
 
 <div class="games" *ngIf="matches">
   <div class="game" *ngFor="let match of matches" [ngStyle]="{'background-color': match.bg}">
-    <div class="outcome" [ngStyle]="{'backgrou  nd-color': match.bg}">
+    <div class="outcome" [ngStyle]="{'background-color': match.bg}">
     </div>
     <div class="type">
       <span>Ranked Solo</span>
       <span>3 Days ago</span>
-      <span>{{match.victory}}</span>
+      <span>{{match.outcome}}</span>
       <span>29m 37s</span>
     </div>
 
     <div class="champion">
       <div class="cimage">
-        <img src="../../assets/champion/tiles/{{match.championId}}_0.jpg" alt="champion" class="cimage__image">
+        <img src="../../assets/champion/tiles/{{match.championId.id}}_0.jpg" alt="champion" class="cimage__image">
         <div class="cimage__level">
           <img src="https://via.placeholder.com/30" alt="">
-          <span>11</span>
+          <span>{{match.champLevel}}</span>
         </div>
       </div>
-      <span class="champion__name">{{match.championName}}</span>
+      <span class="champion__name">{{match.championId.name}}</span>
     </div>
 
     <div class="detail">
       <div class="detail__summoners">
-          <img src="../../assets/summoners/{{match.spell1}}.png" alt="">
-          <img src="../../assets/summoners/{{match.spell2}}.png" alt="">
+          <img src="../../assets/summoners/{{match.spell1Id}}.png" alt="">
+          <img src="../../assets/summoners/{{match.spell2Id}}.png" alt="">
       </div>
       <div class="detail__right">
         <div class="runes">
-          <img src="https://via.placeholder.com/50" alt="" class="runes__primary">
-          <img src="https://via.placeholder.com/25" alt="" class="runes__secondary">
+          <img src="../../assets/runes/{{match.mainPerk}}.png" alt="" class="runes__primary">
+          <img src="../../assets/runes/{{match.secondaryPerk}}.png" alt="" class="runes__secondary">
+          <div class="runes__back"></div>
         </div>
         <div class="role">
           <img src="../../assets/roles/{{match.role}}.png" alt="role" *ngIf="match.role">
@@ -41,25 +42,22 @@
     </div>
 
     <div class="stats">
-      <div class="stats__items">
-        <img src="https://via.placeholder.com/29" alt="">
-        <img src="https://via.placeholder.com/29" alt="">
-        <img src="https://via.placeholder.com/29" alt="">
-        <img src="https://via.placeholder.com/29" alt="">
-        <img src="https://via.placeholder.com/29" alt="">
-        <img src="https://via.placeholder.com/29" alt="">
-        <img src="https://via.placeholder.com/29" alt="">
+      <div class="stats__items" >
+        <div *ngFor="let item of match.items">
+          <img src="../../assets/item/{{item}}.png" alt="">
+        </div>
+        <img src="../../assets/item/{{match.trinket}}.png" alt="" class="trinket">
       </div>
       <div class="stats__details">
         <div class="stat-format">
-          <span>7 / 11 / 3</span>
+          <span>{{match.kills}} / {{match.deaths}} / {{match.assists}}</span>
           <span>0.91:1 KDA</span>
           <span>66% k.part</span>
         </div>
         <div class="stat-format">
-          <span>Control Wards 2</span>
+          <span>Control Wards {{match.vision}}</span>
           <span>125 (4.5) CS</span>
-          <span>Diamond 2</span>
+          <span></span>
         </div>
       </div>
     </div>
@@ -67,45 +65,45 @@
     <div class="players">
       <div class="team">
         <div class="player">
-          <img src="../../assets/champion/square/{{match.participants[0].championId}}.png" alt="">
+          <img src="../../assets/champion/square/{{match.participants[0].championId.id}}.png" alt="">
           <span routerLink="/summoner/{{match.participants[0].summonerName}}">{{match.participants[0].summonerName}}</span>
         </div>
         <div class="player">
-          <img src="../../assets/champion/square/{{match.participants[1].championId}}.png" alt="">
+          <img src="../../assets/champion/square/{{match.participants[1].championId.id}}.png" alt="">
           <span>{{match.participants[1].summonerName}}</span>
         </div>
         <div class="player">
-          <img src="../../assets/champion/square/{{match.participants[2].championId}}.png" alt="">
+          <img src="../../assets/champion/square/{{match.participants[2].championId.id}}.png" alt="">
           <span>{{match.participants[2].summonerName}}</span>
         </div>
         <div class="player">
-          <img src="../../assets/champion/square/{{match.participants[3].championId}}.png" alt="">
+          <img src="../../assets/champion/square/{{match.participants[3].championId.id}}.png" alt="">
           <span>{{match.participants[3].summonerName}}</span>
         </div>
         <div class="player">
-          <img src="../../assets/champion/square/{{match.participants[4].championId}}.png" alt="">
+          <img src="../../assets/champion/square/{{match.participants[4].championId.id}}.png" alt="">
           <span>{{match.participants[4].summonerName}}</span>
         </div>
       </div>
       <div class="team">
         <div class="player">
-          <img src="../../assets/champion/square/{{match.participants[5].championId}}.png" alt="">
+          <img src="../../assets/champion/square/{{match.participants[5].championId.id}}.png" alt="">
           <span>{{match.participants[5].summonerName}}</span>
         </div>
         <div class="player">
-          <img src="../../assets/champion/square/{{match.participants[6].championId}}.png" alt="">
+          <img src="../../assets/champion/square/{{match.participants[6].championId.id}}.png" alt="">
           <span>{{match.participants[6].summonerName}}</span>
         </div>
         <div class="player">
-          <img src="../../assets/champion/square/{{match.participants[7].championId}}.png" alt="">
+          <img src="../../assets/champion/square/{{match.participants[7].championId.id}}.png" alt="">
           <span>{{match.participants[7].summonerName}}</span>
         </div>
         <div class="player">
-          <img src="../../assets/champion/square/{{match.participants[8].championId}}.png" alt="">
+          <img src="../../assets/champion/square/{{match.participants[8].championId.id}}.png" alt="">
           <span>{{match.participants[8].summonerName}}</span>
         </div>
         <div class="player">
-          <img src="../../assets/champion/square/{{match.participants[9].championId}}.png" alt="">
+          <img src="../../assets/champion/square/{{match.participants[9].championId.id}}.png" alt="">
           <span>{{match.participants[9].summonerName}}</span>
         </div>
       </div>

@@ -40,11 +40,7 @@ export class SummonerService {
     return this.http.get(this.protocal+"/api/summonerProfiles/"+name+"?language="+language);
   }
 
-  newProfile(name: string) {
+  generateProfile(name: string) {
     return this.http.post(this.protocal+"/api/summonerProfiles/generateProfile", {name: name}, httpOptions);
-  }
-
-  updateProfile(summoner: Summoner) {
-    return this.http.patch(this.protocal+"/api/summonerProfiles/", {summoner: summoner}, httpOptions );
   }
 }

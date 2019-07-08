@@ -21,4 +21,4 @@ String.prototype.capitalize = () => {
 }
 var a = [1,2,3,4,5,6,7,8,9,10]
 
-console.log(static["Russian"][1])
+console.log(static["English"][120])

@@ -7,7 +7,6 @@ export class SummonerProfile {
   leagues: [League];
   matches: [Match];
   lastUpdated: Date;
-  lastPlayed: String;
 
   constructor(profile) {
     this.summoner = profile.summoner;

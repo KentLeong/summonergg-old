@@ -26,6 +26,9 @@ module.exports = (region) => {
       } catch(err) {
         log('Failed to save League for '+league.summonerName, 'error')
       }
+    },
+    async formatLeagues(leagues) {
+      
     }
   }
 }
