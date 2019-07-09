@@ -5,6 +5,7 @@ module.exports = (region) => {
   return {
     async getByName(name, callback) {
       try {
+        var name = decodeURI(name)
         var res = await client.get(`/lol/summoner/v4/summoners/by-name/`+
         `${encodeURI(name)}?api_key=${riot.key}`)
         log(`Found summoner data: ${res.data.name} by name from riot API`, 'success')

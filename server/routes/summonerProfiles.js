@@ -58,7 +58,7 @@ module.exports = (main, static) => {
   // GET SummonerProfile
   router.get('/:name', (req, res) => {
     var language = req.query.language;
-    var name = req.params.name.split("").join("\\s*")
+    var name = decodeURI(req.params.name).split("").join("\\s*")
     var regex = new RegExp(`^${name}$`, "i")
     SummonerProfile.findOne({'summoner.name': regex}, (err, summonerProfile) => {
       if (err) {

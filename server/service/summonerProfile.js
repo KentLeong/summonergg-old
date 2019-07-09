@@ -12,7 +12,7 @@ module.exports = (region) => {
   return {
     async get(name, callback) {
       try {
-        var res = await local.get('/summonerProfiles/'+name)
+        var res = await local.get('/summonerProfiles/'+decodeURI(name))
         log(`Found summoner profile of ${res.data.summoner.name} from local database`, 'success')
         callback(res.data)
       } catch(err) {
@@ -50,15 +50,6 @@ module.exports = (region) => {
       })
       // everything else
       await matches.asyncForEach(async (match, i) => {
-        var t1TotalKills = 0
-        var t2TotalKills = 0
-        await match.participants.asyncForEach(async (part, a) => {
-          if (part.stats.teamId == 100) {
-            t1TotalKills+=part.stats.kills
-          } else {
-            t2TotalKills+=part.stats.kills
-          }
-        })
         await match.participants.asyncForEach(async (part, a) => {
           if (summoner.accountId == part.currentAccountId) {
             matches[i].profileIcon = part.profileIcon;
@@ -108,6 +99,12 @@ module.exports = (region) => {
             matches[i].duration.minutes = minutes
             matches[i].duration.seconds = seconds
 
+            // minions killed
+            var minionsKilled = part.stats.neutralMinionsKilled + part.stats.totalMinionsKilled
+            matches[i].minionsKilled = minionsKilled
+            let gameMinutes = (match.gameDuration/60)
+            matches[i].minionsPerMin = (minionsKilled/gameMinutes).toFixed(1)
+
             // game played
             this.timePlayed(match.gameCreation).then(played => {
               matches[i].played = played
@@ -116,16 +113,24 @@ module.exports = (region) => {
             matches[i].kda = ((part.stats.kills+part.stats.assists)/part.stats.assists).toFixed(2)
 
             // part
+            var t1TotalKills = 0
+            var t2TotalKills = 0
+            await match.participants.asyncForEach(async (p, a) => {
+              if (p.teamId == 100) {
+                t1TotalKills+=p.stats.kills
+              } else {
+                t2TotalKills+=p.stats.kills
+              }
+            })
+            var participation1 = ((part.stats.kills+part.stats.assists)/t1TotalKills).toFixed(2)*100
+            var participation2 = ((part.stats.kills+part.stats.assists)/t2TotalKills).toFixed(2)*100
             if (part.teamId == 100) {
-              matches[i].part = ((part.stats.kills+part.stats.assists)/t1TotalKills).toFixed(2)*100
+              matches[i].part = Math.floor(participation1)
             } else {
-              matches[i].part = ((part.stats.kills+part.stats.assists)/t2TotalKills).toFixed(2)*100
+              matches[i].part = Math.floor(participation2)
             }
+
           }
-          await delete part.stats;
-          await delete part.matchHistoryUri;
-          await delete part.highestAchievedSeasonTier;
-          await delete part.timeline;
         })
       })
 
@@ -147,6 +152,23 @@ module.exports = (region) => {
             return a.teamId - b.teamId
           })
         }
+        // clean data
+        match.blueTeam = [];
+        match.redTeam = [];
+        await match.participants.asyncForEach(async part => {
+          await delete part.stats;
+          await delete part.matchHistoryUri;
+          await delete part.highestAchievedSeasonTier;
+          await delete part.timeline;
+          if (part.teamId == 100) {
+            match.blueTeam.push(part)
+          } else if (part.teamId == 200) {
+            match.redTeam.push(part)
+          }
+        })
+      })
+      await matches.asyncForEach(async match => {
+        delete match.participants
       })
       callback(matches)
     },
@@ -157,9 +179,16 @@ module.exports = (region) => {
           id: champions[language][key].id,
           name: champions[language][key].name
         }
-        await match.participants.asyncForEach(async (part, p) => {
+        await match.blueTeam.asyncForEach(async (part, p) => {
           let key = part.championId;
-          profile.matches[i].participants[p].championId = {
+          profile.matches[i].blueTeam[p].championId = {
+            id: champions[language][key].id,
+            name: champions[language][key].name
+          }
+        })
+        await match.redTeam.asyncForEach(async (part, p) => {
+          let key = part.championId;
+          profile.matches[i].redTeam[p].championId = {
             id: champions[language][key].id,
             name: champions[language][key].name
           }

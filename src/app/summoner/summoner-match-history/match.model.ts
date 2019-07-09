@@ -25,6 +25,8 @@ export class Match {
   spell2: string;
   perk1: string;
   perk2: string;
+  blueTeam: object[];
+  redTeam: object[];
 }
 
 class team {

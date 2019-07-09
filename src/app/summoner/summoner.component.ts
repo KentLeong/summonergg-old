@@ -77,6 +77,30 @@ export class SummonerComponent implements OnDestroy {
 
   setProfile(profile: SummonerProfile) {
     this.lastPlayed = 'url("../../assets/champion/splash/'+profile.matches[0].championId.id+'_0.jpg")'
+
+    profile.matches.forEach(match => {
+      // find outcome of game
+      if (match.outcome == "Victory") {
+        match.bg = "lightblue"
+      } else {
+        match.bg = "lightcoral"
+      }
+      // find summmoner in players and make bold
+      match.blueTeam.forEach((player: any) => {
+        if (player.summonerName == profile.summoner.name) {
+          player.weight = 700
+        } else {
+          player.weight = 500
+        }
+      })
+      match.redTeam.forEach((player: any) => {
+        if (player.summonerName == profile.summoner.name) {
+          player.weight = 700
+        } else {
+          player.weight = 500
+        }
+      })
+    })
     console.log(profile)
     this.profile = profile;
   }
