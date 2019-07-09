@@ -194,22 +194,5 @@ module.exports = (main, static) => {
     })
   })
   
-  router.post('/', (req, res) => {
-    Match.findOne({gameId: req.body.match.gameId}, async (err, match) => {
-      if (match) {return res.status(400).json("match exists");}
-      const start = (async () => {
-        var newMatch;
-        await req.body.match.participantIdentities.asyncForEach((id, i) => {
-          req.body.match.participants[i] = {...id.player, ...req.body.match.participants[i]};
-        })
-        await delete req.body.match.participantIdentities;
-        newMatch = await new Match(req.body.match);
-        await newMatch.save((err, match) => {
-          if (err) {return region.status(400).json(err);}
-          res.status(200).json(match)
-        })
-      })();
-    })
-  })
   return router
 }

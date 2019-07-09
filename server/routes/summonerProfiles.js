@@ -174,14 +174,19 @@ module.exports = (main, static) => {
         // by riot
         await RiotLeague.bySummonerID(profile.summoner.id, leagues => {
           if (leagues) {
-            profile.leagues = leagues;
+            profile.leagues = leagues
             leagues.forEach(league => {
               LeagueService.new(league);
             })
           }
         })
       }
-  
+      
+      log('Formating leagues..','info')
+      await LeagueService.formatLeagues(profile.leagues, newLeague => {
+        profile.leagues = newLeague
+      })
+
       // GET Matches
       // by local
       log('Retrieving last 10 matches from riot..', 'info')

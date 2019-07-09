@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var schema = new Schema({
   name: String,
   summoner: Object,
-  leagues: [Object],
+  leagues: Object,
   matches: [Object],
   lastUpdated: {type: Date, default: Date.now()}
 })

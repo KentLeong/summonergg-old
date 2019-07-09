@@ -27,8 +27,25 @@ module.exports = (region) => {
         log('Failed to save League for '+league.summonerName, 'error')
       }
     },
-    async formatLeagues(leagues) {
-      
+    async formatLeagues(leagues, callback) {
+      var newLeague = {
+        solo: {},
+        flex_5v5: {},
+        flex_3v3: {}
+      }
+      await leagues.asyncForEach(league => {
+        if (league.queueType == "RANKED_SOLO_5x5") {
+          log('Solo Found, added!', 'success')
+          newLeague["solo"] = league
+        } else if (league.queueType == "RANKED_FLEX_TT") {
+          log('Flex 3v3 Found, added!', 'success')
+          newLeague["flex3v3"] = league
+        } else if (league.queueType == "RANKED_FLEX_SR") {
+          log('Flex 5v5 Found, added!', 'success')
+          newLeague["flex5v5"] = league
+        }
+      })
+      callback(newLeague)
     }
   }
 }

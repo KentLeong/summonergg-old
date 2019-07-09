@@ -21,4 +21,11 @@ String.prototype.capitalize = () => {
 }
 var a = [1,2,3,4,5,6,7,8,9,10]
 
-console.log(static["English"][120])
+function order(items) {
+  items.sort((a,b) => {
+    if (a == 0) return b
+  })
+  console.log(items)
+}
+
+order([0,123,0,12,0,23])

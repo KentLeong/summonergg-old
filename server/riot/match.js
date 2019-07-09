@@ -1,5 +1,10 @@
 const riot = require('../config/riot');
 const log = require('../config/log');
+Array.prototype.asyncForEach = async function(cb) {
+  for(let i=0; i<this.length; i++) {
+    await cb(this[i], i, this)
+  }
+}
 module.exports = (region) => {
   const client = require('../config/riotClient')(region)
   return {
@@ -38,7 +43,6 @@ module.exports = (region) => {
       await match.participantIdentities.asyncForEach((id, i) => {
         match.participants[i] = {...id.player, ...match.participants[i]};
       })      
-
       await delete match.participantIdentities;
       return match
     }

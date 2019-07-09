@@ -9,16 +9,14 @@ import { Summoner } from '../summoner.model';
   styleUrls: ['./summoner-detail.component.scss']
 })
 export class SummonerDetailComponent implements OnChanges {
-
-  solo: object;
-  flex_5v5: object;
-  flex_3v3: object;
   
   constructor(
     private summonerService: SummonerService
   ) { }
 
-  @Input() leagues: any;
+  @Input() solo: object;
+  @Input() flex_5v5: object;
+  @Input() flex_3v3: object;
 
   ngOnChanges() {
   }

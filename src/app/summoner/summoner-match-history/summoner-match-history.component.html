@@ -7,17 +7,17 @@
     <div class="outcome" [ngStyle]="{'background-color': match.bg}">
     </div>
     <div class="type">
-      <span>Ranked Solo</span>
-      <span>3 Days ago</span>
+      <span>{{match.queueId.name}}</span>
+      <span>{{match.played}}</span>
       <span>{{match.outcome}}</span>
-      <span>29m 37s</span>
+      <span>{{match.duration.minutes}}m {{match.duration.seconds}}s</span>
     </div>
 
     <div class="champion">
       <div class="cimage">
         <img src="../../assets/champion/tiles/{{match.championId.id}}_0.jpg" alt="champion" class="cimage__image">
         <div class="cimage__level">
-          <img src="https://via.placeholder.com/30" alt="">
+          <img src="../../assets/item/0.png" alt="">
           <span>{{match.champLevel}}</span>
         </div>
       </div>
@@ -51,13 +51,13 @@
       <div class="stats__details">
         <div class="stat-format">
           <span>{{match.kills}} / {{match.deaths}} / {{match.assists}}</span>
-          <span>0.91:1 KDA</span>
-          <span>66% k.part</span>
+          <span>{{match.kda}}:1 KDA</span>
+          <span>{{match.part}}% part</span>
         </div>
         <div class="stat-format">
           <span>Control Wards {{match.vision}}</span>
           <span>125 (4.5) CS</span>
-          <span></span>
+          <span>&nbsp;</span>
         </div>
       </div>
     </div>
