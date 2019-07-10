@@ -3,80 +3,88 @@
 </div>
 
 <div class="games" *ngIf="matches">
-  <div class="game" *ngFor="let match of matches" [ngStyle]="match.bg">
-    <div class="outcome">
-    </div>
-    <div class="type">
-      <div class="type__content">
-        <span>{{match.queueId.name}}</span>
-        <span>{{match.played}}</span>
-        <span>{{match.outcome}}</span>
-        <span>{{match.duration.minutes}}m {{match.duration.seconds}}s</span>
+  <div class="game" *ngFor="let match of matches" [ngStyle]="match.toggle">
+    <div class="main" [ngStyle]="match.main">
+      <div class="outcome" (click)="toggleMatch(match)">
       </div>
-    </div>
+      <div class="type" (click)="toggleMatch(match)">
+        <div class="type__content">
+          <span>{{match.queueId.name}}</span>
+          <span>{{match.played}}</span>
+          <span>{{match.outcome}}</span>
+          <span>{{match.duration.minutes}}m {{match.duration.seconds}}s</span>
+        </div>
+      </div>
+  
+      <div class="champion" (click)="toggleMatch(match)">
+        <div class="cimage">
+          <img src="../../assets/champion/tiles/{{match.championId.id}}_0.jpg" alt="champion" class="cimage__image">
+          <div class="cimage__level">
+            <img src="../../assets/item/0.png" alt="">
+            <span>{{match.champLevel}}</span>
+          </div>
+        </div>
+        <span class="champion__name">{{match.championId.name}}</span>
+      </div>
+  
+      <div class="detail" (click)="toggleMatch(match)">
+        <div class="detail__summoners">
+            <img src="../../assets/summoners/{{match.spell1Id}}.png" alt="">
+            <img src="../../assets/summoners/{{match.spell2Id}}.png" alt="">
+        </div>
+        <div class="detail__right">
+          <div class="runes">
+            <img src="../../assets/runes/{{match.mainPerk}}.png" alt="" class="runes__primary">
+            <img src="../../assets/runes/{{match.secondaryPerk}}.png" alt="" class="runes__secondary">
+            <div class="runes__back"></div>
+          </div>
+          <div class="role">
+            <img src="../../assets/roles/{{match.role}}.png" alt="role" *ngIf="match.role">
+          </div>
+        </div>
+      </div>
+  
+      <div class="stats" (click)="toggleMatch(match)">
+        <div class="stats__items" >
+          <div *ngFor="let item of match.items">
+            <img src="../../assets/item/{{item}}.png" alt="">
+          </div>
+        </div>
+        <img src="../../assets/item/{{match.trinket}}.png" alt="" class="trinket">
+        <div class="stats__details">
+          <div class="stat-format">
+            <span class="stat-kda white">{{match.kills}} <span class="paren">/</span> {{match.deaths}} <span class="paren">/</span> {{match.assists}}</span>
+            <span><span class="white">{{match.kda}}</span> KDA</span>
+            <span><span class="white">{{match.part}}%</span> p</span>
+          </div>
+          <div class="stat-format">
+            <span>Wards <span class="white">{{match.vision}}</span></span>
+            <span>{{match.minionsKilled}} ({{match.minionsPerMin}}) CS</span>
+            <span>&nbsp;</span>
+          </div>
+        </div>
+      </div>
+  
+      <div class="players">
+        <div class="team">
+          <div class="player" *ngFor="let part of match.blueTeam" (click)="clearProfile()">
+            <img src="../../assets/champion/square/{{part.championId.id}}.png" alt="" *ngIf="part.teamId == 100">
+            <span routerLink="/summoner/{{part.summonerName}}" *ngIf="part.teamId == 100" [ngStyle]="{'font-weight': part.weight}">{{part.summonerName}}</span>
+          </div>
+        </div>
+        <div class="team">
+          <div class="player" *ngFor="let part of match.redTeam" (click)="clearProfile()">
+            <img src="../../assets/champion/square/{{part.championId.id}}.png" alt="" *ngIf="part.teamId == 200">
+            <span routerLink="/summoner/{{part.summonerName}}" *ngIf="part.teamId == 200" [ngStyle]="{'font-weight': part.weight}">{{part.summonerName}}</span>
+          </div>
+        </div>
+      </div>
 
-    <div class="champion">
-      <div class="cimage">
-        <img src="../../assets/champion/tiles/{{match.championId.id}}_0.jpg" alt="champion" class="cimage__image">
-        <div class="cimage__level">
-          <img src="../../assets/item/0.png" alt="">
-          <span>{{match.champLevel}}</span>
-        </div>
-      </div>
-      <span class="champion__name">{{match.championId.name}}</span>
     </div>
+    
+    <div class="toggle">
 
-    <div class="detail">
-      <div class="detail__summoners">
-          <img src="../../assets/summoners/{{match.spell1Id}}.png" alt="">
-          <img src="../../assets/summoners/{{match.spell2Id}}.png" alt="">
-      </div>
-      <div class="detail__right">
-        <div class="runes">
-          <img src="../../assets/runes/{{match.mainPerk}}.png" alt="" class="runes__primary">
-          <img src="../../assets/runes/{{match.secondaryPerk}}.png" alt="" class="runes__secondary">
-          <div class="runes__back"></div>
-        </div>
-        <div class="role">
-          <img src="../../assets/roles/{{match.role}}.png" alt="role" *ngIf="match.role">
-        </div>
-      </div>
-    </div>
 
-    <div class="stats">
-      <div class="stats__items" >
-        <div *ngFor="let item of match.items">
-          <img src="../../assets/item/{{item}}.png" alt="">
-        </div>
-      </div>
-      <img src="../../assets/item/{{match.trinket}}.png" alt="" class="trinket">
-      <div class="stats__details">
-        <div class="stat-format">
-          <span class="stat-kda white">{{match.kills}} <span class="paren">/</span> {{match.deaths}} <span class="paren">/</span> {{match.assists}}</span>
-          <span><span class="white">{{match.kda}}</span> KDA</span>
-          <span><span class="white">{{match.part}}%</span> p</span>
-        </div>
-        <div class="stat-format">
-          <span>Wards <span class="white">{{match.vision}}</span></span>
-          <span>{{match.minionsKilled}} ({{match.minionsPerMin}}) CS</span>
-          <span>&nbsp;</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="players">
-      <div class="team">
-        <div class="player" *ngFor="let part of match.blueTeam" (click)="clearProfile()">
-          <img src="../../assets/champion/square/{{part.championId.id}}.png" alt="" *ngIf="part.teamId == 100">
-          <span routerLink="/summoner/{{part.summonerName}}" *ngIf="part.teamId == 100" [ngStyle]="{'font-weight': part.weight}">{{part.summonerName}}</span>
-        </div>
-      </div>
-      <div class="team">
-        <div class="player" *ngFor="let part of match.redTeam" (click)="clearProfile()">
-          <img src="../../assets/champion/square/{{part.championId.id}}.png" alt="" *ngIf="part.teamId == 200">
-          <span routerLink="/summoner/{{part.summonerName}}" *ngIf="part.teamId == 200" [ngStyle]="{'font-weight': part.weight}">{{part.summonerName}}</span>
-        </div>
-      </div>
     </div>
   </div>
 </div>

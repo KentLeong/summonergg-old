@@ -80,17 +80,21 @@ export class SummonerComponent implements OnDestroy {
 
     profile.matches.forEach(match => {
       // find outcome of game
+      match.showToggle = false;
+      match.toggle = {};
       if (match.outcome == "Defeat") {
-        match.bg = {
-          'background': 'linear-gradient(0deg, rgba(95,44,37,1) 0%, rgba(95,37,40,1) 100%)',
-          'border-top': ".1rem #973f3f solid",
-          'border-bottom': ".2rem #411919 solid"
+        match.main = {
+          'background': 'linear-gradient(0deg, rgba(95,52,37,1) 0%, rgba(95,37,37,1) 100%)',
+          'border-top': ".1rem #973f3f solid"
+        }
+      } else if (match.outcome == "Victory") {
+        match.main = {
+          'background': 'linear-gradient(0deg, rgba(37,78,95,1) 0%, rgba(37,57,95,1) 100%)',
+          'border-top': '.1rem #345688 solid'
         }
       } else {
-        match.bg = {
-          'background': 'linear-gradient(0deg, rgba(37,68,95,1) 0%, rgba(37,57,95,1) 100%)',
-          'border-top': '.1rem #345688 solid',
-          'border-bottom': '.2rem #1f314d solid'
+        match.main = {
+          'filter': 'grayscale(.9)'
         }
       }
       // find summmoner in players and make bold

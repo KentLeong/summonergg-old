@@ -30,4 +30,14 @@ export class SummonerMatchHistoryComponent implements OnChanges {
   clearProfile() {
     this.clear.emit();
   }
+
+  toggleMatch(match: Match) {
+    if (match.showToggle) {
+      match.toggle['grid-template-rows'] = '12rem 0rem';
+    } else {
+      match.toggle['grid-template-rows'] = '12rem 38rem';
+    }
+    console.log(match)
+    match.showToggle = !match.showToggle;
+  }
 }

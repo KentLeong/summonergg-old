@@ -77,6 +77,9 @@ module.exports = (region) => {
               matches[i].outcome = "Defeat";
             }
 
+            if (matches[i].gameDuration < 480) {
+              matches[i].outcome = "Remake";
+            }
             // items
             matches[i].items = [part.stats.item0,
               part.stats.item1,
