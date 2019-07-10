@@ -103,18 +103,6 @@ h4 {
         }
       }
     }
-    .champion-item:after {
-      content: "";
-      display: block;
-      margin: 0 auto;
-      width: 90%;
-      padding-top: .7rem;
-      border-bottom: 1px solid lightgrey;
-    }
-    
-    .champion-item:last-child:after {
-      border: none;
-    }
   }
   .more {
     text-align: center;
@@ -170,12 +158,12 @@ h4 {
           display: inline-block;
           border-radius: .4rem 0 0 .4rem;
           padding: .5rem;
-          background-color: lightblue;
+          background-color: $blue-dark;
         }
         .bar:last-child {
           width: 10%;
           border-radius: 0 .4rem .4rem 0;
-          background-color: lightcoral;
+          background-color: $red-dark;
         }
       }
     }

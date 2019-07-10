@@ -20,5 +20,6 @@
                        [flex_5v5]="profile.leagues.flex5v5"
                        [flex_3v3]="profile.leagues.flex3v3"></app-summoner-detail>
   <app-summoner-match-history class="match-history"
+                              (clear)="clearProfile()"
                               [matches]="profile.matches"></app-summoner-match-history>
 </div>

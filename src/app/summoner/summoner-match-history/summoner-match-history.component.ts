@@ -17,9 +17,8 @@ export class SummonerMatchHistoryComponent implements OnChanges {
     private summonerService: SummonerService
   ) { }
   
-  @Input() profile: SummonerProfile;
   @Input() matches: any[];
-  @Output() matchUpdated = new EventEmitter();
+  @Output() clear = new EventEmitter();
 
   ngOnChanges() {
     console.log(this.matches)
@@ -28,6 +27,7 @@ export class SummonerMatchHistoryComponent implements OnChanges {
   initMatches() {
   }
 
-  update() {
+  clearProfile() {
+    this.clear.emit();
   }
 }

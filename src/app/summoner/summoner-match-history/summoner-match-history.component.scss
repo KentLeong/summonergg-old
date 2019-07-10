@@ -31,27 +31,38 @@
 
 .outcome {
   grid-area: outcome;
-  filter: brightness(.75);
+  background-color: rgba(0,0,0,0.3);
   border-radius: .5rem 0 0 .5rem;
 }
 
 .type {
   grid-area: type;
-  margin: auto;
-  span {
-    display: block;
-    padding-bottom: .4rem;
-  }
-  span:first-child {
-    width: 8rem;
-    font-weight: 700;
-  }
-  span:nth-child(3) {
-    padding-top: 1rem;
-    font-weight: 700;
-  }
-  span:last-child {
-    padding-bottom: 0;
+  width: 100%;
+  height: 100%;
+  &__content {
+    margin-top:1.5rem;
+    margin-left:1rem;
+    span {
+      display: block;
+      padding-bottom: .4rem;
+      color: rgba(255,255,255, 0.35);
+    }
+    span:nth-child(2) {
+      font-size: 1rem;
+    }
+    span:first-child {
+      width: 8rem;
+      font-weight: 700;
+      color: rgba(255,255,255, 0.8);
+    }
+    span:nth-child(3) {
+      padding-top: 1rem;
+      font-weight: 700;
+      color: rgba(255,255,255, 0.8);
+    }
+    span:last-child {
+      padding-bottom: 0;
+    }
   }
 }
 
@@ -61,7 +72,7 @@
     display: block;
     margin-top: .5rem;
     &__image {
-      border: .4rem rgba(0,0,0,0.25)solid;
+      border: .3rem rgba(0,0,0,0.25)solid;
       position: absolute;
       width: 8.8rem;
       padding: .3rem;
@@ -89,6 +100,7 @@
     }
   }
   &__name {
+    color: white;
     display: block;
     text-align:center;
     margin-top: 9.8rem;
@@ -130,31 +142,32 @@
         width: 4rem;
         position: absolute;
         border-radius: 50%;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.3);
       }
       &__secondary {
         padding: .2rem;
         width: 2.5rem;
         position: absolute;
         border-radius: 50%;
-        margin-top: 2.2rem;
-        margin-left: 2.3rem;
+        margin-top: 3.7rem;
+        margin-left: 2.5rem;
       }
       &__back {
         display: inline-block;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.3);
         width: 2.5rem;
         height: 2.5rem;
         border-radius: 50%;
-        margin-top: 2.2rem;
-        margin-left: 2.3rem;
+        margin-top: 3.7rem;
+        margin-left: 2.5rem;
       };
     }
     .role {
+      margin-top:1rem;
       margin-left: .6rem;
       height: 3.6rem;
       width: 3.6rem;
-      background-color: rgba(0,0,0,0.2);
+      background-color: rgba(0,0,0,0.3);
       border-radius: 50%;
       img {
         width: 3.6rem;
@@ -200,19 +213,30 @@
   &__details {
     display: block;
     text-align: center;
-    margin-top: 1rem;
+    margin-top: .5rem;
     .stat-format {
-      margin-left: 3rem;
+      width: 9rem;
+      margin-left: 2rem;
       display: inline-block;
       text-align: center;
+      .paren {
+        display: inline;
+        font-size: 1.3rem;
+        color: rgba(0,0,0,0.4);
+      }
       .stat-kda {
         font-size: 1.6rem;
+        font-weight: 700;
+      }
+      .white {
+        color: rgba(255,255,255,0.7);
+        display: inline;
+
       }
       span {
         display: block;
-      }
-      span:first-child {
-        font-weight: 800;
+        color: rgba(255,255,255,0.35);
+        font-weight: 600;
       }
     }
     .stat-format:first-child {
@@ -229,15 +253,16 @@
   border-radius: .3rem;
   .team {
     display: inline-block;
-    margin-right: .4rem;
+    margin-right: .3rem;
     .player {
+      color: rgba(255,255,255,0.6);
       display: block;
       margin: auto;
-      margin-top: .4rem;
-      margin-bottom: .4rem;
+      margin-top: .3rem;
+      margin-bottom: .3rem;
       border-radius: .3rem;
       img, span {
-        font-size: 1.2rem;
+        font-size: 1.15rem;
         vertical-align: middle;
         display: inline;
       }
@@ -251,14 +276,14 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        width: 8rem;
+        width: 7.7rem;
         height: 1.5rem;
         margin-left: .2rem;
       }
     }
     .player:hover {
       cursor: pointer;
-      background: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.15);
     }
   }
   .team:last-child {

@@ -5,13 +5,15 @@
 <div class="games" *ngIf="matches">
   <div class="game" *ngFor="let match of matches" [ngStyle]="{'background-color': match.bg,
                                                               'border-top': match.highlight}">
-    <div class="outcome" [ngStyle]="{'background-color': match.bg}">
+    <div class="outcome">
     </div>
     <div class="type">
-      <span>{{match.queueId.name}}</span>
-      <span>{{match.played}}</span>
-      <span>{{match.outcome}}</span>
-      <span>{{match.duration.minutes}}m {{match.duration.seconds}}s</span>
+      <div class="type__content">
+        <span>{{match.queueId.name}}</span>
+        <span>{{match.played}}</span>
+        <span>{{match.outcome}}</span>
+        <span>{{match.duration.minutes}}m {{match.duration.seconds}}s</span>
+      </div>
     </div>
 
     <div class="champion">
@@ -51,12 +53,12 @@
       <img src="../../assets/item/{{match.trinket}}.png" alt="" class="trinket">
       <div class="stats__details">
         <div class="stat-format">
-          <span class="stat-kda">{{match.kills}} / {{match.deaths}} / {{match.assists}}</span>
-          <span>{{match.kda}}:1 KDA</span>
-          <span>{{match.part}}% part</span>
+          <span class="stat-kda white">{{match.kills}} <span class="paren">/</span> {{match.deaths}} <span class="paren">/</span> {{match.assists}}</span>
+          <span><span class="white">{{match.kda}}</span> KDA</span>
+          <span><span class="white">{{match.part}}%</span> p</span>
         </div>
         <div class="stat-format">
-          <span>Control Wards {{match.vision}}</span>
+          <span>Wards <span class="white">{{match.vision}}</span></span>
           <span>{{match.minionsKilled}} ({{match.minionsPerMin}}) CS</span>
           <span>&nbsp;</span>
         </div>
@@ -65,13 +67,13 @@
 
     <div class="players">
       <div class="team">
-        <div class="player" *ngFor="let part of match.blueTeam">
+        <div class="player" *ngFor="let part of match.blueTeam" (click)="clearProfile()">
           <img src="../../assets/champion/square/{{part.championId.id}}.png" alt="" *ngIf="part.teamId == 100">
           <span routerLink="/summoner/{{part.summonerName}}" *ngIf="part.teamId == 100" [ngStyle]="{'font-weight': part.weight}">{{part.summonerName}}</span>
         </div>
       </div>
       <div class="team">
-        <div class="player" *ngFor="let part of match.redTeam">
+        <div class="player" *ngFor="let part of match.redTeam" (click)="clearProfile()">
           <img src="../../assets/champion/square/{{part.championId.id}}.png" alt="" *ngIf="part.teamId == 200">
           <span routerLink="/summoner/{{part.summonerName}}" *ngIf="part.teamId == 200" [ngStyle]="{'font-weight': part.weight}">{{part.summonerName}}</span>
         </div>

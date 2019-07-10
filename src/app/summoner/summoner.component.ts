@@ -80,7 +80,7 @@ export class SummonerComponent implements OnDestroy {
 
     profile.matches.forEach(match => {
       // find outcome of game
-      if (match.outcome == "Victory") {
+      if (match.outcome == "Defeat") {
         match.bg = "#5f2525"
         match.highlight = ".1rem #973f3f solid"
       } else {
@@ -110,4 +110,7 @@ export class SummonerComponent implements OnDestroy {
   matchUpdated() {
   }
 
+  clearProfile() {
+    this.summoner = new Summoner;
+  }
 }
