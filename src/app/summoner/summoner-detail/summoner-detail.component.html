@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="ranks__solo" *ngIf="solo">
-      <img src="../../assets/rank-icons/{{solo.tier}}_{{solo.rank}}.png" alt="">
+      <img src="../../assets/rank-icons/{{solo.tier.toLowerCase()}}_{{solo.rank}}.png" alt="">
       <div>
         <span>Ranked Solo</span><br>
         <span>{{solo.tier}} {{solo.rank}}</span><br>
@@ -17,7 +17,7 @@
       </div>
     </div>
     <div *ngIf="flex_5v5" class="ranks__flex__5v5 flex">
-      <img src="../../assets/rank-icons/{{flex_5v5.tier}}_{{flex_5v5.rank}}.png" alt="">
+      <img src="../../assets/rank-icons/{{flex_5v5.tier.toLowerCase()}}_{{flex_5v5.rank}}.png" alt="">
       <div class="details">
         <span>Flex 5v5</span><br>
         <span>{{flex_5v5.tier}} {{flex_5v5.rank}}</span><br>
@@ -27,7 +27,7 @@
     </div>
     <br>
     <div *ngIf="flex_3v3" class="ranks__flex__3v3 flex">
-      <img src="../../assets/rank-icons/{{flex_3v3.tier}}_{{flex_3v3.rank}}.png" alt="">
+      <img src="../../assets/rank-icons/{{flex_3v3.tier.toLowerCase()}}_{{flex_3v3.rank}}.png" alt="">
       <div class="details">
         <span>Flex 3v3</span><br>
         <span>{{flex_3v3.tier}} {{flex_3v3.rank}}</span><br>

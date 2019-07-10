@@ -34,6 +34,7 @@ module.exports = (region) => {
         flex_3v3: {}
       }
       await leagues.asyncForEach(league => {
+        league.tier = league.tier.toLowerCase()
         if (league.queueType == "RANKED_SOLO_5x5") {
           log('Solo Found, added!', 'success')
           newLeague["solo"] = league
