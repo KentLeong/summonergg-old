@@ -3,8 +3,7 @@
 </div>
 
 <div class="games" *ngIf="matches">
-  <div class="game" *ngFor="let match of matches" [ngStyle]="{'background-color': match.bg,
-                                                              'border-top': match.highlight}">
+  <div class="game" *ngFor="let match of matches" [ngStyle]="match.bg">
     <div class="outcome">
     </div>
     <div class="type">

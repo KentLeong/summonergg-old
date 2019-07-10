@@ -14,8 +14,7 @@ export class Match {
   participants: participant[];
   // indiv
   outcome: string;
-  bg: string;
-  highlight: string;
+  bg: object;
   championId: {
     id: string,
     name: string
