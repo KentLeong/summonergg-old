@@ -26,7 +26,7 @@
   height: 100%;
   border-top: .2rem $blue-secondary-dark solid;
   display: grid;
-  grid-template-columns: 1.5rem 10rem 9.1rem 9rem 22.5rem auto;
+  grid-template-columns: 1.5rem 10rem 9.1rem 9rem 22.5rem 23rem;
   grid-template-rows: 12rem;
   grid-template-areas: "outcome type champion detail stats players"
 }
@@ -43,8 +43,9 @@
 .outcome {
   height:12rem;
   grid-area: outcome;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.25);
   border-radius: .5rem 0 0 .5rem;
+  box-shadow: inset -2.3rem 0rem 1rem -2rem rgba(0,0,0,0.15);
 }
 
 .type {
@@ -265,7 +266,7 @@
 .players {  
   grid-area: players;
   margin: auto;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.23);
   padding-left: .3rem;
   border-radius: .3rem;
   .team {
@@ -293,7 +294,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        width: 7.7rem;
+        width: 8.4rem;
         height: 1.5rem;
         margin-left: .2rem;
       }
@@ -314,13 +315,31 @@
 *
 **/
 .toggle {
+  display:none;
   grid-area: toggle;
   border-radius: 0 0 .3rem .3rem;
-  margin-left: 1.5rem;
-  width: 73.5rem;
+  margin-left: 2rem;
+  width: 72.5rem;
   height: 100%;
   z-index: -1;
   top: -.3rem;
   position: relative;
   background-color: grey;
+  &__nav {
+    box-shadow: inset 0px 12px 10px -10px rgba(0,0,0,0.75);
+    width: 100%;
+    height: 4rem;
+    background: grey;
+    span {
+      text-align: center;
+      display: inline-block;
+      margin-top: .3rem;
+      padding-top: .7rem;
+      height: 3rem;
+      width: 15rem;
+      margin-left: 2.5rem;
+      background: rgba(0,0,0,0.15);
+      font-weight: 600;
+    }
+  }
 }

@@ -15,6 +15,8 @@ export class Match {
   // indiv
   outcome: string;
   toggle: object;
+  toggleContent: object;
+  nav: object;
   showToggle: boolean;
   main: object;
   championId: {

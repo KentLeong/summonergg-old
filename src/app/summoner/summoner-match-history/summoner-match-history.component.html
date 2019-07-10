@@ -82,9 +82,22 @@
 
     </div>
     
-    <div class="toggle">
+    <div class="toggle" [ngStyle]="match.toggleContent">
 
-
+      <div class="toggle__nav" [ngStyle]="match.nav">
+        <span>Overview</span>
+        <span>Replay</span>
+        <span>Builds</span>
+        <span>Graphs</span>
+      </div>
+      <div class="toggle__overview">
+          <div class="blue-team">
+    
+          </div>
+          <div class="red-team">
+    
+          </div>
+      </div>
     </div>
   </div>
 </div>
