@@ -3,7 +3,8 @@
 </div>
 
 <div class="games" *ngIf="matches">
-  <div class="game" *ngFor="let match of matches" [ngStyle]="{'background-color': match.bg}">
+  <div class="game" *ngFor="let match of matches" [ngStyle]="{'background-color': match.bg,
+                                                              'border-top': match.highlight}">
     <div class="outcome" [ngStyle]="{'background-color': match.bg}">
     </div>
     <div class="type">
@@ -46,11 +47,11 @@
         <div *ngFor="let item of match.items">
           <img src="../../assets/item/{{item}}.png" alt="">
         </div>
-        <img src="../../assets/item/{{match.trinket}}.png" alt="" class="trinket">
       </div>
+      <img src="../../assets/item/{{match.trinket}}.png" alt="" class="trinket">
       <div class="stats__details">
         <div class="stat-format">
-          <span>{{match.kills}} / {{match.deaths}} / {{match.assists}}</span>
+          <span class="stat-kda">{{match.kills}} / {{match.deaths}} / {{match.assists}}</span>
           <span>{{match.kda}}:1 KDA</span>
           <span>{{match.part}}% part</span>
         </div>

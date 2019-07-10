@@ -1,5 +1,6 @@
+@import '../../../scss/values';
 .container-info {
-  background-color: white;
+  background-color: $content-dark;
   border-radius: .5rem;
   margin: 1rem;
 }
@@ -10,7 +11,7 @@ h4 {
 }
 .ranks {
   &__solo {
-    border-bottom: .5rem solid #e6ecf0;
+    border-bottom: .5rem solid $base-dark;
     img {
       width: 12rem;
       margin: 1rem;
@@ -22,19 +23,20 @@ h4 {
       font-size: 1.5rem;
     }
   }
-  &__flex {
+  .flex {
+    width: 34rem;
+    display: inline-block;
+    font-size: 1.4rem;
+    .details {
+      display: inline-block;
+      vertical-align: middle;
+    }
     img {
+      vertical-align: middle;
       display: inline-block;
       width: 8rem;
       margin: 1rem;
       margin-left: 3rem;
-    }
-    div {
-      margin-left: 3rem;
-      display: inline-block;
-      position: absolute;
-      margin-top: 3rem;
-      font-size: 1.4rem;
     }
   }
 }

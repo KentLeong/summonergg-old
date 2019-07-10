@@ -1,3 +1,4 @@
+@import './scss/values';
 /* You can add global styles to this file, and also import other style files */
 *,
 *::after,
@@ -13,9 +14,10 @@ html {
 }
 
 body {
-  background-color: #e6ecf0;
+  background-color: $base-dark;
   box-sizing: border-box;
   font-size: 1.6rem;
   font-weight: 500;
   height: 3000px;
+  color: $font-dark;
 }

@@ -10,7 +10,6 @@ import { SummonerDetailComponent } from './summoner-detail/summoner-detail.compo
 import { Summoner } from './summoner.model';
 import { Match } from './summoner-match-history/match.model';
 import { SummonerProfile } from './summonerProfile.model';
-
 @Component({
   selector: 'app-summoner',
   templateUrl: './summoner.component.html',
@@ -76,14 +75,17 @@ export class SummonerComponent implements OnDestroy {
   }
 
   setProfile(profile: SummonerProfile) {
+    if (!profile.leagues) profile.leagues = {};
     this.lastPlayed = 'url("../../assets/champion/splash/'+profile.matches[0].championId.id+'_0.jpg")'
 
     profile.matches.forEach(match => {
       // find outcome of game
       if (match.outcome == "Victory") {
-        match.bg = "lightblue"
+        match.bg = "#5f2525"
+        match.highlight = ".1rem #973f3f solid"
       } else {
-        match.bg = "lightcoral"
+        match.bg = "#253c5f"
+        match.highlight = ".1rem #345688 solid"
       }
       // find summmoner in players and make bold
       match.blueTeam.forEach((player: any) => {

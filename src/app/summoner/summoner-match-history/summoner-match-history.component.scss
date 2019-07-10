@@ -1,5 +1,6 @@
+@import '../../../scss/values';
 .container-info {
-  background-color: white;
+  background-color: $content-dark;
   border-radius: .5rem;
   margin: 1rem;
 }
@@ -10,23 +11,28 @@
 }
 
 .game {
+  color: rgba(255,255,255,0.7);
   margin-top: 1rem;
   font-size: 1.2rem;
-  background-color: lightblue;
-  border-radius: 0 .5rem .5rem 0;
+  background-color: $blue-dark;
+  border-radius: .5rem;
   margin-left: .5rem;
   width: 100%;
+  border-top: .2rem $blue-secondary-dark solid;
   display: grid;
-  grid-template-columns: 2rem 10rem 9.1rem 9rem 22.5rem auto;
+  grid-template-columns: 1.5rem 10rem 9.1rem 9rem 22.5rem auto;
   grid-template-rows: 12rem;
   grid-template-areas: "outcome type champion detail stats players"
 }
-
+.game:hover {
+  cursor: pointer;
+  background-color: rgba(0,0,0,0.2);
+}
 
 .outcome {
   grid-area: outcome;
+  filter: brightness(.75);
   border-radius: .5rem 0 0 .5rem;
-  border-right: .3rem #e6ecf0 solid;
 }
 
 .type {
@@ -55,8 +61,9 @@
     display: block;
     margin-top: .5rem;
     &__image {
+      border: .4rem rgba(0,0,0,0.25)solid;
       position: absolute;
-      width: 9.2rem;
+      width: 8.8rem;
       padding: .3rem;
       border-radius: 50%;
     }
@@ -92,11 +99,14 @@
 .detail {
   grid-area: detail;
   margin: auto;
-  margin-left: .3rem;
+  margin-left: .2rem;
   &__summoners {
+    padding: .3rem;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: .3rem;
+    margin-bottom: 3rem;
     vertical-align: middle;
     display: inline-block;
-    padding-bottom: 3.3rem;
     img { 
       display: block;
       width: 2.7rem;
@@ -108,8 +118,7 @@
     }
   }
   &__right {
-    margin-left: .3rem;
-    width: 5.5rem;
+    width: 4.5rem;
     height: 9rem;
     vertical-align: middle;
     display: inline-block;
@@ -117,11 +126,11 @@
       height: 5rem;
       margin-left: .3rem;
       &__primary {
-        padding: .1rem;
+        padding: .2rem;
         width: 4rem;
         position: absolute;
         border-radius: 50%;
-        background-color: black;
+        background-color: rgba(0, 0, 0, 0.5);
       }
       &__secondary {
         padding: .2rem;
@@ -133,8 +142,7 @@
       }
       &__back {
         display: inline-block;
-        background-color: black;
-        border: .2rem black solid;
+        background-color: rgba(0, 0, 0, 0.5);
         width: 2.5rem;
         height: 2.5rem;
         border-radius: 50%;
@@ -144,8 +152,13 @@
     }
     .role {
       margin-left: .6rem;
+      height: 3.6rem;
+      width: 3.6rem;
+      background-color: rgba(0,0,0,0.2);
+      border-radius: 50%;
       img {
-        width: 3.3rem;
+        width: 3.6rem;
+        padding: .3rem;
       }
     }
   }
@@ -157,7 +170,12 @@
   margin-left: 0;
   
   &__items {
-    display: block;
+    vertical-align: middle;
+    display: inline-block;
+    padding: .4rem;
+    padding-bottom: .1rem;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: .3rem;
     div {
       margin-left: .2rem;
       border-radius: .3rem;
@@ -166,13 +184,18 @@
     div:first-child {
       margin-left: 0;
     }
-    .trinket {
-      margin-left: .2rem;
-    }
     img {
-      width: 2.9rem;
+      width: 2.8rem;
       border-radius: .3rem;
     }
+  }
+  .trinket {
+    border: .4rem rgba(0,0,0,0.3) solid;
+    vertical-align: middle;
+    display: inline-block;
+    margin-left: .3rem;
+    border-radius: 50%;
+    width: 3.5rem;
   }
   &__details {
     display: block;
@@ -182,6 +205,9 @@
       margin-left: 3rem;
       display: inline-block;
       text-align: center;
+      .stat-kda {
+        font-size: 1.6rem;
+      }
       span {
         display: block;
       }
@@ -198,6 +224,9 @@
 .players {  
   grid-area: players;
   margin: auto;
+  background-color: rgba(0,0,0,0.3);
+  padding-left: .5rem;
+  border-radius: .3rem;
   .team {
     display: inline-block;
     margin-right: .4rem;
@@ -206,6 +235,7 @@
       margin: auto;
       margin-top: .4rem;
       margin-bottom: .4rem;
+      border-radius: .3rem;
       img, span {
         font-size: 1.2rem;
         vertical-align: middle;
@@ -228,7 +258,7 @@
     }
     .player:hover {
       cursor: pointer;
-      background-color: lightgrey;
+      background: rgba(255,255,255,0.3);
     }
   }
   .team:last-child {

@@ -4,7 +4,7 @@ import { Match } from './summoner-match-history/match.model';
 
 export class SummonerProfile {
   summoner: Summoner;
-  leagues: [League];
+  leagues: Object;
   matches: [Match];
   lastUpdated: Date;
 

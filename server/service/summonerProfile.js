@@ -71,6 +71,8 @@ module.exports = (region) => {
             //outcome
             if (part.teamId == 100 && match.teams[0].win == "Win") {
               matches[i].outcome = "Victory";
+            } else if (part.teamId == 200 && match.teams[1].win == "Win") {
+              matches[i].outcome = "Victory";
             } else {
               matches[i].outcome = "Defeat";
             }

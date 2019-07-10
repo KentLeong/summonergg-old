@@ -15,6 +15,7 @@ export class Match {
   // indiv
   outcome: string;
   bg: string;
+  highlight: string;
   championId: {
     id: string,
     name: string

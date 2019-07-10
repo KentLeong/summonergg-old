@@ -178,6 +178,8 @@ module.exports = (main, static) => {
             leagues.forEach(league => {
               LeagueService.new(league);
             })
+          } else {
+            profile.leagues = {};
           }
         })
       }
