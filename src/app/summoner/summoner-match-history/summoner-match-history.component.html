@@ -90,13 +90,44 @@
         <span>Builds</span>
         <span>Graphs</span>
       </div>
-      <div class="toggle__overview">
-          <div class="blue-team">
-    
-          </div>
-          <div class="red-team">
-    
-          </div>
+      <div class="toggle__content">
+        <div class="overview">
+            <div class="overview__blue-team">
+              <table>
+                <thead class="header">
+                  <th>{{match.blueTeam.outcome}} (Blue Team)</th>
+                  <th>Tier</th>
+                  <th>KDA</th>
+                  <th>Damage</th>
+                  <th>Wards</th>
+                  <th>CS</th>
+                  <th>Items</th>
+                </thead>
+              </table>
+            </div>
+            <div class="overview__red-team">
+              <table>
+                <thead>
+                  <th>{{match.redTeam.outcome}} (Red Team)</th>
+                  <th>Tier</th>
+                  <th>KDA</th>
+                  <th>Damage</th>
+                  <th>Wards</th>
+                  <th>CS</th>
+                  <th>Items</th>
+                </thead>
+              </table>
+            </div>
+        </div>
+        <div class="replay">
+
+        </div>
+        <div class="builds">
+
+        </div>
+        <div class="graphs">
+
+        </div>
       </div>
     </div>
   </div>

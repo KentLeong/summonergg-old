@@ -36,7 +36,7 @@ export class SummonerMatchHistoryComponent implements OnChanges {
       match.toggle['grid-template-rows'] = '12rem 0rem';
       match.toggleContent['display'] = "none";
     } else {
-      match.toggle['grid-template-rows'] = '12rem 38rem';
+      match.toggle['grid-template-rows'] = '12rem 66rem';
       match.toggleContent['display'] = "block";
     }
     console.log(match)
