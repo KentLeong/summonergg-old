@@ -348,24 +348,30 @@
     width: 100%;
     .overview {
       display: grid;
-      grid-template-columns: 10rem auto 10rem;
-      grid-template-rows: 31rem 31rem;
-      grid-template-areas: "blueTeam blueTeam ."
-                           ". redTeam redTeam";
+      grid-template-columns: auto;
+      grid-template-rows: 30rem 2rem 30rem;
+      grid-template-areas: "blueTeam blueTeam blueTeam"
+                           "matchDetails matchDetails matchDetails"
+                           "redTeam redTeam redTeam";
       width: inherit;
       &__blue-team {
         grid-area: blueTeam;
         width: inherit;
+        height: inherit;
       }
       &__match-details {
         grid-area: matchDetails;
         width: inherit;
+        border-left: .5rem #16181b solid;
+        border-right: .5rem #16181b solid;
+        box-shadow: inset 0rem -.8rem 1rem -1rem rgba(0,0,0,0.6), inset 0rem 1.1rem 1rem -1rem rgba(0,0,0,0.6);
       }
       &__red-team {
         grid-area: redTeam;
         width: inherit;
       }
       .header {
+
       }
     }
     .replay {

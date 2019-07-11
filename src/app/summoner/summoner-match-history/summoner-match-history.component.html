@@ -92,7 +92,7 @@
       </div>
       <div class="toggle__content">
         <div class="overview">
-            <div class="overview__blue-team">
+            <div class="overview__blue-team" [ngStyle]="match.main">
               <table>
                 <thead class="header">
                   <th>{{match.blueTeam.outcome}} (Blue Team)</th>
@@ -104,6 +104,8 @@
                   <th>Items</th>
                 </thead>
               </table>
+            </div>
+            <div class="overview__match-details" [ngStyle]="match.nav">
             </div>
             <div class="overview__red-team">
               <table>
