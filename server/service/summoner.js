@@ -2,6 +2,16 @@ const log = require('../config/log');
 module.exports = (region) => {
   var local = require('../config/localClient')(region);
   return {
+    async getBySummonerId(id, callback) {
+      try {
+        var res = await local.get('/summoners/'+id)
+        log(`Retrieved summoner data ${res.data.name} from local database!`, 'success')
+        callback(res.data)
+      } catch(err) {
+        log(`Could not find summoner data ${id} from local database`, 'warning')
+        callback(false)
+      }
+    },
     async getByName(name, callback) {
       try {
         var res = await local.get('/summoners/name/'+name)

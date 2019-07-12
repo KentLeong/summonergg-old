@@ -52,8 +52,6 @@ module.exports = (main, static) => {
         res.status(400).json("exists")
       } else {
         newMatch.participants.forEach(part => {
-          if (part.currentPlatformId) delete part.currentPlatformId;
-          if (part.currentAccountId) delete part.currentAccountId;
           if (part.matchHistoryUri) delete part.matchHistoryUri;
           if (part.profileIcon) delete part.profileIcon;
           if (part.highestAchievedSeasonTier) delete part.highestAchievedSeasonTier;

@@ -167,6 +167,7 @@ module.exports = (region) => {
       }
       //save profile
       log('saving profile..', 'info')
+      this.new(newProfile);
       callback(profile)
     },
     async formatMatches(summoner, matches, callback) {
@@ -292,7 +293,35 @@ module.exports = (region) => {
         // clean data
         match.blueTeam = [];
         match.redTeam = [];
-        await match.participants.asyncForEach(async part => {
+        await match.participants.asyncForEach(async (part, i) => {
+          var summonerFound = false;
+          await SummonerService.getBySummonerId(part.summonerId, updatedSummoner => {
+            if(updatedSummoner) {
+              match.participants[i].summonerName = updatedSummoner.name;
+              summonerFound = true;
+            }
+          })
+
+          if (!summonerFound) {
+            await RiotSummoner.getByAccountID(part.accountId, updatedSummoner => {
+              if (updatedSummoner) {
+                match.participants[i].summonerName = updatedSummoner.name;
+                SummonerService.new(updatedSummoner)
+                summonerFound = true;
+              }
+            })
+          }
+          if (!summonerFound) {
+            await RiotSummoner.getByAccountIDWithRegion(part.currentAccountId, part.currentPlatformId, updatedSummoner => {
+              if (updatedSummoner) {
+                match.participants[i].summonerName = updatedSummoner.name;
+                summonerFound = true;
+              }
+            })
+          }
+          if (!summonerFound) {
+            match.participants[i].name = ""
+          }
           if (part.teamId == 100) {
             match.blueTeam.push(part)
           } else if (part.teamId == 200) {
@@ -302,19 +331,6 @@ module.exports = (region) => {
       })
       await matches.asyncForEach(async match => {
         delete match.participants
-      })
-      callback(matches)
-    },
-    async formatForProfile(matches, callback) {
-      await matches.asyncForEach(async match => {
-        await match.blueTeam.asyncForEach(async part => {
-          await delete part.stats;
-          await delete part.timeline;
-        })
-        await match.redTeam.asyncForEach(async part => {
-          await delete part.stats;
-          await delete part.timeline;
-        })
       })
       callback(matches)
     },

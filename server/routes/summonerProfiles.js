@@ -65,52 +65,54 @@ module.exports = (main, static) => {
     if (!summoner) {
       res.status(400).json("not found")
     } else {
-      console.log(summoner)
       var profile = {
         summoner: {},
         leagues: {},
         matches: []
       };
-      var refrence = {};
+      var refrence = false;
       // get profile and map summoner
       await SummonerProfileService.getById(summoner._id, profileRef => {
-        refrence = profileRef;
+        if (profileRef) refrence = profileRef;
         profile.summoner = summoner;
       })
-
-      // get leagues
-      await Object.keys(refrence.leagues).asyncForEach(async league => {
-        var leagueExists = Object.keys(refrence.leagues[league]) != "";
-        if (leagueExists) {
-          await LeagueService.getById(refrence.leagues[league], retrievedLeague => {
-            if (retrievedLeague) {
-              profile.leagues[league] = retrievedLeague;
-            } else {
-              profile.leagues[league] = {};
-            }
-          })
-        } else {
-          profile.leagues[league] = {};
-        }
-      })
-      
-      // get matches
-      await refrence.matches.asyncForEach(async match => {
-        await MatchService.getById(match, retrievedMatch => {
-          if (retrievedMatch) profile.matches.push(retrievedMatch);
+      if (!refrence) {
+        res.status(400).json("not found")
+      } else {
+        // get leagues
+        await Object.keys(refrence.leagues).asyncForEach(async league => {
+          var leagueExists = Object.keys(refrence.leagues[league]) != "";
+          if (leagueExists) {
+            await LeagueService.getById(refrence.leagues[league], retrievedLeague => {
+              if (retrievedLeague) {
+                profile.leagues[league] = retrievedLeague;
+              } else {
+                profile.leagues[league] = {};
+              }
+            })
+          } else {
+            profile.leagues[league] = {};
+          }
         })
-      })
+        
+        // get matches
+        await refrence.matches.asyncForEach(async match => {
+          await MatchService.getById(match, retrievedMatch => {
+            if (retrievedMatch) profile.matches.push(retrievedMatch);
+          })
+        })
 
-      // format matches
-      await SummonerProfileService.formatMatches(profile.summoner, profile.matches, updatedMatches => {
-        profile.matches = updatedMatches;
-      })
+        // format matches
+        await SummonerProfileService.formatMatches(profile.summoner, profile.matches, updatedMatches => {
+          profile.matches = updatedMatches;
+        })
 
-      // translate matches
-      await SummonerProfileService.translate(profile, language, updatedProfile => {
-        profile = updatedProfile;
-      }) 
-      res.status(200).json(profile)
+        // translate matches
+        await SummonerProfileService.translate(profile, language, updatedProfile => {
+          profile = updatedProfile;
+        }) 
+        res.status(200).json(profile)
+      }
     }
   })
   
@@ -228,7 +230,7 @@ module.exports = (main, static) => {
       await SummonerProfileService.translate(profile, "English", updatedProfile => {
         if (updatedProfile) profile = updatedProfile
       })
-
+      
       res.status(200).json(profile)
     }
   })
