@@ -10,6 +10,7 @@ module.exports = (region) => {
   return {
     async getMatches(options, callback) {
       // options = {accountID, query}
+      // query = ?champion/queue/season/endTime/beginTime/endTime/beginIndex
       try {
         var res = await client.get('/lol/match/v4/matchlists/by-account/'+
         `${options.accountId}?${options.query}api_key=${riot.key}`)

@@ -15,8 +15,8 @@ export class SummonerDetailComponent implements OnChanges {
   ) { }
 
   @Input() solo: object;
-  @Input() flex_5v5: object;
-  @Input() flex_3v3: object;
+  @Input() flex5v5: object;
+  @Input() flex3v3: object;
 
   ngOnChanges() {
   }

@@ -16,10 +16,10 @@
     </div>
   </div>
   <app-summoner-detail class="detail"
-                       [solo]="profile.leagues.solo"
-                       [flex_5v5]="profile.leagues.flex5v5"
-                       [flex_3v3]="profile.leagues.flex3v3"></app-summoner-detail>
+                       [solo]="profile.leagues.RANKED_SOLO_5x5"
+                       [flex5v5]="profile.leagues.RANKED_FLEX_SR"
+                       [flex3v3]="profile.leagues.RANKED_FLEX_TT"></app-summoner-detail>
   <app-summoner-match-history class="match-history"
                               (clear)="clearProfile()"
                               [matches]="profile.matches"></app-summoner-match-history>
-</div>
+</div> 

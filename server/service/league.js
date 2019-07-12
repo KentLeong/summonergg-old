@@ -9,20 +9,41 @@ Array.prototype.asyncForEach = async function(cb) {
 module.exports = (region) => {
   var local = require('../config/localClient')(region);
   return {
+    async getById(id, callback) {
+      try {
+        var res = await local.get(`/leagues/by-id/${id}`)
+        log(`Found league for ${id}!`, 'success')
+        callback(res.data)
+      } catch(err) {
+        log(`League not found for ${id}`, "warning")
+        callback(false)
+      }
+    },
+    async getBySummonerId(id, queueType, callback) {
+      try {
+        var res = await local.get(`/leagues/by-summonerId/${id}?queueType=${queueType}`)
+        log(`Found league for ${res.data.summonerName}! type: ${queueType}`, 'success')
+        callback(res.data)
+      } catch(err) {
+        log(`League not found for ${id}, type: ${queueType}`, "warning")
+        callback(false)
+      }
+    },
     async getByName(name, callback) {
       try {
         var res = await local.get(`/leagues/name/${name}`)
-        log(`Found league for ${name}!`, 'success')
+        log(`Found league for ${name}! `, 'success')
         callback(res.data)
       } catch(err) {
         log(`League not found for ${name}`, "warning")
         callback(false)
       }
     },
-    async new(league) {
+    async new(league, callback) {
       try {
         var res = await local.post('/leagues/', {league: league})
         log(`League for ${league.summonerName} was created`, 'success')
+        callback(res.data)
       } catch(err) {
         log('Failed to save League for '+league.summonerName, 'error')
       }

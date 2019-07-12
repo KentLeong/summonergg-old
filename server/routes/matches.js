@@ -23,12 +23,27 @@ module.exports = (main, static) => {
     Match.findOne({gameId: req.params.id}, (err, match) => {
       if (err) {
         res.status(500).json(err)
+      } else if (!match) {
+        res.status(400).json("not found")
       } else {
         res.status(200).json(match)
       }
     })
   })
-  
+
+  // GET Match
+  router.get('/by-id/:id', (req, res) => {
+    Match.findOne({_id: req.params.id}, (err, match) => {
+      if (err) {
+        res.status(500).json(err)
+      } else if (!match) {
+        res.status(400).json("not found")
+      } else {
+        res.status(200).json(match)
+      }
+    })
+  })
+    
   // POST Match
   router.post('/', (req, res) => {
     var newMatch = new Match(req.body.match)

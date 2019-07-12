@@ -22,10 +22,11 @@ module.exports = (region) => {
         callback(false)
       }
     },
-    async new(summoner) {
+    async new(summoner, callback) {
       try {
         var res = await local.post('/summoners/', {summoner: summoner})
         log(`${summoner.name} was created!`, 'success')
+        callback(res.data)
       } catch(err) {
         log(`Failed to create ${summoner.name}`, 'error')
       }

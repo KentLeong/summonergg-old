@@ -8,7 +8,12 @@ Array.prototype.asyncForEach = async function(cb) {
 }
 module.exports = (region) => {
   var local = require('../config/localClient')(region);
-  var static = require('./static')(region)
+  var static = require('./static')(region);
+  
+  var SummonerService = require('./summoner')(region);
+  var LeagueService = require('./league')(region);
+  var MatchService = require('./match')(region);
+  var RiotMatch = require('../riot/match')(region);
   return {
     async get(name, callback) {
       try {
@@ -17,6 +22,16 @@ module.exports = (region) => {
         callback(res.data)
       } catch(err) {
         log(`Could not find summoner profile of ${name}`, 'warning')
+        callback(false)
+      }
+    },
+    async getById(id, callback) {
+      try {
+        var res = await local.get('/summonerProfiles/by-id/'+id)
+        log(`Found summoner profile of ${id} from local database`, 'success')
+        callback(res.data)
+      } catch(err) {
+        log(`Could not find summoner profile of ${id}`, 'warning')
         callback(false)
       }
     },
@@ -31,10 +46,128 @@ module.exports = (region) => {
     async new(profile) {
       try {
         var res = await local.post('/summonerProfiles/', {summonerProfile: profile})
-        log(`${profile.summoner.name} summoner profile was saved`, 'success')
+        log(`${profile.summoner} summoner profile was saved`, 'success')
       } catch(err) {
-        log(`${profile.summoner.name} summoner profile was not created`, 'error')
+        log(`${profile.summoner} summoner profile was not created`, 'error')
       }
+    },
+    async getSummoner(profile, name, callback) {
+      //find summoner
+      await SummonerService.getByName(name, foundSummoner => {
+        if (foundSummoner) profile.summoner = foundSummoner;
+      })
+      if (!profile.summoner) {
+        await RiotSummoner.getByName(name, foundSummoner => {
+          if (foundSummoner) {
+            profile.summoner = foundSummoner;
+          }
+        })
+      }
+      callback(profile)
+    },
+    async getLeagues(profile, callback) {
+      //get leagues
+      profile.leagues = {}
+      var queues = ['RANKED_SOLO_5x5', 'RANKED_FLEX_SR', 'RANKED_FLEX_TT'];
+      var found = false;
+      await queues.asyncForEach(async (queue, i) => {
+        await LeagueService.getBySummonerId(profile.summoner.id, queue, league => {
+          if (league) {
+            found = true
+            profile.leagues[queue] = league;
+          } else {
+            profile.leagues[queue] = {};
+          }
+        })
+      })
+      if (!found) {
+        await RiotLeague.bySummonerId(profile.summoner.id, async leagues => {
+          if (leagues.length > 0) {
+            await leagues.asyncForEach(league => {
+              profile.leagues[league.queueType] = league
+            })
+          }
+        })
+      }
+      callback(profile)
+    },
+    async getMatches(profile, query, callback) {
+      options = {
+        accountId: profile.summoner.accountId,
+        query: query
+      }
+      await RiotMatch.getMatches(options, retrievedMatches => {
+        if (retrievedMatches) profile.matches = retrievedMatches;
+      })
+      if (profile.matches) {
+        await profile.matches.asyncForEach(async (match, i) => {
+          var found = false
+          await MatchService.getByGameId(match.gameId, retrievedMatch => {
+            if (retrievedMatch) {
+              found = true;
+              profile.matches[i] = retrievedMatch;
+            }
+          })
+          if (!found) {
+            await RiotMatch.byID(match.gameId, retrievedMatch => {
+              if (retrievedMatch) profile.matches[i] = retrievedMatch;
+            })
+          }
+        })
+      }
+      callback(profile)
+    },
+    async saveProfile(profile, callback) {
+      var newProfile = {
+        summoner: "",
+        leagues: {},
+        matches: []
+      };
+      //save summoner
+      log('saving summoner..', 'info')
+      if (!profile.summoner._id) {
+        await SummonerService.new(profile.summoner, updatedProfile => {
+          newProfile.summoner = updatedProfile._id;
+          profile.summoner = updatedProfile;
+        })
+      } else {
+        newProfile.summoner = profile.summoner._id;
+      }
+      //save league
+      log('saving leagues..', 'info')
+      await Object.keys(profile.leagues).asyncForEach(async league => {
+        let leagueExists = Object.keys(profile.leagues[league]).length > 0;
+        let notSaved = !profile.leagues[league]._id; 
+        if (leagueExists && notSaved) {
+          await LeagueService.new(profile.leagues[league], updatedLeague => {
+            profile.leagues[league] = updatedLeague;
+            newProfile.leagues[league] = updatedLeague._id;
+          })
+        } else {
+          if (leagueExists) {
+            newProfile.leagues[league] = profile.leagues[league]._id;
+          } else {
+            newProfile.leagues[league] = "";
+          }
+        }
+      })
+      //save matches
+      log('saving matches..', 'info')
+      if (profile.matches.length > 0) {
+        await profile.matches.asyncForEach(async (match, i) => {
+          if (!match._id) {
+            await MatchService.new(match, updatedMatch => {
+              profile.matches[i] = updatedMatch;
+              newProfile.matches.push(updatedMatch._id);
+            })
+          } else {
+            newProfile.matches.push(match._id);
+          }
+        })
+      }
+      //save profile
+      log('saving profile..', 'info')
+      callback(profile)
     },
     async formatMatches(summoner, matches, callback) {
       //role
@@ -50,7 +183,7 @@ module.exports = (region) => {
       // everything else
       await matches.asyncForEach(async (match, i) => {
         await match.participants.asyncForEach(async (part, a) => {
-          if (summoner.accountId == part.currentAccountId) {
+          if (summoner.accountId == part.accountId) {
             matches[i].profileIcon = part.profileIcon;
             matches[i].teamId = part.teamId;
             matches[i].championId = part.championId;

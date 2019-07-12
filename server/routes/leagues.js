@@ -20,16 +20,31 @@ module.exports = (main, static) => {
     League.findOne({summonerId: req.params.id}, (err, league) => {
       if (err) {
         res.status(500).json(err)
+      } else if (!league) {
+        res.status(200).json("not found")
       } else {
         res.status(200).json(league)
       }
     })
   })
-  
+
+  // GET by Mongo ID
+  router.get('/by-id/:id', (req, res) => {
+    League.findOne({_id: req.params.id}, (err, league) => {
+      if (err) {
+        res.status(500).json(err)
+      } else if (!league) {
+        res.status(200).json("not found")
+      } else {
+        res.status(200).json(league)
+      }
+    })
+  })
+
   // POST League
   router.post('/', (req, res) => {
     var newLeague = new League(req.body.league)
-    League.findOne({summonerId: newLeague.summonerId}, (err, league) => {
+    League.findOne({summonerId: newLeague.summonerId, queueType: newLeague.queueType}, (err, league) => {
       if (league) {
         res.status(400).json("exists")
       } else {
@@ -78,6 +93,17 @@ module.exports = (main, static) => {
         res.status(400).json(leagues)
       } else {
         res.status(200).json(leagues)
+      }
+    })
+  })
+
+  //find league by name
+  router.get('/by-summonerId/:id', (req,res) => {
+    League.findOne({summonerId: req.params.id, queueType:req.query.queueType}, (err, league) => {
+      if (err) {
+        res.status(500).json(err)
+      } else {
+        res.status(200).json(league)
       }
     })
   })

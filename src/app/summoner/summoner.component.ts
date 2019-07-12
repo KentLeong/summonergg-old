@@ -77,7 +77,10 @@ export class SummonerComponent implements OnDestroy {
   setProfile(profile: SummonerProfile) {
     if (!profile.leagues) profile.leagues = {};
     this.lastPlayed = 'url("../../assets/champion/splash/'+profile.matches[0].championId.id+'_0.jpg")'
-
+    Object.keys(profile.leagues).forEach(league => {
+      var leagueExists = Object.keys(profile.leagues[league]).length > 0;
+      if (!leagueExists) delete profile.leagues[league];
+    })
     profile.matches.forEach(match => {
       // find outcome of game
       match.showToggle = false;

@@ -20,6 +20,16 @@ module.exports = (region) => {
     },
     async getById(id, callback) {
       try {
+        var res = await local.get(`/matches/by-id/${id}`)
+        log(`Match ID: ${id} found from local database!`, 'success');
+        callback(res.data)
+      } catch(err) {
+        log(`Match ID: ${id} was not found from local database`, 'warning')
+        callback(false)
+      }
+    },
+    async getByGameId(id, callback) {
+      try {
         var res = await local.get(`/matches/${id}`)
         log(`Match ID: ${id} found from local database!`, 'success');
         callback(res.data)
@@ -28,10 +38,11 @@ module.exports = (region) => {
         callback(false)
       }
     },
-    async new(match) {
+    async new(match, callback) {
       try {
         var res = await local.post('/matches/', {match: match})
         log(`Match ID: ${match.gameId} was saved`, 'success')
+        callback(res.data)
       } catch(err) {
         log(`Match ID: ${match.gameId} was not saved`, 'error')
       }

@@ -3,7 +3,7 @@ const riot = require('../config/riot')
 module.exports = (region) => {
   const client = require('../config/riotClient')(region);
   return {
-    async bySummonerID(id, callback) {
+    async bySummonerId(id, callback) {
       try {
         var res = await client.get(`/lol/league/v4/entries/by-summoner/`+
         `${id}?api_key=${riot.key}`)
@@ -14,7 +14,7 @@ module.exports = (region) => {
         callback(false)
       }
     },
-    async byLeagueID(id, callback) {
+    async byLeagueId(id, callback) {
       try {
         var res = await client.get(`/lol/league/v4/leagues/`+
         `${id}?api_key=${riot.key}`)
@@ -25,18 +25,18 @@ module.exports = (region) => {
         callback(false)
       }
     },
-    async retriveDivision(options, callback) {
+    async retrieveDivision(options, callback) {
       try {
         var res = await client.get(`/lol/league/v4/entries/`+
-        `${options.queue}/${options.tier}/${options.division}?api_key=${riot.key}`)
-        log(`Retrieved divison for ${options.queue}/${options.tier}/${options.divison}, from riot API`, 'success')
+        `${options.queue}/${options.tier}/${options.division}?page=${options.page}&api_key=${riot.key}`)        
+        log(`Retrieved page ${options.page} of divison for ${options.queue}/${options.tier}/${options.division}, from riot API`, 'success')
         callback(res.data)
       } catch(err) {
-        log(`Failed to get divison for ${options.queue}/${options.tier}/${options.divison} from riot API`, 'error')
+        log(`Failed to get page ${options.page} of divison ${options.queue}/${options.tier}/${options.division} from riot API`, 'error')
         callback(false)
       }
     },
-    async retriveChallenger(queue, callback) {
+    async retrieveChallenger(queue, callback) {
       try {
         var res = await client.get(`/lol/league/v4/challengerleagues/by-queue/`+
         `${queue}?api_key=${riot.key}`)
@@ -47,17 +47,18 @@ module.exports = (region) => {
         callback(false)
       }
     },
-    async retriveGrandMaster(id, callback) {
+    async retrieveGrandMaster(queue, callback) {
       try {
         var res = await client.get(`/lol/league/v4/grandmasterleagues/by-queue/`+
         `${queue}?api_key=${riot.key}`)
         log(`Retrieved grandmaster division from riot API`, 'success')
+        callback(res.data)
       } catch(err) {
         log(`Failed to retrieve grandmaster division from riot API`, 'error')
         callback(false)
       }
     },
-    async retriveMaster(id, callback) {
+    async retrieveMaster(queue, callback) {
       try {
         var res = await client.get(`/lol/league/v4/masterleagues/by-queue/`+
         `${queue}?api_key=${riot.key}`)

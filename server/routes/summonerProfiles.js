@@ -56,29 +56,81 @@ module.exports = (main, static) => {
   })
   
   // GET SummonerProfile
-  router.get('/:name', (req, res) => {
+  router.get('/:name', async (req, res) => {
     var language = req.query.language;
-    var name = decodeURI(req.params.name).split("").join("\\s*")
-    var regex = new RegExp(`^${name}$`, "i")
-    SummonerProfile.findOne({'summoner.name': regex}, (err, summonerProfile) => {
+    var summoner = false;
+    await SummonerService.getByName(req.params.name, updatedSummoner => {
+      summoner = updatedSummoner;
+    })
+    if (!summoner) {
+      res.status(400).json("not found")
+    } else {
+      console.log(summoner)
+      var profile = {
+        summoner: {},
+        leagues: {},
+        matches: []
+      };
+      var refrence = {};
+      // get profile and map summoner
+      await SummonerProfileService.getById(summoner._id, profileRef => {
+        refrence = profileRef;
+        profile.summoner = summoner;
+      })
+
+      // get leagues
+      await Object.keys(refrence.leagues).asyncForEach(async league => {
+        var leagueExists = Object.keys(refrence.leagues[league]) != "";
+        if (leagueExists) {
+          await LeagueService.getById(refrence.leagues[league], retrievedLeague => {
+            if (retrievedLeague) {
+              profile.leagues[league] = retrievedLeague;
+            } else {
+              profile.leagues[league] = {};
+            }
+          })
+        } else {
+          profile.leagues[league] = {};
+        }
+      })
+      
+      // get matches
+      await refrence.matches.asyncForEach(async match => {
+        await MatchService.getById(match, retrievedMatch => {
+          if (retrievedMatch) profile.matches.push(retrievedMatch);
+        })
+      })
+
+      // format matches
+      await SummonerProfileService.formatMatches(profile.summoner, profile.matches, updatedMatches => {
+        profile.matches = updatedMatches;
+      })
+
+      // translate matches
+      await SummonerProfileService.translate(profile, language, updatedProfile => {
+        profile = updatedProfile;
+      }) 
+      res.status(200).json(profile)
+    }
+  })
+  
+  // GET SummonerProfile by id
+  router.get('/by-id/:id', (req, res) => {
+    SummonerProfile.findOne({summoner: req.params.id}, (err, profile) => {
       if (err) {
         res.status(500).json(err)
-      } else if (!summonerProfile) {
+      } else if (!profile) {
         res.status(400).json("not found")
-      } else if (language) {
-        SummonerProfileService.translate(summonerProfile, language, profile => {
-          res.status(200).json(profile)
-        })
       } else {
-        res.status(200).json(summonerProfile)
+        res.status(200).json(profile)
       }
     })
   })
-  
+
   // POST SummonerProfile
   router.post('/', (req, res) => {
     var newSummonerProfile = new SummonerProfile(req.body.summonerProfile)
-    SummonerProfile.findOne({'summoner.accountId': newSummonerProfile.summoner.accountId}, (err, summonerProfile) => {
+    SummonerProfile.findOne({summoner: newSummonerProfile.summoner}, (err, summonerProfile) => {
       if (summonerProfile) {
         res.status(400).json("exists")
       } else {
@@ -133,120 +185,51 @@ module.exports = (main, static) => {
   })
   
   // Generate New Profile
-  router.post('/generateProfile', async (req, res) => { 
-    var name = req.body.name;
+  router.post('/generateProfile', async (req, res) => {
+    var name = req.body.name
     var profile = {};
 
-    profile.matches = [];
-    // GET Summoner
-    // by local
-    log(`Generating ${name} profile..`, "info")
-    log(`Retrieving summoner data..`, "info")
-    await SummonerService.getByName(name, async(summoner) => {
-      if (summoner) profile.summoner = summoner;
+    //find summoner profile
+    await SummonerProfileService.get(name, foundProfile => {
+      if (foundProfile) profile = foundProfile;
     })
+
+    //get summoner
+    await SummonerProfileService.getSummoner(profile, name, updatedProfile => {
+      if (updatedProfile) profile = updatedProfile;
+    })
+
+    // check if summoner is found
     if (!profile.summoner) {
-      // by riot
-      await RiotSummoner.getByName(name, summoner => {
-        if (summoner) {
-          profile.summoner = summoner;
-          SummonerService.new(summoner);
-        }
-      })
-    }
-    if (!profile.summoner) {
-      res.status(400).json("summoner does not exist")
+      res.status(400).json("does not exist")
     } else {
-      /**
-       * Finds League and Matches if Summoner is found
-       */
-      // GET League
-      // by local
-      log(`Retrieving league data..`, "info")
-      await LeagueService.getByName(name, leagues => {
-        if (leagues) {
-          profile.leagues = leagues
-        }
-      })
-      if (!profile.leagues) {
-        // by riot
-        await RiotLeague.bySummonerID(profile.summoner.id, leagues => {
-          if (leagues) {
-            profile.leagues = leagues
-            leagues.forEach(league => {
-              LeagueService.new(league);
-            })
-          } else {
-            profile.leagues = {};
-          }
-        })
-      }
-      
-      log('Formating leagues..','info')
-      await LeagueService.formatLeagues(profile.leagues, newLeague => {
-        profile.leagues = newLeague
+      //get leagues
+      await SummonerProfileService.getLeagues(profile, updatedProfile => {
+        profile = updatedProfile;
       })
 
-      // GET Matches
-      // by local
-      log('Retrieving last 10 matches from riot..', 'info')
-      let options = {
-        accountId: profile.summoner.accountId,
-        query: `beginIndex=0&endIndex=10&season=${riot.season}&`
-      }
-      var matches = [];
-      await RiotMatch.getMatches(options, list => {
-        matches = list
-      })
-      if (matches.length > 0) {
-        // get each match data
-        await matches.asyncForEach(async data => {
-          var found = false
-          await MatchService.getById(data.gameId, async match => {
-            if (match){
-              profile.matches.push(match);
-              found = true
-            }
-          })
-          if (!found) {
-            await RiotMatch.byID(data.gameId, match => {
-              if (match) {
-                MatchService.new(match)
-                profile.matches.push(match);
-              };
-            })
-          } 
-        })
-        
-        // format match for summoner profile
-        log(`Formating matches for profile..`, 'info')
-        await SummonerProfileService.formatMatches(profile.summoner, profile.matches, matches => {
-          profile.matches = matches
-        })
-        await SummonerProfileService.formatForProfile(profile.matches, matches => {
-          profile.matches = matches
-        })
-      }
-      var profileFound = false;
-      log('Checking if profile already exists..', 'info')
-      await SummonerProfileService.get(name, profile => {
-        if (profile) profileFound = profile;
+      // get first 10 matches
+      var query = "beginIndex=0&endIndex=10&season="+riot.season+"&"
+      await SummonerProfileService.getMatches(profile, query, updatedProfile => {
+        profile = updatedProfile;
       })
 
-      if (profileFound) {
-        log("Profile found, updating profile..", 'info')
-        await SummonerProfileService.update(profile)
-      } else {
-        log('Profile not found, saving '+profile.summoner.name+' summoner profile..', 'info')
-        await SummonerProfileService.new(profile);
-      }
-      if (profile.matches.length > 0) {
-        await SummonerProfileService.translate(profile, "English", profile => {
-          res.status(200).json(profile)
-        })
-      } else {
-        res.status(200).json(profile)
-      }
+      // save profile data
+      await SummonerProfileService.saveProfile(profile, updatedProfile => {
+        profile = updatedProfile;
+      })
+
+      // format profile matches
+      await SummonerProfileService.formatMatches(profile.summoner, profile.matches, formatedMatches => {
+        if (formatedMatches) profile.matches = formatedMatches;
+      })
+
+      // translate profile match champions
+      await SummonerProfileService.translate(profile, "English", updatedProfile => {
+        if (updatedProfile) profile = updatedProfile
+      })
+
+      res.status(200).json(profile)
     }
   })
 
@@ -272,7 +255,6 @@ module.exports = (main, static) => {
     await SummonerProfileService.formatMatches(summoner, matches, formatedMatches => {
       matches = formatedMatches;
     })
-
     res.status(200).json(matches)
   })
   return router
