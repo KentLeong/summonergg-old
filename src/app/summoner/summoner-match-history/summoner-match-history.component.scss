@@ -1,4 +1,14 @@
 @import '../../../scss/values';
+.no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
 .container-info {
   background-color: $content-dark;
   border-radius: .5rem;
@@ -326,12 +336,14 @@
   position: relative;
   background-color: grey;
   &__nav {
+    color: rgba(255,255,255, 0.95);
     box-shadow: inset 0rem -.8rem 1rem -1rem rgba(0,0,0,0.6), inset 0rem 1.1rem 1rem -1rem rgba(0,0,0,0.6);
     width: 100%;
     height: 4rem;
     background: grey;
     border-left: .5rem #16181b solid;
     border-right: .5rem #16181b solid;
+    filter: brightness(0.85);
     span {
       text-align: center;
       display: inline-block;
@@ -362,6 +374,7 @@
       &__match-details {
         grid-area: matchDetails;
         width: inherit;
+        filter: brightness(0.85);
         border-left: .5rem #16181b solid;
         border-right: .5rem #16181b solid;
         box-shadow: inset 0rem -.8rem 1rem -1rem rgba(0,0,0,0.6), inset 0rem 1.1rem 1rem -1rem rgba(0,0,0,0.6);

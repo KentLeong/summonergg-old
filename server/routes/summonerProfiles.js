@@ -143,9 +143,7 @@ module.exports = (main, static) => {
     log(`Generating ${name} profile..`, "info")
     log(`Retrieving summoner data..`, "info")
     await SummonerService.getByName(name, async(summoner) => {
-      if (summoner) {
-        profile.summoner = summoner
-      };
+      if (summoner) profile.summoner = summoner;
     })
     if (!profile.summoner) {
       // by riot

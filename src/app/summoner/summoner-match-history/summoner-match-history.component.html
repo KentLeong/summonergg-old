@@ -2,7 +2,7 @@
 
 </div>
 
-<div class="games" *ngIf="matches">
+<div class="games no-select" *ngIf="matches">
   <div class="game" *ngFor="let match of matches" [ngStyle]="match.toggle">
     <div class="main" [ngStyle]="match.main">
       <div class="outcome" (click)="toggleMatch(match)">

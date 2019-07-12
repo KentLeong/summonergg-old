@@ -36,6 +36,16 @@ module.exports = (main, static) => {
       if (match) {
         res.status(400).json("exists")
       } else {
+        newMatch.participants.forEach(part => {
+          if (part.currentPlatformId) delete part.currentPlatformId;
+          if (part.currentAccountId) delete part.currentAccountId;
+          if (part.matchHistoryUri) delete part.matchHistoryUri;
+          if (part.profileIcon) delete part.profileIcon;
+          if (part.highestAchievedSeasonTier) delete part.highestAchievedSeasonTier;
+          if (part.participantId) delete part.participantId;
+          if (part.summonerName) delete part.summonerName;
+          if (part.platformId) delete part.platformId;
+        })
         newMatch.save((err, match) => {
           if (err) {
             res.status(500).json(err)

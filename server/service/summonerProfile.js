@@ -176,14 +176,10 @@ module.exports = (region) => {
       await matches.asyncForEach(async match => {
         await match.blueTeam.asyncForEach(async part => {
           await delete part.stats;
-          await delete part.matchHistoryUri;
-          await delete part.highestAchievedSeasonTier;
           await delete part.timeline;
         })
         await match.redTeam.asyncForEach(async part => {
           await delete part.stats;
-          await delete part.matchHistoryUri;
-          await delete part.highestAchievedSeasonTier;
           await delete part.timeline;
         })
       })
