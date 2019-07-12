@@ -35,6 +35,20 @@ module.exports = (region) => {
       } catch(err) {
         log(`Match ID: ${match.gameId} was not saved`, 'error')
       }
+    },
+    async getByAccount(id, options, callback) {
+      var query = "?"
+      Object.keys(options).forEach((op, i) => {
+        if (i != 0) query += "&";
+        query += op + "=" +options[op]
+      })
+      try {
+        var res = await local.get(`/matches/multi/${id}${query}`)
+        log(`Retrieved matches for AccountID: ${id}`, 'success')
+        callback(res.data)
+      } catch(err) {
+        log(`Could not retrieve matches for AccountID: ${id}`, "error")
+      }
     }
   }
 }

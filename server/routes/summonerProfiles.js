@@ -225,6 +225,9 @@ module.exports = (main, static) => {
         await SummonerProfileService.formatMatches(profile.summoner, profile.matches, matches => {
           profile.matches = matches
         })
+        await SummonerProfileService.formatForProfile(profile.matches, matches => {
+          profile.matches = matches
+        })
       }
       var profileFound = false;
       log('Checking if profile already exists..', 'info')
@@ -247,6 +250,32 @@ module.exports = (main, static) => {
         res.status(200).json(profile)
       }
     }
+  })
+
+  // retrieve matches
+  router.get('/retrieveMatches/:accountId', async (req, res) => {
+    var options = {
+      skip: req.query.skip,
+      limit: req.query.limit,
+      season: req.query.season
+    }
+    var matches = [];
+    var summoner = {};
+
+    if (req.query.champion) options.champion = req.query.champion;
+
+    await SummonerService.getByAccount(req.params.accountId, summonerFound => {
+      summoner = summonerFound
+    })
+    await MatchService.getByAccount(req.params.accountId, options, newMatches => {
+      matches = newMatches
+    })
+
+    await SummonerProfileService.formatMatches(summoner, matches, formatedMatches => {
+      matches = formatedMatches;
+    })
+
+    res.status(200).json(matches)
   })
   return router
 }

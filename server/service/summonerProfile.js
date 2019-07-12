@@ -38,7 +38,6 @@ module.exports = (region) => {
     },
     async formatMatches(summoner, matches, callback) {
       //role
-
       await matches.asyncForEach(async(match, i) => {
         await match.participants.asyncForEach(async (part, a) => {
           var role = part.timeline.role;
@@ -161,10 +160,6 @@ module.exports = (region) => {
         match.blueTeam = [];
         match.redTeam = [];
         await match.participants.asyncForEach(async part => {
-          await delete part.stats;
-          await delete part.matchHistoryUri;
-          await delete part.highestAchievedSeasonTier;
-          await delete part.timeline;
           if (part.teamId == 100) {
             match.blueTeam.push(part)
           } else if (part.teamId == 200) {
@@ -174,6 +169,23 @@ module.exports = (region) => {
       })
       await matches.asyncForEach(async match => {
         delete match.participants
+      })
+      callback(matches)
+    },
+    async formatForProfile(matches, callback) {
+      await matches.asyncForEach(async match => {
+        await match.blueTeam.asyncForEach(async part => {
+          await delete part.stats;
+          await delete part.matchHistoryUri;
+          await delete part.highestAchievedSeasonTier;
+          await delete part.timeline;
+        })
+        await match.redTeam.asyncForEach(async part => {
+          await delete part.stats;
+          await delete part.matchHistoryUri;
+          await delete part.highestAchievedSeasonTier;
+          await delete part.timeline;
+        })
       })
       callback(matches)
     },

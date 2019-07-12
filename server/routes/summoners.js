@@ -84,5 +84,16 @@ module.exports = (main, static) => {
       }
     })
   })
+
+  // GET by Account
+  router.get('/by-account/:id', (req, res) => {
+    Summoner.findOne({accountId: req.params.id}, (err, summoner) => {
+      if (err) {
+        res.status(500).json(err)
+      } else {
+        res.status(200).json(summoner)
+      }
+    })
+  })
   return router
 }

@@ -43,7 +43,7 @@ export class SummonerService {
   generateProfile(name: string) {
     return this.http.post(this.protocal+"/api/summonerProfiles/generateProfile", {name: name}, httpOptions);
   }
-  retrieveMatches() {
-    
+  retrieveMatches(accountId: string) {
+    return this.http.get(this.protocal+"/api/summonerProfiles/retrieveMatches/"+accountId)
   }
 }
