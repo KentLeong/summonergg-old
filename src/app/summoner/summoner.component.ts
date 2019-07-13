@@ -57,7 +57,7 @@ export class SummonerComponent implements OnDestroy {
 
         this.setProfile(profile);
         // Update profile if 30 minutes past since last update;
-        if (minutes > 60) this.generateProfile(name);
+        if (minutes > 60) this.generateProfile(name);9
       }, res => {
         if (res.error == "not found") {
           this.generateProfile(name)

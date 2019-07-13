@@ -3,6 +3,7 @@ const path = require("path");
 const http = require("http");
 const fs = require("fs");
 const bodyParser = require("body-parser");
+const log = require('./server/config/log');
 
 const riot = require('./server/config/riot');
 const app = express();
@@ -36,9 +37,10 @@ var connnect = (async () => {
   var static = {};
 
   // connect to region mongo db
+  log("Connecting to regional enpoints..", 'info')
   await Object.keys(endpoints).asyncForEach(async (endPoint, i) => {
-    main[endPoint] = await mongoose.createConnection("mongodb://localhost:27017/sgg_"+endPoint, {useNewUrlParser: true});
-    console.log(endPoint+" connected")
+    main[endPoint] = await mongoose.createConnection(endpoints[endPoint].db+"/sgg_"+endPoint, {useNewUrlParser: true});
+    log(endpoints[endPoint].name+" connected at host: "+ endpoints[endPoint].db, 'success')
   })
 
   fs.readdir("./server/routes", (err, files) => {
@@ -58,8 +60,8 @@ var connnect = (async () => {
     app.set('port', port)
   
     const server = http.createServer(app);
-    server.listen(port, () => console.log("API runnning on localhost:"+port))
-  }, 1500)
+    server.listen(port, () => log("API runnning on localhost:"+port, "info"))
+  }, 500)
 })();
 
 
