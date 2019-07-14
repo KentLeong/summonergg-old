@@ -11,4 +11,6 @@ function calculateTime(pages) {
   return `${hours} hours, and ${seconds} seconds`;
 }
 
-console.log(calculateTime(6830))
+// plat I - III 418
+// plat IV 404
+console.log(calculateTime(404))

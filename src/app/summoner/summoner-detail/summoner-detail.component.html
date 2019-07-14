@@ -16,22 +16,22 @@
         <span>Win Ratio {{solo.winRatio}}%</span><br>
       </div>
     </div>
-    <div *ngIf="flex5v5" class="ranks__flex__5v5 flex">
-      <img src="../../assets/rank-icons/{{flex5v5.tier.toLowerCase()}}_{{flex5v5.rank}}.png" alt="">
+    <div *ngIf="flexSR" class="ranks__flex__5v5 flex">
+      <img src="../../assets/rank-icons/{{flexSR.tier.toLowerCase()}}_{{flexSR.rank}}.png" alt="">
       <div class="details">
         <span>Flex 5v5</span><br>
-        <span>{{flex5v5.tier}} {{flex5v5.rank}}</span><br>
-        <span>{{flex5v5.leaguePoints}} LP <span>/ {{flex5v5.wins}}W {{flex5v5.losses}}L</span></span><br>
+        <span>{{flexSR.tier}} {{flexSR.rank}}</span><br>
+        <span>{{flexSR.leaguePoints}} LP <span>/ {{flexSR.wins}}W {{flexSR.losses}}L</span></span><br>
         <span>Unranked</span>
       </div>
     </div>
     <br>
-    <div *ngIf="flex3v3" class="ranks__flex__3v3 flex">
-      <img src="../../assets/rank-icons/{{flex3v3.tier.toLowerCase()}}_{{flex3v3.rank}}.png" alt="">
+    <div *ngIf="flexTT" class="ranks__flex__3v3 flex">
+      <img src="../../assets/rank-icons/{{flexTT.tier.toLowerCase()}}_{{flexTT.rank}}.png" alt="">
       <div class="details">
         <span>Flex 3v3</span><br>
-        <span>{{flex3v3.tier}} {{flex3v3.rank}}</span><br>
-        <span>{{flex3v3.leaguePoints}} LP <span>/ {{flex3v3.wins}}W {{flex3v3.losses}}L</span></span><br>
+        <span>{{flexTT.tier}} {{flexTT.rank}}</span><br>
+        <span>{{flexTT.leaguePoints}} LP <span>/ {{flexTT.wins}}W {{flexTT.losses}}L</span></span><br>
         <span>Unranked</span>
       </div>
     </div>

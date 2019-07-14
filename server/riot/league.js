@@ -1,4 +1,5 @@
 const log = require('../config/log');
+const dev = require('../config/dev');
 const riot = require('../config/riot')
 module.exports = (region) => {
   const client = require('../config/riotClient')(region);
@@ -7,10 +8,10 @@ module.exports = (region) => {
       try {
         var res = await client.get(`/lol/league/v4/entries/by-summoner/`+
         `${id}?api_key=${riot.key}`)
-        log(`Retrieved leagues by summoner ID: ${id}, from riot API`, 'success')
+        dev(`Retrieved leagues by summoner ID: ${id}, from riot API`, 'success')
         callback(res.data)
       } catch(err) {
-        log(`Failed to get leagues by summoner ID: ${id} from riot API`, 'error')
+        dev(`Failed to get leagues by summoner ID: ${id} from riot API`, 'error')
         callback(false)
       }
     },
@@ -18,10 +19,10 @@ module.exports = (region) => {
       try {
         var res = await client.get(`/lol/league/v4/leagues/`+
         `${id}?api_key=${riot.key}`)
-        log(`Retrieved leagues by league ID: ${id}, from riot API`, 'success')
+        dev(`Retrieved leagues by league ID: ${id}, from riot API`, 'success')
         callback(res.data)
       } catch(err) {
-        log(`Failed to get leagues by league ID: ${id} from riot API`, 'error')
+        dev(`Failed to get leagues by league ID: ${id} from riot API`, 'error')
         callback(false)
       }
     },

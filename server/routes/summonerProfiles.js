@@ -1,4 +1,5 @@
 const log = require('../config/log');
+const dev = require('../config/dev');
 const rate = require('../service/rate')();
 
 module.exports = (main, static) => {
@@ -55,7 +56,35 @@ module.exports = (main, static) => {
     RiotMatch = require('../riot/match')(region);
     next();
   })
-  
+  // GET all SummonerProfile
+  router.get('/', (req, res) => {
+    SummonerProfile.find().limit(+req.query.limit).sort('-lastUpdated').select("summoner").exec((err, profiles) => {
+      if (err) {
+        res.status(500).json(err)
+      } else if (!profiles) {
+        res.status(400).json("idk what happened")
+      } else {
+        res.status(200).json(profiles)
+      }
+    })
+  })
+
+  // GET ALL puuid duplicates and delete
+  router.get('/puuid-duplicates/:id', (req, res) => {
+    SummonerProfile.find({'summoner.puuid': req.params.id}, (err, duplicates) => {
+      if (err) {
+        res.status(500).json(err)
+      } else if (duplicates.length < 2) {
+        res.status(200).json(duplicates.length)
+      } else {
+        for (var i = 1; i < duplicates.length; i++) {
+          log(`deleting ${i+1} of duplicate`, 'success')
+          duplicates[i].delete();
+        }
+        res.status(200).json(duplicates.length)
+      }
+    })
+  })
   // GET SummonerProfile
   router.get('/:name', async (req, res) => {
     var removedSpaces = req.params.name.split(" ").join("")

@@ -1,14 +1,15 @@
 
 const region = "na"
-const rate = require('./server/service/rate')();
+const rate = require('../server/service/rate')();
+const riot = require('../server/config/riot');
 const axios = require('axios');
-const MatchService = require('./server/service/match')(region);
-const RiotMatch = require('./server/riot/match')(region);
+const MatchService = require('../server/service/match')(region);
+const RiotMatch = require('../server/riot/match')(region);
 const static = require('./server/static/champions.json')
-const RiotLeague = require('./server/riot/league')(region);
-const SummonerProfileService = require('./server/service/summonerProfile')(region);
-const localClient = require('./server/config/localClient')(region);
-const log = require('./server/config/log');
+const RiotLeague = require('../server/riot/league')(region);
+const SummonerProfileService = require('../server/service/summonerProfile')(region);
+const localClient = require('../server/config/localClient')(region);
+const log = require('../server/config/log');
 const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
@@ -16,13 +17,12 @@ Array.prototype.asyncForEach = async function(cb) {
   }
 }
 
-
 var main = async function() {
   var matches = [];
   var leagueList = [];
   var queues = ["RANKED_SOLO_5x5"];
-  var tiers = ["DIAMOND"];
-  var divisions = ["IV"];
+  var tiers = ["PLATINUM"];
+  var divisions = ["I"];
   // var queues = ["RANKED_SOLO_5x5", "RANKED_FLEX_TT", "RANKED_FLEX_SR"];
   // var tiers = ["DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON"];
   // var divisions = ["I", "II", "III", "IV"];

@@ -1,4 +1,5 @@
 const log = require('../config/log');
+const dev = require('../config/dev');
 const champions = require('../static/champions');
 const gameMode = require('../static/gameModes');
 Array.prototype.asyncForEach = async function(cb) {
@@ -17,40 +18,58 @@ module.exports = (region) => {
   var RiotSummoner = require('../riot/summoner')(region);
   var RiotLeague = require('../riot/league')(region);
   return {
+    async findDeleteDuplicates(id, callback) {
+      try {
+        var res = await local.get('/summonerProfiles/puuid-duplicates/'+id)
+        callback(res.data)
+      } catch(err) {
+        callback(false)
+      }
+    },
+    async all(options, callback) {
+      try {
+        var res = await local.get('/summonerProfiles/'+`?limit=${options.limit}&skip=${options.skip}`)
+        dev(`retrieved every summoner profile`, 'success')
+        callback(res.data)
+      } catch(err) {
+        dev(`failed to retrieve every summoner profile`, 'warning')
+        callback(false)
+      }
+    },
     async get(name, callback) {
       try {
         var res = await local.get('/summonerProfiles/'+decodeURI(name))
-        log(`Found summoner profile of ${res.data.summoner.name} from local database`, 'success')
+        dev(`Found summoner profile of ${res.data.summoner.name} from local database`, 'success')
         callback(res.data)
       } catch(err) {
-        log(`Could not find summoner profile of ${name}`, 'warning')
+        dev(`Could not find summoner profile of ${name}`, 'warning')
         callback(false)
       }
     },
     async getById(id, callback) {
       try {
         var res = await local.get('/summonerProfiles/by-id/'+id)
-        log(`Found summoner profile of ${id} from local database`, 'success')
+        dev(`Found summoner profile of ${res.data.summoner.name} from local database`, 'success')
         callback(res.data)
       } catch(err) {
-        log(`Could not find summoner profile of ${id}`, 'warning')
+        dev(`Could not find summoner profile of ${id}`, 'warning')
         callback(false)
       }
     },
     async update(profile) {
       try {
         var res = await local.put('/summonerProfiles/', {summonerProfile: profile})
-        log(`${profile.summoner.name} summoner profile was updated`, 'success')
+        dev(`${profile.summoner.name} summoner profile was updated`, 'success')
       } catch(err) {
-        log(`${profile.summoner.name} summoner profile was not created`, 'error')
+        dev(`${profile.summoner.name} summoner profile was not created`, 'error')
       }
     },
     async new(profile) {
       try {
         var res = await local.post('/summonerProfiles/', {summonerProfile: profile})
-        log(`${profile.summoner.name} summoner profile was saved`, 'success')
+        dev(`${profile.summoner.name} summoner profile was saved`, 'success')
       } catch(err) {
-        log(`${profile.summoner.name} summoner profile was not created`, 'error')
+        dev(`${profile.summoner.name} summoner profile was not created`, 'error')
       }
     },
     async getSummoner(profile, name, callback) {
@@ -227,7 +246,7 @@ module.exports = (region) => {
       })
 
       // sort roles
-      log('sorting match..', 'info')
+      dev('sorting match..', 'info')
       await matches.asyncForEach(async (match, i) => {
         var order = {
           top: 1,

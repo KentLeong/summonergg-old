@@ -3,7 +3,7 @@ const chalk = require('chalk');
 
 var out = function(message, status) {
   var colorized;
-  if (config.logging) {
+  if (config.dev) {
     switch (status) {
       case "success":
           colorized = chalk.green.underline("[ SUCCESS ]");

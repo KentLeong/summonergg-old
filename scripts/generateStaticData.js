@@ -1,7 +1,7 @@
 
 const fs = require('fs');
-const riot = require('./server/config/riot');
-const log = require('./server/config/log');
+const riot = require('../server/config/riot');
+const log = require('../server/config/log');
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
     await cb(this[i], i, this)
@@ -14,7 +14,7 @@ var main = (async ()=>{
 
   await languageList.asyncForEach(async lang => {
     async function getData(lang, callback) {
-      var client = require('./server/config/ddragonClient')(lang);
+      var client = require('../server/config/ddragonClient')(lang);
       log('Retrieving champion list for '+lang, 'info')
       try {
         var res = await client.get('/champion.json')

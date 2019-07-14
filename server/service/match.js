@@ -1,4 +1,5 @@
 const log = require('../config/log');
+const dev = require('../config/dev');
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
     await cb(this[i], i, this)
@@ -11,40 +12,40 @@ module.exports = (region) => {
     async getByName(name, callback) {
       try {
         var res = await local.get(`/matches/name/${name}`)
-        log(`Found matches for ${name}`, 'success');
+        dev(`Found matches for ${name}`, 'success');
         callback(res.data)
       } catch(err) {
-        log(`Could not find matches for ${name}`, 'warning');
+        dev(`Could not find matches for ${name}`, 'warning');
         callback(false)
       }
     },
     async getById(id, callback) {
       try {
         var res = await local.get(`/matches/by-id/${id}`)
-        log(`Match ID: ${id} found from local database!`, 'success');
+        dev(`Match ID: ${id} found from local database!`, 'success');
         callback(res.data)
       } catch(err) {
-        log(`Match ID: ${id} was not found from local database`, 'warning')
+        dev(`Match ID: ${id} was not found from local database`, 'warning')
         callback(false)
       }
     },
     async getByGameId(id, callback) {
       try {
         var res = await local.get(`/matches/${id}`)
-        log(`Match ID: ${id} found from local database!`, 'success');
+        dev(`Match ID: ${id} found from local database!`, 'success');
         callback(res.data)
       } catch(err) {
-        log(`Match ID: ${id} was not found from local database`, 'warning')
+        dev(`Match ID: ${id} was not found from local database`, 'warning')
         callback(false)
       }
     },
     async new(match, callback) {
       try {
         var res = await local.post('/matches/', {match: match})
-        log(`Match ID: ${match.gameId} was saved`, 'success')
+        dev(`Match ID: ${match.gameId} was saved`, 'success')
         callback(res.data)
       } catch(err) {
-        log(`Match ID: ${match.gameId} was not saved`, 'error')
+        dev(`Match ID: ${match.gameId} was not saved`, 'error')
       }
     },
     async getByAccount(id, options, callback) {
@@ -55,10 +56,10 @@ module.exports = (region) => {
       })
       try {
         var res = await local.get(`/matches/multi/${id}${query}`)
-        log(`Retrieved matches for AccountID: ${id}`, 'success')
+        dev(`Retrieved matches for AccountID: ${id}`, 'success')
         callback(res.data)
       } catch(err) {
-        log(`Could not retrieve matches for AccountID: ${id}`, "error")
+        dev(`Could not retrieve matches for AccountID: ${id}`, "error")
       }
     }
   }

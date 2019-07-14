@@ -1,6 +1,7 @@
 const fs = require('fs');
 const riot = require('../config/riot');
 const log = require('../config/log');
+const dev = require('../config/dev');
 
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
@@ -14,7 +15,7 @@ module.exports = () => {
   var currentRate = {};
   fs.readFile(__dirname+'\\..\\config\\rate.json', (err, data) => {
     if (!data) {
-      log('rate.json not found. create...', 'info')
+      dev('rate.json not found. create...', 'info')
       var rate = {
         second: 0,
         minute: 0,

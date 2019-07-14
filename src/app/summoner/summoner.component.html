@@ -16,9 +16,9 @@
     </div>
   </div>
   <app-summoner-detail class="detail"
-                       [solo]="profile.leagues.RANKED_SOLO_5x5"
-                       [flex5v5]="profile.leagues.RANKED_FLEX_SR"
-                       [flex3v3]="profile.leagues.RANKED_FLEX_TT"></app-summoner-detail>
+                       [solo]="profile.leagues.solo"
+                       [flexSR]="profile.leagues.flexSR"
+                       [flexTT]="profile.leagues.flexTT"></app-summoner-detail>
   <app-summoner-match-history class="match-history"
                               (clear)="clearProfile()"
                               [matches]="profile.matches"></app-summoner-match-history>
