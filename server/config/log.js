@@ -1,25 +1,34 @@
 const config = require('../../config');
 const chalk = require('chalk');
-var log = function(message, status) {
+const log = console.log;
+var out = function(message, status) {
   var colorized;
   if (config.dev) {
     switch (status) {
       case "success":
-          colorized = chalk.green("[ SUCCESS ] " + message);
+          colorized = chalk.green.underline("[ SUCCESS ]");
+          message = chalk.green(message);
           break;
       case "info":
-          colorized = chalk.blue("[ INFO    ] "+message);
+          colorized = chalk.blue.underline("[ INFO    ]");
+          message = chalk.blue(message);
           break;
       case "error":
-          colorized = chalk.red("[ ERROR   ] "+message);
+          colorized = chalk.red.underline("[ ERROR   ]");
+          message = chalk.red(message);
           break;
       case "warning":
-          colorized = chalk.yellow("[ WARNING ] "+message);
+          colorized = chalk.yellow.underline("[ WARNING ]");
+          message = chalk.yellow(message);
+          break;
+      case "complete":
+          colorized = chalk.magenta.underline("[ COMPLETE ]");
+          message = chalk.magenta(message);
           break;
       default:
           colorized = chalk.white(message);
     }
-    console.log(colorized)
+    console.log(colorized+" "+message)
   }
 }
-module.exports = log;
+module.exports = out;

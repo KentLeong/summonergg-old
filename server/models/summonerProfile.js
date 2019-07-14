@@ -2,9 +2,13 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var schema = new Schema({
-  summoner: String,
-  leagues: Object,
-  matches: [String],
+  summoner: Object,
+  leagues: {
+    solo: Object,
+    flexSR: Object,
+    flexTT: Object
+  },
+  matches: [Object],
   lastUpdated: {type: Date, default: Date.now()}
 })
 module.exports = (mongo)=> {

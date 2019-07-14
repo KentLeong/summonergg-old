@@ -9,6 +9,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+  "nodemonConfig": {
+    "ignore": ["server/config/rate.json"]
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~7.2.0",

@@ -14,7 +14,7 @@ module.exports = (main, static) => {
   router.use((req, res, next) => {
     region = req.headers.host.split(".")[0].replace("http://", "")
     Match = require('../models/match')(main[region]);
-    RiotMatch = require('../riot/match')(main[region]);
+    RiotMatch = require('../riot/match')(region);
     next();
   })
   
@@ -56,7 +56,6 @@ module.exports = (main, static) => {
           if (part.profileIcon) delete part.profileIcon;
           if (part.highestAchievedSeasonTier) delete part.highestAchievedSeasonTier;
           if (part.participantId) delete part.participantId;
-          if (part.summonerName) delete part.summonerName;
           if (part.platformId) delete part.platformId;
         })
         newMatch.save((err, match) => {

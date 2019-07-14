@@ -60,7 +60,7 @@ var connnect = (async () => {
     app.set('port', port)
   
     const server = http.createServer(app);
-    server.listen(port, () => log("API runnning on localhost:"+port, "info"))
+    server.listen(port, () => log("API runnning on localhost:"+port, "complete"))
   }, 500)
 })();
 
