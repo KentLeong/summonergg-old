@@ -13,6 +13,7 @@ export class Match {
   teams: team[];
   participants: participant[];
   // indiv
+  played: string;
   outcome: string;
   toggle: object;
   toggleContent: object;

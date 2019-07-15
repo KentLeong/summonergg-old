@@ -85,6 +85,20 @@ module.exports = (main, static) => {
       }
     })
   })
+
+  // GET SummonerProfile by PUUID
+  router.get('/by-puuid/:id', (req, res) => {
+    SummonerProfile.findOne({'summoner.puuid': req.params.id}, (err, profile) => {
+      if (err) {
+        res.status(500).json(err)
+      } else if (!profile) {
+        res.status(400).json("does not exist")
+      } else {
+        res.status(200).json(profile)
+      }
+    })
+  })
+
   // GET SummonerProfile
   router.get('/:name', async (req, res) => {
     var removedSpaces = req.params.name.split(" ").join("")
@@ -233,13 +247,80 @@ module.exports = (main, static) => {
         
         // save profile match
         SummonerProfileService.formatAndSave(profile)
-        // rate.rateUsed(totalUsed);
+        rate.rateUsed(totalUsed);
         log(`Finished creating profile for ${profile.summoner.name}`, "complete")
         res.status(200).json(profile);
       }
     }
   })
 
+  // Update profile
+  router.put('/updateProfile', async (req, res) => {
+    var puuid = req.body.puuid;
+    var profile;
+    //for api rates
+    var totalUsed = 0;
+    var max = 13;
+    var rateAvailable = true;
+
+    await rate.remainingRate((currentRate, second, minute) => {
+      if (second < max || minute < max) {
+        rateAvailable = false;
+        log(`Riot rate used up, please wait`, "warning")
+      }
+    })
+    if (!rateAvailable) {
+      res.status(400).json("riot rate used up")
+    } else {
+      //find summoner profile from local database by puuid
+      await SummonerProfileService.byPuuid(puuid, updatedProfile => {
+        profile = updatedProfile;
+      })
+
+      // get summoner by puuid from riot and set summoner
+      await RiotSummoner.getByPUUID(puuid, foundSummoner => {
+        totalUsed++
+        if (foundSummoner) profile.summoner = foundSummoner;
+      })
+
+      // get leagues from riot with updated summoner and set leagues
+      var queues = {
+        RANKED_SOLO_5x5: "solo",
+        RANKED_FLEX_SR: "flexSR",
+        RANKED_FLEX_TT: "flexTT"
+      }
+      await RiotLeague.bySummonerId(profile.summoner.id, async leagues => {
+        totalUsed++
+        if (leagues.length > 0) {
+          await leagues.asyncForEach(league => {
+            profile.leagues[queues[league.queueType]] = league
+          })
+        }
+      })
+
+      // update last 10 matches
+      var query = "beginIndex=0&endIndex=10&season="+riot.season+"&"
+      await SummonerProfileService.getMatches(profile, query, (updatedProfile, used) => {
+        totalUsed += used;
+        profile = updatedProfile;
+      })
+
+      // format profile matches
+      await SummonerProfileService.formatMatches(profile.summoner, profile.matches, formatedMatches => {
+        if (formatedMatches) profile.matches = formatedMatches;
+      })
+
+      // translate profile match champions
+      await SummonerProfileService.translate(profile, "English", updatedProfile => {
+        if (updatedProfile) profile = updatedProfile
+      })
+      // save profile match
+      SummonerProfileService.formatAndUpdate(profile)
+      rate.rateUsed(totalUsed);
+      log(`Finished Updating profile: ${profile.summoner.name}`, 'complete')
+      res.status(200).json(profile)
+    }
+  })
   // retrieve matches
   router.get('/retrieveMatches/:accountId', async (req, res) => {
     var options = {

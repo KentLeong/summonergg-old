@@ -46,24 +46,23 @@ export class SummonerComponent implements OnDestroy {
     if (this.navigationSubscription) this.navigationSubscription.unsubscribe();
   }
 
-  updateSummoner() {
-  }
-
   getProfile(name: string) {
     this.summonerService.getProfile(name, "English")
       .subscribe((profile: SummonerProfile) => {
-        var lastUpdated = new Date(profile.lastUpdated).getTime();
-        let minutes = ((new Date()).getTime() - lastUpdated)/60000;
-
         this.setProfile(profile);
-        // Update profile if 30 minutes past since last update;
-        if (minutes > 60) this.generateProfile(name);9
       }, res => {
         if (res.error == "not found") {
           this.generateProfile(name)
         } else {
           console.error(res) 
         }
+      })
+  }
+
+  updateProfile(profile: SummonerProfile) {
+    this.summonerService.updateProfile(profile.summoner.puuid)
+      .subscribe((profile: SummonerProfile) => {
+        this.setProfile(profile)
       })
   }
 
@@ -81,10 +80,16 @@ export class SummonerComponent implements OnDestroy {
       var leagueExists = Object.keys(profile.leagues[league]).length > 0;
       if (!leagueExists) delete profile.leagues[league];
     })
-    profile.matches.forEach(match => {
+    profile.matches.forEach((match, i) => {
+      // set game played
+      this.timePlayed(match.gameCreation, match.gameDuration).then(played => {
+        profile.matches[i].played = played
+      })
+
       // find outcome of game
       match.showToggle = false;
       match.toggleContent = {'display': "none"};
+
       match.toggle = {};
       if (match.outcome == "Defeat") {
         match.main = {
@@ -131,5 +136,42 @@ export class SummonerComponent implements OnDestroy {
 
   clearProfile() {
     this.summoner = new Summoner;
+  }
+
+  async timePlayed(gameCreation, gameDuration) {
+    var lastPlayed = new Date(gameCreation).getTime();
+    let playedMinutes = Math.floor(((new Date()).getTime() - lastPlayed)/60000);
+    // playedMinutes = playedMinutes/60;
+    console.log(playedMinutes)
+    if (playedMinutes < 1) {
+      return `few seconds ago`
+    } else if (playedMinutes < 60) {
+      if (playedMinutes == 1) {
+        return `${playedMinutes} minute ago`
+      } else {
+        return `${playedMinutes} minutes ago`
+      }
+    } else if (playedMinutes < 1440) {
+      let hours = Math.floor(playedMinutes/60)
+      if (hours == 1) {
+        return `${hours} hour ago`
+      } else {
+        return `${hours} hours ago`
+      }
+    } else if (playedMinutes < 40320){
+      let days = Math.floor(playedMinutes/1440)
+      if (days = 1) {
+        return `${days} day ago`
+      } else {
+        return `${days} days ago`
+      }
+    } else {
+      let month = Math.floor(playedMinutes/40320)
+      if (month == 1) {
+        return `${month} month ago`
+      } else {
+        return `${month} months ago`
+      }
+    }
   }
 }

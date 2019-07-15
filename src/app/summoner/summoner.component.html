@@ -11,8 +11,8 @@
       <h4>{{profile.summoner.name}}</h4>
       <span>Rank 165,556 (top 14.84%)</span>
       <br>
-      <button (click)="updateSummoner()">Update</button>
-      <button>Live</button>
+      <button (click)="updateProfile(profile)" class="btn update">Update</button>
+      <button class="btn live">Live</button>
     </div>
   </div>
   <app-summoner-detail class="detail"

@@ -46,4 +46,7 @@ export class SummonerService {
   retrieveMatches(accountId: string) {
     return this.http.get(this.protocal+"/api/summonerProfiles/retrieveMatches/"+accountId)
   }
+  updateProfile(puuid: string) {
+    return this.http.put(this.protocal+"/api/summonerProfiles/updateProfile/", {puuid: puuid}, httpOptions);
+  }
 }

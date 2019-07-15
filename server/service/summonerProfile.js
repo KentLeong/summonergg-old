@@ -18,6 +18,16 @@ module.exports = (region) => {
   var RiotSummoner = require('../riot/summoner')(region);
   var RiotLeague = require('../riot/league')(region);
   return {
+    async byPuuid(id, callback) {
+      try {
+        var res = await local.get('/summonerProfiles/by-puuid/'+id)
+        dev(`got ${res.data.summoner.name} profile with puuid`, 'success')
+        callback(res.data)
+      } catch(err) {
+        dev(`Could not get profile from puuid: ${id}`, 'warning')
+        callback(false)
+      }
+    },
     async findDeleteDuplicates(id, callback) {
       try {
         var res = await local.get('/summonerProfiles/puuid-duplicates/'+id)
@@ -216,10 +226,6 @@ module.exports = (region) => {
             let gameMinutes = (match.gameDuration/60)
             matches[i].minionsPerMin = (minionsKilled/gameMinutes).toFixed(1)
 
-            // game played
-            this.timePlayed(match.gameCreation).then(played => {
-              matches[i].played = played
-            })
             // kda
             matches[i].kda = ((part.stats.kills+part.stats.assists)/part.stats.assists).toFixed(2)
 
@@ -330,40 +336,28 @@ module.exports = (region) => {
       }
       this.new(profile)
     },
-    async timePlayed(gameCreation) {
-      var lastPlayed = new Date(gameCreation).getTime();
-      let playedMinutes = Math.floor(((new Date()).getTime() - lastPlayed)/60000);
-      if (playedMinutes < 1) {
-        return `few seconds ago`
-      } else if (playedMinutes < 60) {
-        if (playedMinutes == 1) {
-          return `${playedMinutes} minute ago`
-        } else {
-          return `${playedMinutes} minutes ago`
-        }
-      } else if (playedMinutes < 1440) {
-        let hours = Math.floor(playedMinutes/60)
-        if (hours == 1) {
-          return `${hours} hour ago`
-        } else {
-          return `${hours} hours ago`
-        }
-      } else if (playedMinutes < 40320){
-        let days = Math.floor(playedMinutes/1440)
-        if (days = 1) {
-          return `${days} day ago`
-        } else {
-          return `${days} days ago`
-        }
-      } else {
-        let month = Math.floor(playedMinutes/40320)
-        if (month == 1) {
-          return `${month} month ago`
-        } else {
-          return `${month} months ago`
-        }
+    async formatAndUpdate(profile) {
+      await profile.matches.asyncForEach(async match => {
+        await match.blueTeam.asyncForEach(part => {
+          delete part.stats;
+          delete part.timeline;
+          delete part.spell1Id;
+          delete part.spell2Id;
+        })
+        await match.redTeam.asyncForEach(part => {
+          delete part.stats;
+          delete part.timeline;
+          delete part.spell1Id;
+          delete part.spell2Id;
+        })
+      })
+      if (Object.keys(profile.leagues).length > 0) {
+        await Object.keys(profile.leagues).asyncForEach(league => {
+          delete profile.leagues[league].summonerName;
+          delete profile.leagues[league].summonerId;
+        })
       }
-
+      this.update(profile)
     },
     async findRole(role, lane) {
       if (lane == "JUNGLE") {
