@@ -1,5 +1,11 @@
 <div class="search">
-  <button class="search__region">NA</button>   
-  <input type="text" [(ngModel)]="summoner">
-  <button (click)="searchSummoner(summoner)" class="search__go">GO</button>    
+  <div class="btn-container left region-container">
+    <div class="left region-left center"></div>
+    <div class="right region-right center"></div>
+    <span class="region">NA</span>
+  </div>
+  <input type="text" [(ngModel)]="summoner" placeholder="Summoner..">
+  <div class="btn-container right">
+    <img src="../../assets/general/magnifying.png" alt=""(click)="searchSummoner(summoner)" class="search__go">  
+  </div>  
 </div>

@@ -16,28 +16,39 @@
   }
 }
 .btn {
-  width: 13.5rem;
+  width: 12.5rem;
   height: 4.5rem;
   border-radius: .3rem;
   background: $content-dark;
   border: none;
   color: white;
   font-weight: 700;
-  font-size: 1.6rem
+  font-size: 1.6rem;
+  padding-left: 1.5rem;
+}
+.btn:focus {
+  outline: none;
 }
 .btn:hover {
   filter: brightness(1.15);
   cursor: pointer;
 }
 .live {
+  text-align: left;
   margin-left: .5rem;
   background: linear-gradient(0deg, rgba(95,52,37,1) 0%, rgba(95,37,37,1) 100%);
   border-top: .1rem #973f3f solid;
+  border-bottom: 4px solid rgb(80, 42, 29);
+  box-shadow: 0px 3px 0px 0px rgba(0,0,0,.2);
 }
 .update {
+  text-align: left;
   background: linear-gradient(0deg, #254e5f 0%, #25395f 100%);
   border-top: .1rem #345688 solid;
+  border-bottom: 4px solid #1c3c49;
+  box-shadow: 0px 3px 0px 0px rgba(0,0,0,.2);
 }
+
 .container { 
   width: 110rem;
   margin: auto;
@@ -112,4 +123,14 @@
   position: relative;
   top:-20rem;
   grid-area: mh;
+}
+
+.selectable {
+  -webkit-touch-callout: text; /* iOS Safari */
+    -webkit-user-select: text; /* Safari */
+      -khtml-user-select: text; /* Konqueror HTML */
+        -moz-user-select: text; /* Firefox */
+        -ms-user-select: text; /* Internet Explorer/Edge */
+            user-select: text /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }

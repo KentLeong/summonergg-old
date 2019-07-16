@@ -116,6 +116,6 @@ module.exports = (main, static) => {
       res.status(200).json(matches)
     })
   })
-  
+
   return router
 }

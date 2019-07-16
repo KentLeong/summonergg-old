@@ -15,7 +15,11 @@
       <span>Season 9</span>
     </div>
     <div class="champion-query query-content">
+      <div class="champion-query__left"></div>
       <input type="text" placeholder="Search Champion..">
+      <div class="champion-query__right">
+        <img src="../../../assets/general/magnifying.png" alt="">
+      </div>
     </div>
   </div>
   <div class="search__stats">
@@ -44,7 +48,7 @@
   </div>
 </div>
 
-<div class="games no-select" *ngIf="profile.matches">
+<div class="games" *ngIf="profile.matches">
   <div class="game" *ngFor="let match of profile.matches" [ngStyle]="match.toggle">
     <div class="main" [ngStyle]="match.main">
       <div class="outcome" (click)="toggleMatch(match)">

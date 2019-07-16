@@ -1,17 +1,88 @@
+@import '../../scss/values';
+
 .search {
   margin: auto;
   display: inline;
   input {
-    height: 3rem;
+    display: inline-block;
+    vertical-align: middle;
+    height: 3.6rem;
+    width: 13rem;
+    border: none;
+    background: rgba(26, 29, 32, 0.6);
+    color: white;
+    padding: .5rem;
+    padding-left: 1.5rem;
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
+  .btn-container {
+    vertical-align: middle;
+    display: inline-block;
+    width: 3.6rem;
+    height: 3.6rem;
+    background: rgba(26, 29, 32, 0.6);
+  }
+  button {
+    margin-top: .3rem;
+    border: none;
   }
   &__go {
+    margin-top:.2rem;
+    margin-right: .4rem;
     width: 3rem;
     height: 3rem;
-    border-radius: 0 50% 50% 0;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  &__go:hover {
+    filter: brightness(0.8);
   }
   &__region {
+    margin-right: .2rem;
     width: 3rem;
     height: 3rem;
+    border-radius: 50%;
+  }
+  .left {
     border-radius: 50% 0 0 50%;
+  }
+  .right {
+    border-radius: 0 50% 50% 0;
+  }
+  .center {
+    position: absolute;
+    vertical-align: middle;
+    margin-top: .5rem;
+    background: $content-dark;
+  }
+  .center:hover {
+    cursor: pointer;
+  }
+  .region-left {
+    margin-left:.6rem;
+    height: 2.6rem;
+    width: 2.6rem;
+  }
+  .region-right {
+    margin-left: 1.8rem;
+    height: 2.6rem;
+    width: 2.6rem;
+  }
+  .region {
+    display: inline-block;
+    position: relative;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight:700;
+    width: 4rem;
+    margin-left: .4rem;
+    text-align: center;
+  }
+  .region:hover {
+    cursor: pointer;
+  }
+  .region-container:hover {
+    filter: brightness(1.1);
   }
 }
