@@ -66,6 +66,85 @@
       }
     }
   }
+  &__stats {
+    padding: .5rem;
+    display: grid;
+    width: 100%;
+    grid-template-columns: 11rem 9rem 10rem 5rem 5rem;
+    grid-template-rows: 10rem;
+    grid-template-areas: "pie streak performance . .";
+    text-align: center;
+    .stat-pie {
+      grid-area: pie;
+      .stat-games {
+        margin-top:.2rem;
+        position: absolute;
+        font-size: 1.3rem;
+        width: 11rem;
+        span {
+          margin-left: .4rem;
+        }
+      }
+      .pie-chart {
+        position: absolute;
+        margin-left: 2rem;
+        margin-top: 2rem;
+        width: 7.5rem;
+        height: 7.5rem;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(37,78,95,1) 40%, rgba(37,57,95,1) 100%);
+      }
+      .pie-inside {
+        position: absolute;
+        margin-left: 3rem;
+        margin-top: 3rem;
+        width: 5.5rem;
+        height: 5.5rem;
+        border-radius: 50%;
+        background: $content-dark;
+        span {
+          margin-top: 1.8rem;
+          display: inline-block;
+        }
+      }
+    }
+    .stat-streak {
+      grid-area: streak;
+      padding: .5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      .streak-container {
+        width: 100%;
+      }
+      span {
+        display: block;
+      }
+      span:last-child {
+        font-size: 4rem;
+        font-weight: 700;
+      }
+    }
+    .stat-performance {
+      grid-area: performance;
+      padding: .5rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      .performance-container {
+        width: 100%;
+      }
+      span {
+        display: block;
+      }
+      span:first-child {
+        margin-top: .5rem;
+        margin-bottom: .5rem;
+      }
+      span:last-child {
+        font-size: 4rem;
+        font-weight: 700;
+      }
+    }
+  }
 }
 .game {
   margin-top: 1rem;
@@ -91,11 +170,9 @@
 }
 .main:hover {
   cursor: pointer;
-  .type, .champion, .detail, .stats{
-    background-color: rgba(0,0,0,0.08);
-  }
+  filter: brightness(1.1);
   .stats {
-    box-shadow: 1.7rem 0rem 1.1rem 0rem rgba(0,0,0,0.08);
+    // box-shadow: 1.7rem 0rem 1.1rem 0rem rgba(0,0,0,0.08);
   }
 }
 

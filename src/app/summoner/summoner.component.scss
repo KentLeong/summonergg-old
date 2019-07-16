@@ -16,16 +16,17 @@
   }
 }
 .btn {
-  width: 12rem;
+  width: 13.5rem;
   height: 4.5rem;
   border-radius: .3rem;
   background: $content-dark;
   border: none;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.6rem
 }
 .btn:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.15);
   cursor: pointer;
 }
 .live {

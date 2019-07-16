@@ -17,11 +17,11 @@ export class SummonerMatchHistoryComponent implements OnChanges {
     private summonerService: SummonerService
   ) { }
   
-  @Input() matches: any[];
+  @Input() profile: SummonerProfile;
   @Output() clear = new EventEmitter();
 
   ngOnChanges() {
-    console.log(this.matches)
+    console.log(this.profile.matches)
   }
 
   initMatches() {

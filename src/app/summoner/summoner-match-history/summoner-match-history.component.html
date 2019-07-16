@@ -18,10 +18,34 @@
       <input type="text" placeholder="Search Champion..">
     </div>
   </div>
+  <div class="search__stats">
+    <div class="stat-pie">
+      <div class="stat-games">
+        <span>10G 2W 8L</span>
+      </div>
+      <div class="pie-chart">
+      </div>
+      <div class="pie-inside">
+        <span>50%</span>
+      </div>
+    </div>
+    <div class="stat-streak">
+      <div class="streak-container">
+        <span>{{profile.stats.streak.outcome}} Streak</span>
+        <span>{{profile.stats.streak.num}}</span>
+      </div>
+    </div>
+    <div class="stat-performance">
+      <div class="performance-container">
+        <span>Performance Rating</span>
+        <span>{{profile.stats.streak.num}}</span>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="games no-select" *ngIf="matches">
-  <div class="game" *ngFor="let match of matches" [ngStyle]="match.toggle">
+<div class="games no-select" *ngIf="profile.matches">
+  <div class="game" *ngFor="let match of profile.matches" [ngStyle]="match.toggle">
     <div class="main" [ngStyle]="match.main">
       <div class="outcome" (click)="toggleMatch(match)">
       </div>

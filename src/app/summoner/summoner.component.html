@@ -1,5 +1,5 @@
 <div *ngIf="profile" class="champion-image">
-  <img src="../../assets/champion/splash/{{profile.matches[0].championId.id}}_0.jpg" alt="">
+  <img src="../../assets/champion/splash/{{profile.stats.lastPlayed}}_0.jpg" alt="">
 </div>
 <div *ngIf="profile" class="container">
   <div class="profile">
@@ -21,5 +21,5 @@
                        [flexTT]="profile.leagues.flexTT"></app-summoner-detail>
   <app-summoner-match-history class="match-history"
                               (clear)="clearProfile()"
-                              [matches]="profile.matches"></app-summoner-match-history>
+                              [profile]="profile"></app-summoner-match-history>
 </div> 
