@@ -106,7 +106,7 @@
     padding: .5rem;
     display: grid;
     width: 100%;
-    grid-template-columns: 11rem 15rem 9rem 10rem 5rem;
+    grid-template-columns: 11rem 10rem 9rem 10rem 5rem;
     grid-template-rows: 10rem;
     grid-template-areas: "pie . streak performance .";
     text-align: center;
@@ -188,7 +188,7 @@
       }
       span:first-child {
         margin-top: .5rem;
-        margin-bottom: .5rem;
+        margin-bottom: .2rem;
       }
       span:last-child {
         font-size: 4rem;

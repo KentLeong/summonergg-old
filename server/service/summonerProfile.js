@@ -153,6 +153,9 @@ module.exports = (region) => {
       }
       callback(profile, used)
     },
+    async generateStats() {
+
+    },
     async formatMatches(summoner, matches, callback) {
       //role
       await matches.asyncForEach(async(match, i) => {

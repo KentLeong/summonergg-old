@@ -240,6 +240,11 @@ module.exports = (main, static) => {
           if (formatedMatches) profile.matches = formatedMatches;
         })
 
+        // generate stats
+        await SummonerProfileService.generateStats(profile, updatedProfile => {
+          if (updatedProfile) profile = updatedProfile
+        })
+
         // translate profile match champions
         await SummonerProfileService.translate(profile, "English", updatedProfile => {
           if (updatedProfile) profile = updatedProfile
@@ -308,6 +313,11 @@ module.exports = (main, static) => {
       // format profile matches
       await SummonerProfileService.formatMatches(profile.summoner, profile.matches, formatedMatches => {
         if (formatedMatches) profile.matches = formatedMatches;
+      })
+
+      // generate stats
+      await SummonerProfileService.generateStats(profile, updatedProfile => {
+        if (updatedProfile) profile = updatedProfile
       })
 
       // translate profile match champions

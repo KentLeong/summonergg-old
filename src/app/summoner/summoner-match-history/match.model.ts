@@ -13,6 +13,9 @@ export class Match {
   teams: team[];
   participants: participant[];
   // indiv
+  kills: number;
+  deaths: number;
+  assists: number;
   played: string;
   outcome: string;
   toggle: object;
