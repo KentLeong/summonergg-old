@@ -144,6 +144,21 @@
         }
       }
     }
+    .total-kda {
+      font-size: 1.6rem;
+      font-weight: 700;
+      display: inline-block;
+      vertical-align: middle;
+      .kda-container {
+        margin-top: 2.5rem;
+        .paren {
+          display: inline;
+        }
+        span {
+          display: block;
+        }
+      }
+    }
     .stat-streak {
       grid-area: streak;
       padding: .5rem;

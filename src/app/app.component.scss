@@ -18,10 +18,9 @@
 .nav {
   position: absolute;
   height: 5.5rem;
-  margin-top: 2rem;
   width: 100%;
   z-index: 10;
-  background-color: transparent;
+  background-color: $base-dark;
   &__header {
     display: grid;
     grid-template-columns: 150px auto 300px;
