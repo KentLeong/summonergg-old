@@ -40,7 +40,7 @@ var main = (async ()=>{
 
   log("finished", 'success')
   let data = JSON.stringify(champions);
-  fs.writeFileSync('./server/static/champions.json', data);
+  fs.writeFileSync('../server/static/champions.json', data);
 })();
 
 

@@ -10,7 +10,9 @@
     "e2e": "ng e2e"
   },
   "nodemonConfig": {
-    "ignore": ["server/config/rate.json"]
+    "ignore": [
+      "server/config/rate.json",
+      "server/static/leagues/*"]
   },
   "private": true,
   "dependencies": {

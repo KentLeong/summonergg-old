@@ -254,6 +254,7 @@ module.exports = (main, static) => {
         await SummonerProfileService.generateRecentChampions(profile, updatedProfile => {
           if (updatedProfile) profile = updatedProfile
         })
+
         // save profile match
         SummonerProfileService.formatAndSave(profile)
         
