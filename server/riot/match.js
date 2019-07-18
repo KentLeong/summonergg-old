@@ -10,14 +10,18 @@ module.exports = (region) => {
   const client = require('../config/riotClient')(region)
   return {
     async getMatches(options, callback) {
-      // options = {accountID, query}
+      // options = {accountId, query}
       // query = ?champion/queue/season/endTime/beginTime/endTime/beginIndex
       try {
+        var query = ""
+        Object.keys(options.query).forEach((q, i) => {
+          query += q+"="+options.query[q]+"&";
+        })
         var res = await client.get('/lol/match/v4/matchlists/by-account/'+
-        `${options.accountId}?${options.query}api_key=${riot.key}`)
-        var op = options.query.split('&').join(' ')
+        `${options.accountId}?${query}api_key=${riot.key}`)
+        var op = query.split('&').join(' ')
         dev(`Retrieved matches by account ID: ${options.accountId} with options: ${op}, from riot API`, 'success')
-        callback(res.data.matches)
+        callback(res.data)
       } catch(err) {
         dev(`Failed to retrieve matches by accountID: ${options.accountId} with options: ${options}, from riot API`, 'error')
         callback(false)

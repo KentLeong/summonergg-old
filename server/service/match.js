@@ -1,5 +1,7 @@
 const log = require('../config/log');
 const dev = require('../config/dev');
+const riot = require('../config/riot')
+const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
     await cb(this[i], i, this)
@@ -8,6 +10,7 @@ Array.prototype.asyncForEach = async function(cb) {
 
 module.exports = (region) => {
   var local = require('../config/localClient')(region);
+  var RiotMatch =require('../riot/match')(region);
   return {
     async getByName(name, callback) {
       try {
@@ -61,6 +64,41 @@ module.exports = (region) => {
       } catch(err) {
         dev(`Could not retrieve matches for AccountID: ${id}`, "error")
       }
+    },
+    async getAllPlayerMatch(id) {
+      var done = false;
+      var matches = [];
+      var options = {
+        accountId: id,
+        query: {
+          season: riot.season,
+          beginIndex: 0,
+          endIndex: 100
+        }
+      }
+      do {
+        await RiotMatch.getMatches(options, async res => {
+          matches = [...matches, ...res.matches]
+          if (res.matches.length != 100) done = true;
+          options.query.beginIndex += 100;
+          options.query.endIndex += 100;
+          await waitFor(60);
+        })
+      } while(!done) 
+      await matches.asyncForEach(async (match, i) => {
+        await waitFor(60)
+        var found = false;
+        await this.getById(match.gameId, matchFound => {
+          if (matchFound) found = true;
+        })
+        if (!found) {
+          await RiotMatch.byID(match.gameId, updatedMatch => {
+            match = updatedMatch
+          })
+          await this.new(match, done => {})
+          log(`[${i}] finished saving match: ${match.gameId}`,'success')
+        }
+      })
     }
   }
 }

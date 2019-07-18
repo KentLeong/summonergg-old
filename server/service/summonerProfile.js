@@ -156,9 +156,13 @@ module.exports = (region) => {
     async generateChampions(profile, callback) {
       if (!profile.champions) profile.recent = {};
       if (profile.matches.length > 0) {
-        MatchService.getById(profile.summoner.accountId, matches => {
-          
-        })
+        var done = false;
+        // var options = {
+
+        // }
+        // do {
+        //   MatchService.getByAccount()
+        // } while (!done)
       }
       callback(profile)
     },
