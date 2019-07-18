@@ -9,6 +9,7 @@ var schema = new Schema({
     flexTT: Object
   },
   matches: [Object],
+  stats: Object,
   lastUpdated: {type: Date, default: Date.now()}
 })
 module.exports = (mongo)=> {

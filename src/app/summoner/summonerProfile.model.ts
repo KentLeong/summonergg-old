@@ -13,5 +13,6 @@ export class SummonerProfile {
     this.summoner = profile.summoner;
     this.leagues = profile.leagues;
     this.matches = profile.matches;
+    this.stats = profile.stats;
   }
 }

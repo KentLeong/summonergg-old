@@ -153,8 +153,28 @@ module.exports = (region) => {
       }
       callback(profile, used)
     },
-    async generateStats() {
-
+    async generateChampions(profile, callback) {
+      if (!profile.champions) profile.recent = {};
+      if (profile.matches.length > 0) {
+        MatchService.getById(profile.summoner.accountId, matches => {
+          
+        })
+      }
+      callback(profile)
+    },
+    async generateStats(profile, callback) {
+      if (!profile.stats) profile.stats = {};
+      if (profile.matches.length > 0) {
+        profile.stats.lastPlayed = champions["English"][profile.matches[0].championId].id
+      }
+      this.calculateStreak(profile, updatedProfile => {
+        profile = updatedProfile;
+      })
+      this.caclulateKda(profile, updatedProfile => {
+        profile = updatedProfile;
+      })
+      
+      callback(profile)
     },
     async formatMatches(summoner, matches, callback) {
       //role
@@ -196,7 +216,7 @@ module.exports = (region) => {
               matches[i].outcome = "Defeat";
             }
 
-            if (matches[i].gameDuration < 480) {
+            if (matches[i].gameDuration < 270) {
               matches[i].outcome = "Remake";
             }
             // items
@@ -301,16 +321,20 @@ module.exports = (region) => {
         }
         await match.blueTeam.asyncForEach(async (part, p) => {
           let key = part.championId;
-          profile.matches[i].blueTeam[p].championId = {
-            id: champions[language][key].id,
-            name: champions[language][key].name
+          if (champions[language][key]) {
+            profile.matches[i].blueTeam[p].championId = {
+              id: champions[language][key].id,
+              name: champions[language][key].name
+            }
           }
         })
         await match.redTeam.asyncForEach(async (part, p) => {
           let key = part.championId;
-          profile.matches[i].redTeam[p].championId = {
-            id: champions[language][key].id,
-            name: champions[language][key].name
+          if (champions[language][key]) {
+            profile.matches[i].redTeam[p].championId = {
+              id: champions[language][key].id,
+              name: champions[language][key].name
+            }
           }
         })
       })
@@ -388,6 +412,74 @@ module.exports = (region) => {
           return "bottom"
         }
       }
+    },
+    async calculateStreak(profile, callback) {
+      // calculate streak
+      profile.stats.streak = {
+        outcome: "",
+        num: 0 
+      };
+      profile.matches.some((match, i) => {
+        var end = false;
+        if (match.outcome != "Remake") {
+          if (match.outcome == "Victory") {
+            if (profile.stats.streak.outcome == "") {
+              profile.stats.streak.outcome = "Win";
+              profile.stats.streak.num++;
+            } else if (profile.stats.streak.outcome == "Win") {
+              profile.stats.streak.num++;
+            } else {
+              end = true;
+            }
+          }
+          if (match.outcome == "Defeat") {
+            if (profile.stats.streak.outcome == "") {
+              profile.stats.streak.outcome = "Loss";
+              profile.stats.streak.num++;
+            } else if (profile.stats.streak.outcome == "Loss") {
+              profile.stats.streak.num++;
+            } else {
+              end = true;
+            }
+          }
+        }
+        return end
+      })
+      callback(profile)
+    },
+    async caclulateKda(profile, callback) {
+      //calculate kda
+      var totalKills = 0;
+      var totalAssists = 0;
+      var totalDeaths = 0;
+      var totalMatches = profile.matches.length;
+      var totalWins = 0;
+      var totalLosses = 0;
+      var totalPart = 0;
+      profile.matches.forEach((match) => {
+        totalKills += match.kills;
+        totalAssists += match.assists;
+        totalDeaths += match.deaths;
+        totalPart += match.part;
+        if (match.outcome == "Victory") {
+          totalWins++
+        } else if (match.outcome == "Defeat") {
+          totalLosses++
+        }
+      })
+      var stats = {
+        averageKills: Math.round(totalKills/totalMatches),
+        averageAssists: Math.round(totalAssists/totalMatches),
+        averageDeaths: Math.round(totalDeaths/totalMatches),
+        winRate: Math.round((totalWins/(totalWins+totalLosses))*100),
+        totalMatches: totalMatches,
+        totalWins: totalWins,
+        totalLosses: totalLosses,
+        totalPart: Math.round(totalPart/totalMatches),
+        kda: ((totalKills+totalAssists)/totalDeaths).toFixed(2)
+      }
+      profile.stats = {...profile.stats, ...stats};
+      callback(profile)
     }
   }
 }

@@ -110,7 +110,9 @@ module.exports = (main, static) => {
       } else if (!profile) {
         res.status(400).json("not found")
       } else {
-        res.status(200).json(profile)
+        SummonerProfileService.translate(profile, req.query.language, translatedProfile => {
+          res.status(200).json(translatedProfile)
+        })
       }
     })
   })
@@ -168,10 +170,12 @@ module.exports = (main, static) => {
         profile.matches = "";
         profile.leagues = "";
         profile.lastUpdated = "";
+        profile.stats = "";
         profile.save((err, profile) => {
           profile.summoner = summonerProfile.summoner;
           profile.matches = summonerProfile.matches;
           profile.leagues = summonerProfile.leagues;
+          profile.stats = summonerProfile.stats;
           profile.lastUpdated = new Date();
           profile.save((err, profile) => {
             if (err) {
@@ -193,6 +197,7 @@ module.exports = (main, static) => {
     var rateAvailable = true;
 
     var name = req.body.name
+    var language = req.query.language;
     var profile = {};
 
     await rate.remainingRate((currentRate, second, minute) => {
@@ -245,13 +250,17 @@ module.exports = (main, static) => {
           if (updatedProfile) profile = updatedProfile
         })
 
-        // translate profile match champions
-        await SummonerProfileService.translate(profile, "English", updatedProfile => {
+        // generate champions
+        await SummonerProfileService.generateRecentChampions(profile, updatedProfile => {
           if (updatedProfile) profile = updatedProfile
         })
-        
         // save profile match
         SummonerProfileService.formatAndSave(profile)
+        
+        // translate profile match
+        await SummonerProfileService.translate(profile, language, translatedProfile => {
+          profile = translatedProfile;
+        })
         rate.rateUsed(totalUsed);
         log(`Finished creating profile for ${profile.summoner.name}`, "complete")
         res.status(200).json(profile);
@@ -262,6 +271,7 @@ module.exports = (main, static) => {
   // Update profile
   router.put('/updateProfile', async (req, res) => {
     var puuid = req.body.puuid;
+    var language = req.query.language;
     var profile;
     //for api rates
     var totalUsed = 0;
@@ -320,12 +330,13 @@ module.exports = (main, static) => {
         if (updatedProfile) profile = updatedProfile
       })
 
-      // translate profile match champions
-      await SummonerProfileService.translate(profile, "English", updatedProfile => {
-        if (updatedProfile) profile = updatedProfile
-      })
       // save profile match
       SummonerProfileService.formatAndUpdate(profile)
+
+      // translate profile match
+      await SummonerProfileService.translate(profile, language, translatedProfile => {
+        profile = translatedProfile;
+      })
       rate.rateUsed(totalUsed);
       log(`Finished Updating profile: ${profile.summoner.name}`, 'complete')
       res.status(200).json(profile)

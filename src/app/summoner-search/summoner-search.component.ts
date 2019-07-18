@@ -21,7 +21,13 @@ export class SummonerSearchComponent implements OnInit {
     if (summoner) {
       this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
       this.router.navigate(['/summoner/'+summoner])); 
-    } 
+      this.summoner = "";
+    }
   }
 
-}
+  keyDown(event, summoner) {
+    if (event.keyCode == 13) {
+      this.searchSummoner(summoner)
+    }
+  }
+} 

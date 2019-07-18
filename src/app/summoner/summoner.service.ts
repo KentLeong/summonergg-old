@@ -39,62 +39,23 @@ export class SummonerService {
     return this.http.get(this.protocal+"/api/summonerProfiles/"+name+"?language="+language);
   }
 
-  generateProfile(name: string) {
-    return this.http.post(this.protocal+"/api/summonerProfiles/generateProfile", {name: name}, httpOptions);
+  generateProfile(name: string, language: string) {
+    return this.http.post(this.protocal+"/api/summonerProfiles/generateProfile?language="+language, {name: name}, httpOptions);
   }
   retrieveMatches(accountId: string) {
     return this.http.get(this.protocal+"/api/summonerProfiles/retrieveMatches/"+accountId)
   }
-  updateProfile(puuid: string) {
-    return this.http.put(this.protocal+"/api/summonerProfiles/updateProfile/", {puuid: puuid}, httpOptions);
+  updateProfile(puuid: string, language: string) {
+    return this.http.put(this.protocal+"/api/summonerProfiles/updateProfile/?language="+language, {puuid: puuid}, httpOptions);
   }
 
 
   // profile formating main
   async formatProfile(profile, callback) {
     this.profile = profile;
-    if (!this.profile.leagues) this.profile.leagues = {};
-    this.profile.stats = {};
-    await this.generalStats();
-    await this.formatMatches();
-    await this.deleteEmptyLeagues();
-    await this.calculateStreak();
-    await this.calculateKda();
+    this.formatMatches();
+    this.deleteEmptyLeagues();
     callback(this.profile)
-  }
-  async generalStats() {
-
-    // set Last Played
-    this.profile.stats.lastPlayed = this.profile.matches[0].championId.id
-  }
-  async calculateKda() {
-    var totalKills = 0;
-    var totalAssists = 0;
-    var totalDeaths = 0;
-    var totalMatches = this.profile.matches.length;
-    var totalWins = 0;
-    var totalLosses = 0;
-    this.profile.matches.forEach((match: Match) => {
-      totalKills += match.kills;
-      totalAssists += match.assists;
-      totalDeaths += match.deaths;
-      if (match.outcome == "Victory") {
-        totalWins++
-      } else if (match.outcome == "Defeat") {
-        totalLosses++
-      }
-    })
-    var stats = {
-      averageKills: Math.round(totalKills/totalMatches),
-      averageAssists: Math.round(totalAssists/totalMatches),
-      averageDeaths: Math.round(totalDeaths/totalMatches),
-      winRate: Math.round((totalWins/(totalWins+totalLosses))*100),
-      totalMatches: totalMatches,
-      totalWins: totalWins,
-      totalLosses: totalLosses,
-      kda: ((totalKills+totalAssists)/totalDeaths).toFixed(2)
-    }
-    this.profile.stats = {...this.profile.stats, ...stats};
   }
 
   async formatMatches() {
@@ -153,39 +114,6 @@ export class SummonerService {
     Object.keys(this.profile.leagues).forEach(league => {
       var leagueExists = Object.keys(this.profile.leagues[league]).length > 0;
       if (!leagueExists) delete this.profile.leagues[league];
-    })
-  }
-  // profile format functions
-  async calculateStreak() {
-    this.profile.stats.streak = {
-      outcome: "",
-      num: 0 
-    };
-    this.profile.matches.some((match, i) => {
-      var end = false;
-      if (match.outcome != "Remake") {
-        if (match.outcome == "Victory") {
-          if (this.profile.stats.streak.outcome == "") {
-            this.profile.stats.streak.outcome = "Win";
-            this.profile.stats.streak.num++;
-          } else if (this.profile.stats.streak.outcome == "Win") {
-            this.profile.stats.streak.num++;
-          } else {
-            end = true;
-          }
-        }
-        if (match.outcome == "Defeat") {
-          if (this.profile.stats.streak.outcome == "") {
-            this.profile.stats.streak.outcome = "Loss";
-            this.profile.stats.streak.num++;
-          } else if (this.profile.stats.streak.outcome == "Loss") {
-            this.profile.stats.streak.num++;
-          } else {
-            end = true;
-          }
-        }
-      }
-      return end
     })
   }
 

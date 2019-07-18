@@ -45,8 +45,11 @@ export class SummonerComponent implements OnDestroy {
   }
 
   getProfile(name: string) {
+    console.log(name)
     this.summonerService.getProfile(name, "English")
       .subscribe((profile: SummonerProfile) => {
+        console.log("raw")
+        console.log(profile)
         this.setProfile(profile);
       }, res => {
         if (res.error == "not found") {
@@ -58,14 +61,14 @@ export class SummonerComponent implements OnDestroy {
   }
 
   updateProfile(profile: SummonerProfile) {
-    this.summonerService.updateProfile(profile.summoner.puuid)
+    this.summonerService.updateProfile(profile.summoner.puuid, "English")
       .subscribe((profile: SummonerProfile) => {
         this.setProfile(profile)
       })
   }
 
   generateProfile(name: string) {
-    this.summonerService.generateProfile(name)
+    this.summonerService.generateProfile(name, "English")
       .subscribe((profile: SummonerProfile) => {
         this.setProfile(profile)
       })
@@ -76,6 +79,7 @@ export class SummonerComponent implements OnDestroy {
     this.summonerService.formatProfile(profile, (updatedProfile: SummonerProfile) => {
       this.profile = updatedProfile
     })
+    console.log("formated")
     console.log(profile)
     this.profile = profile;
   }
