@@ -12,7 +12,8 @@
   "nodemonConfig": {
     "ignore": [
       "server/config/rate.json",
-      "server/static/leagues/*"]
+      "server/static/leagues/*"
+    ]
   },
   "private": true,
   "dependencies": {
