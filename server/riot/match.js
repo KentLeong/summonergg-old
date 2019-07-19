@@ -14,7 +14,7 @@ module.exports = (region) => {
       // query = ?champion/queue/season/endTime/beginTime/endTime/beginIndex
       try {
         var query = ""
-        Object.keys(options.query).forEach((q, i) => {
+        Object.keys(options.query).forEach(q => {
           query += q+"="+options.query[q]+"&";
         })
         var res = await client.get('/lol/match/v4/matchlists/by-account/'+

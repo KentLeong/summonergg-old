@@ -2,6 +2,7 @@ const log = require('../config/log');
 const dev = require('../config/dev');
 const champions = require('../static/champions');
 const gameMode = require('../static/gameModes');
+const riot = require('../config/riot');
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
     await cb(this[i], i, this)
@@ -17,6 +18,7 @@ module.exports = (region) => {
   var RiotMatch = require('../riot/match')(region);
   var RiotSummoner = require('../riot/summoner')(region);
   var RiotLeague = require('../riot/league')(region);
+  var StatService = require('../service/stat')(region);
   return {
     async byPuuid(id, callback) {
       try {
@@ -126,7 +128,7 @@ module.exports = (region) => {
       }
       await RiotMatch.getMatches(options, retrievedMatches => {
         used++;
-        if (retrievedMatches) profile.matches = retrievedMatches;
+        if (retrievedMatches) profile.matches = retrievedMatches.matches;
       })
       if (profile.matches) {
         var temp = [];
@@ -155,16 +157,52 @@ module.exports = (region) => {
     },
     async generateChampions(profile, callback) {
       if (!profile.champions) profile.recent = {};
+      var matches = [];
       if (profile.matches.length > 0) {
-        var done = false;
-        // var options = {
-
-        // }
-        // do {
-        //   MatchService.getByAccount()
-        // } while (!done)
+        await MatchService.getByAccount(profile.summoner.accountId, {
+          season: riot.season,
+          queueId: {"$in": [420, 440, 470]}
+        }, updatedMatches => {
+          matches = [...matches, ...updatedMatches]
+        })
       }
-      callback(profile)
+      if (matches.length > 0) {
+        var champions = {};
+        await matches.asyncForEach(match => {
+          match.participants.some(part => {
+            if (part.currentAccountId == profile.summoner.accountId) {
+              if (!champions[part.championId]) champions[part.championId] = {
+                games: 0,
+                kills: 0,
+                deaths: 0,
+                assists: 0,
+                wins: 0,
+                losses: 0
+              };
+              champions[part.championId].games++;
+              champions[part.championId].kills += part.stats.kills;
+              champions[part.championId].deaths += part.stats.deaths;
+              champions[part.championId].assists += part.stats.assists;
+              if (part.stats.win && match.gameDuration > 400) {
+                champions[part.championId].wins++
+              } else if (!part.stats.win && match.gameDuration > 400) {
+                champions[part.championId].losses++
+              }
+            }
+            return (part.currentAccountId == profile.summoner.accountId)
+          })
+        })
+        await StatService.new({
+          puuid: profile.summoner.puuid,
+          champions: champions
+        }, updatedStat => {
+          if (updatedStat) {
+            callback(profile, updatedStat);
+          } else {
+            callback(profile, false);
+          }
+        })
+      }
     },
     async generateStats(profile, callback) {
       if (!profile.stats) profile.stats = {};
@@ -234,8 +272,6 @@ module.exports = (region) => {
               if (a==0) return b
             })
 
-            // queueType
-            matches[i].queueId = gameMode[matches[i].queueId]
 
             // role
             matches[i].role = part.role
@@ -316,6 +352,7 @@ module.exports = (region) => {
     },
     async translate(profile, language, callback) {
       await profile.matches.asyncForEach(async (match, i) => {
+        profile.matches[i].queueId = gameMode[profile.matches[i].queueId]
         let key = match.championId;
         if (champions[language][key]) {
           profile.matches[i].championId = {
@@ -344,8 +381,50 @@ module.exports = (region) => {
       })
       callback(profile)
     },
-    async formatAndSave(profile) {
+    async format(profile, stat, callback) {
+      if (!profile.top5) profile.top5 = [];
+      var championList = [];
+      if (Object.keys(stat.champions).length > 0) {
+        await Object.keys(stat.champions).asyncForEach(champion => {
+          var games = stat.champions[champion].games;
+          var wins = stat.champions[champion].wins;
+          var losses = stat.champions[champion].losses;
+          var kills = stat.champions[champion].kills;
+          var deaths = stat.champions[champion].deaths;
+          var assists = stat.champions[champion].assists;
+          var championStat = {
+            id: champions["English"][champion].id,
+            games: games,
+            kills: (kills/games).toFixed(1),
+            deaths: (deaths/games).toFixed(1),
+            assists: (assists/games).toFixed(1),
+            kda: ((kills+assists)/assists).toFixed(2),
+            winPercent: Math.round((wins/games).toFixed(2)*100)
+          }
+          championList.push(championStat)
+        })
+        championList.sort((a,b) => {
+          return b.winPercent - a.winPercent;
+        })
+        championList.sort((a,b) => {
+          return b.games - a.games;
+        })
+        if (championList.length <= 5) {
+          profile.top5 = championList
+        } else {
+          profile.top5 = championList.slice(0, 5)
+        }
+      }
       await profile.matches.asyncForEach(async match => {
+        delete match.teams;
+        delete match.gameVersion;
+        delete match.gameMode;
+        delete match.gameType;
+        delete match.mapId;
+        delete match.seasonId;
+        delete match.platformId;
+        delete match._id;
+        delete match.__v;
         await match.blueTeam.asyncForEach(part => {
           delete part.stats;
           delete part.timeline;
@@ -365,30 +444,7 @@ module.exports = (region) => {
           delete profile.leagues[league].summonerId;
         })
       }
-      this.new(profile)
-    },
-    async formatAndUpdate(profile) {
-      await profile.matches.asyncForEach(async match => {
-        await match.blueTeam.asyncForEach(part => {
-          delete part.stats;
-          delete part.timeline;
-          delete part.spell1Id;
-          delete part.spell2Id;
-        })
-        await match.redTeam.asyncForEach(part => {
-          delete part.stats;
-          delete part.timeline;
-          delete part.spell1Id;
-          delete part.spell2Id;
-        })
-      })
-      if (Object.keys(profile.leagues).length > 0) {
-        await Object.keys(profile.leagues).asyncForEach(league => {
-          delete profile.leagues[league].summonerName;
-          delete profile.leagues[league].summonerId;
-        })
-      }
-      this.update(profile)
+      callback(profile)
     },
     async findRole(role, lane) {
       if (lane == "JUNGLE") {

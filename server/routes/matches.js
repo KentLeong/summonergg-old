@@ -100,6 +100,7 @@ module.exports = (main, static) => {
     * season
     * skip 
     * limit
+    * queueId
     **/
     var options = req.query;
     var query = {
@@ -109,6 +110,7 @@ module.exports = (main, static) => {
         }
       }
     }
+    if (options.queue) query.queue = options.queue
     if (options.seasonId) query.seasonId = options.seasonId;
     if (options.championId) query.participants.$elemMatch.championId = options.championId;
     Match.find(query).sort({gameCreation: 'descending'}).skip(+options.skip).limit(+options.limit).exec((err, matches) => {

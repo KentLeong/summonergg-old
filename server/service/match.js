@@ -1,6 +1,6 @@
 const log = require('../config/log');
 const dev = require('../config/dev');
-const riot = require('../config/riot')
+const riot = require('../config/riot');
 const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
@@ -11,6 +11,7 @@ Array.prototype.asyncForEach = async function(cb) {
 module.exports = (region) => {
   var local = require('../config/localClient')(region);
   var RiotMatch =require('../riot/match')(region);
+  var rate = require('./rate')();
   return {
     async getByName(name, callback) {
       try {
@@ -52,6 +53,14 @@ module.exports = (region) => {
       }
     },
     async getByAccount(id, options, callback) {
+      /** 
+        * OPTIONS***
+        * champion
+        * season
+        * skip 
+        * limit
+        * queueId
+        **/
       var query = "?"
       Object.keys(options).forEach((op, i) => {
         if (i != 0) query += "&";
@@ -65,7 +74,7 @@ module.exports = (region) => {
         dev(`Could not retrieve matches for AccountID: ${id}`, "error")
       }
     },
-    async getAllPlayerMatch(id) {
+    async getAllPlayerMatch(id, queue) {
       var done = false;
       var matches = [];
       var options = {
@@ -76,27 +85,35 @@ module.exports = (region) => {
           endIndex: 100
         }
       }
+      if (queue) options.query.queue = queue;
       do {
         await RiotMatch.getMatches(options, async res => {
-          matches = [...matches, ...res.matches]
-          if (res.matches.length != 100) done = true;
-          options.query.beginIndex += 100;
-          options.query.endIndex += 100;
-          await waitFor(60);
+          if (!res.matches) {
+            done = true
+          } else {
+            matches = [...matches, ...res.matches]
+            if (res.matches.length != 100) done = true;
+            options.query.beginIndex += 100;
+            options.query.endIndex += 100;
+          }
         })
-      } while(!done) 
+      } while(!done)
       await matches.asyncForEach(async (match, i) => {
-        await waitFor(60)
         var found = false;
-        await this.getById(match.gameId, matchFound => {
-          if (matchFound) found = true;
+        await this.getByGameId(match.gameId, matchFound => {
+          if (matchFound) {
+            log(`[${i+1}] Match ID: ${match.gameId} already exists`,'warning')
+            found = true
+          }
         })
+        // await waitFor(60)
         if (!found) {
-          await RiotMatch.byID(match.gameId, updatedMatch => {
-            match = updatedMatch
+          await waitFor(50);
+          RiotMatch.byID(match.gameId, updatedMatch => {
+            this.new(updatedMatch, done => {})
+            log(`[${i+1}] finished saving match: ${match.gameId}`,'success')
           })
-          await this.new(match, done => {})
-          log(`[${i}] finished saving match: ${match.gameId}`,'success')
+          
         }
       })
     }

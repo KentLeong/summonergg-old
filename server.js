@@ -20,8 +20,8 @@ Array.prototype.asyncForEach = async function(cb) {
 var endpoints = riot.endpoints
 var languages = riot.languages
 // Parsers for POST data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 // Point static path to dist
 app.use(express.static(path.join(__dirname, "dist")));

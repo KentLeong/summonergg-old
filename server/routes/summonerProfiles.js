@@ -1,7 +1,6 @@
 const log = require('../config/log');
 const dev = require('../config/dev');
 const rate = require('../service/rate')();
-
 module.exports = (main, static) => {
   var express = require('express');
   var router = express.Router();
@@ -192,20 +191,11 @@ module.exports = (main, static) => {
   // Generate New Profile
   router.post('/generateProfile', async (req, res) => {
     //for api rates
-    var totalUsed = 0;
-    var max = 13;
     var rateAvailable = true;
 
     var name = req.body.name
     var language = req.query.language;
     var profile = {};
-
-    await rate.remainingRate((currentRate, second, minute) => {
-      if (second < max || minute < max) {
-        rateAvailable = false;
-        log(`Riot rate used up, please wait`, "warning")
-      }
-    })
 
     if (!rateAvailable) {
       res.status(400).json("riot rate used up");
@@ -218,7 +208,6 @@ module.exports = (main, static) => {
       //get summoner
       await SummonerProfileService.getSummoner(profile, name, (updatedProfile, used) => {
         if (updatedProfile) profile = updatedProfile;
-        totalUsed += used;
       })
 
       // check if summoner is found
@@ -227,16 +216,24 @@ module.exports = (main, static) => {
       } else if(!profile.summoner.accountId) {
         res.status(400).json("couldn't update from riot")
       } else {
+        var stat = false;
         //get leagues
         await SummonerProfileService.getLeagues(profile, (updatedProfile, used) => {
-          totalUsed += used;
           profile = updatedProfile;
         })
 
+        // matches for all ranked games
+        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "420")
+        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "440")
+        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "470")
+
         // get first 10 matches
-        var query = "beginIndex=0&endIndex=10&season="+riot.season+"&"
+        var query = {
+          season: riot.season,
+          beginIndex: 0,
+          endIndex: 10
+        }
         await SummonerProfileService.getMatches(profile, query, (updatedProfile, used) => {
-          totalUsed += used;
           profile = updatedProfile;
         })
 
@@ -251,18 +248,24 @@ module.exports = (main, static) => {
         })
 
         // generate champions
-        await SummonerProfileService.generateRecentChampions(profile, updatedProfile => {
-          if (updatedProfile) profile = updatedProfile
+        await SummonerProfileService.generateChampions(profile, (updatedProfile, updatedStat) => {
+          if (updatedProfile) {
+            profile = updatedProfile;
+            stat = updatedStat;
+          }
         })
 
         // save profile match
-        SummonerProfileService.formatAndSave(profile)
-        
+        await SummonerProfileService.format(profile, stat, updatedProfile => {
+          profile = updatedProfile;
+        })
+
+        await SummonerProfileService.new(profile);
+
         // translate profile match
         await SummonerProfileService.translate(profile, language, translatedProfile => {
           profile = translatedProfile;
         })
-        rate.rateUsed(totalUsed);
         log(`Finished creating profile for ${profile.summoner.name}`, "complete")
         res.status(200).json(profile);
       }
@@ -288,6 +291,7 @@ module.exports = (main, static) => {
     if (!rateAvailable) {
       res.status(400).json("riot rate used up")
     } else {
+      var stat = false;
       //find summoner profile from local database by puuid
       await SummonerProfileService.byPuuid(puuid, updatedProfile => {
         profile = updatedProfile;
@@ -315,7 +319,11 @@ module.exports = (main, static) => {
       })
 
       // update last 10 matches
-      var query = "beginIndex=0&endIndex=10&season="+riot.season+"&"
+        var query = {
+          season: riot.season,
+          beginIndex: 0,
+          endIndex: 10
+        }
       await SummonerProfileService.getMatches(profile, query, (updatedProfile, used) => {
         totalUsed += used;
         profile = updatedProfile;
@@ -331,9 +339,12 @@ module.exports = (main, static) => {
         if (updatedProfile) profile = updatedProfile
       })
 
-      // save profile match
-      SummonerProfileService.formatAndUpdate(profile)
+      // update profile match
+      await SummonerProfileService.format(profile, stat, updatedProfile => {
+        profile = updatedProfile;
+      })
 
+      await SummonerProfileService.update(profile)
       // translate profile match
       await SummonerProfileService.translate(profile, language, translatedProfile => {
         profile = translatedProfile;
