@@ -1,7 +1,7 @@
 const log = require('../config/log');
 const dev = require('../config/dev');
 const rate = require('../service/rate')();
-module.exports = (main, static) => {
+module.exports = (serverList) => {
   var express = require('express');
   var router = express.Router();
   
@@ -38,10 +38,10 @@ module.exports = (main, static) => {
     region = req.headers.host.split(".")[0].replace("http://", "");
     
     //models
-    SummonerProfile = require('../models/summonerProfile')(main[region]);
-    Summoner = require('../models/summoner')(main[region]);
-    Match = require('../models/match')(main[region]);
-    League = require('../models/league')(main[region]);
+    SummonerProfile = require('../models/summonerProfile')(serverList[region]);
+    Summoner = require('../models/summoner')(serverList[region]);
+    Match = require('../models/match')(serverList[region]);
+    League = require('../models/league')(serverList[region]);
   
     //services
     SummonerService = require('../service/summoner')(region);
@@ -282,7 +282,7 @@ module.exports = (main, static) => {
     var max = 13;
     var rateAvailable = true;
 
-    await rate.remainingRate((currentRate, second, minute) => {
+    await rate.reserverListingRate((currentRate, second, minute) => {
       if (second < max || minute < max) {
         rateAvailable = false;
         log(`Riot rate used up, please wait`, "warning")

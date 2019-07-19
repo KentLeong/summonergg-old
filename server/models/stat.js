@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var schema = new Schema({
-  puuid: String,
+  puuid: {type: String, index: true},
   lastUpdated: Date,
   timeline: [Number],
   champions: Object

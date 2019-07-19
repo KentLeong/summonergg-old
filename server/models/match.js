@@ -3,7 +3,7 @@ var uniqueValidator = require('mongoose-unique-validator');
 var Schema = mongoose.Schema;
 
 var schema = new Schema({
-  gameId: {type:String, unique: true},
+  gameId: {type:String, unique: true, index: true},
   platformId: String,
   gameCreation: Date,
   gameDuration: Number,

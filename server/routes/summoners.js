@@ -1,4 +1,4 @@
-module.exports = (main, static) => {
+module.exports = (serverList) => {
   var express = require('express');
   var router = express.Router();
   
@@ -13,7 +13,7 @@ module.exports = (main, static) => {
   
   router.use((req, res, next) => {
     region = req.headers.host.split(".")[0].replace("http://", "")
-    Summoner = require('../models/summoner')(main[region]);
+    Summoner = require('../models/summoner')(serverList[region]);
     RiotSummoner = require('../riot/summoner')(region);
     next();
   })

@@ -1,4 +1,4 @@
-module.exports = (main, static) => {
+module.exports = (serverList) => {
   var express = require('express');
   var router = express.Router();
   const riot = require('../config/riot');
@@ -13,9 +13,21 @@ module.exports = (main, static) => {
   
   router.use((req, res, next) => {
     region = req.headers.host.split(".")[0].replace("http://", "")
-    Match = require('../models/match')(main[region]);
-    RiotMatch = require('../riot/match')(region);
-    next();
+    var MatchService = require('../service/match')(region);
+    var time = req.query.epoch;
+    if (!time) time = req.query.date;
+    var type = req.query.type
+    if (time && riot.types.includes(type)) {
+      MatchService.getLocation(time, type, (server, location) => {
+        if (!server) {
+          Match = require('../models/match')(serverList[region], location);
+        } else {
+          Match = require('../models/match')(server, location);
+        }
+      })
+      RiotMatch = require('../riot/match')(region);
+      next();
+    }
   })
   
   // GET Match

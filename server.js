@@ -33,13 +33,12 @@ app.use((req, res, next) => {
 });
 
 var connnect = (async () => {
-  var main = {};
-  var static = {};
+  var serverList = {};
 
   // connect to region mongo db
   log("Connecting to regional enpoints..", 'info')
   await Object.keys(endpoints).asyncForEach(async (endPoint, i) => {
-    main[endPoint] = await mongoose.createConnection(endpoints[endPoint].db+"/sgg_"+endPoint, {useNewUrlParser: true});
+    serverList[endPoint] = await mongoose.createConnection(endpoints[endPoint].db+"/sgg_"+endPoint, {useNewUrlParser: true});
     log(endpoints[endPoint].name+" connected at host: "+ endpoints[endPoint].db, 'success')
   })
 
@@ -47,7 +46,7 @@ var connnect = (async () => {
     if (err) return console.error(err);
     files.forEach(file => {
       let fileName = file.split(".")[0];
-      var route = require(`./server/routes/${fileName}`)(main, static)
+      var route = require(`./server/routes/${fileName}`)(serverList)
       app.use(`/api/${fileName}`, route)
     })
   })

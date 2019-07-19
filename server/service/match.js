@@ -13,6 +13,27 @@ module.exports = (region) => {
   var RiotMatch =require('../riot/match')(region);
   var rate = require('./rate')();
   return {
+    async getLocation(time, type, callback) {
+      var location = false;
+      var server = false;
+      var now = new Date();
+      //set location
+      if (time.length > 10) {
+        var created = new Date(+time);
+        var year = created.getUTCFullYear()
+        var month = created.getUTCMonth()+1
+        var daysAgo = ((((now-created)/1000)/60)/60)/24;
+        if (type) location = `${year}_${month}_${type}`;
+        if (daysAgo < riot.archive && type) location = "recent";
+      } else {
+        location = time
+      }
+      //set server
+      if (location != "recent") {
+        // get server location
+      }
+      callback(server, location)
+    },
     async getByName(name, callback) {
       try {
         var res = await local.get(`/matches/name/${name}`)
