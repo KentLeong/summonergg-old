@@ -18,9 +18,6 @@ module.exports = (serverList) => {
   
   var region;
   //models
-  var Summoner;
-  var Match;
-  var League;
   var SummonerProfile;
   
   // Services
@@ -39,9 +36,6 @@ module.exports = (serverList) => {
     
     //models
     SummonerProfile = require('../models/summonerProfile')(serverList[region]);
-    Summoner = require('../models/summoner')(serverList[region]);
-    Match = require('../models/match')(serverList[region]);
-    League = require('../models/league')(serverList[region]);
   
     //services
     SummonerService = require('../service/summoner')(region);

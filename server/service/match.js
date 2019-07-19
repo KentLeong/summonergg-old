@@ -1,6 +1,7 @@
 const log = require('../config/log');
 const dev = require('../config/dev');
 const riot = require('../config/riot');
+const gameModes = require('../static/gameModes');
 const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
@@ -34,15 +35,43 @@ module.exports = (region) => {
       }
       callback(server, location)
     },
-    async getByName(name, callback) {
-      try {
-        var res = await local.get(`/matches/name/${name}`)
-        dev(`Found matches for ${name}`, 'success');
-        callback(res.data)
-      } catch(err) {
-        dev(`Could not find matches for ${name}`, 'warning');
+    async formatMatchOptions(options, callback) {
+      var query = [];
+      var epoch = options.epoch;
+      var date = options.date;
+      var type = options.type;
+      
+
+      if (!type || !epoch && !date) {
         callback(false)
+      } else {
+        if (epoch) query.push("epoch="+epoch);
+        if (date && !epoch) query.push("date="+date);
+        if (riot.type.includes(type)) {
+          query.push("type="+type)
+        } else {
+          query.push(gameModes[type].cat)
+        }
+  
+        callback(query.join("&"))
       }
+    },
+    async getByName(name, options, callback) {
+      await this.formatMatchOptions(options, async query => {
+        if (query) {
+          try {
+            var res = await local.get(`/matches/name/${name}?${epoch}`)
+            dev(`Found matches for ${name}`, 'success');
+            callback(res.data)
+          } catch(err) {
+            dev(`Could not find matches for ${name}`, 'warning');
+            callback(false)
+          }
+        } else {
+          dev(`Wrong options: getByName()`, 'error')
+          callback(false)
+        }
+      })
     },
     async getById(id, callback) {
       try {
