@@ -11,7 +11,6 @@ module.exports = (region) => {
   return {
     async new(stat, callback) {
       try {
-        console.log(stat)
         var res = await local.post(`/stats/`, {stat: stat})
         dev(`Stat saved for PUUID: ${stat.puuid}`, 'success')
         callback(res.data)

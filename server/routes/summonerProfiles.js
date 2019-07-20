@@ -1,12 +1,12 @@
 const log = require('../config/log');
 const dev = require('../config/dev');
 const rate = require('../service/rate')();
+const riot = require('../config/riot');
 module.exports = (serverList) => {
   var express = require('express');
   var router = express.Router();
   
   
-  const riot = require('../config/riot');
   String.prototype.capitalize = () => {
     return this.charAt(0).toUpperCase() + this.slice(1);
   }
@@ -230,7 +230,6 @@ module.exports = (serverList) => {
         await SummonerProfileService.getMatches(profile, query, (updatedProfile, used) => {
           profile = updatedProfile;
         })
-
         // format profile matches
         await SummonerProfileService.formatMatches(profile.summoner, profile.matches, formatedMatches => {
           if (formatedMatches) profile.matches = formatedMatches;
@@ -242,7 +241,7 @@ module.exports = (serverList) => {
         })
 
         // generate champions
-        await SummonerProfileService.generateChampions(profile, (updatedProfile, updatedStat) => {
+        await SummonerProfileService.generateChampions(profile, riot.season, (updatedProfile, updatedStat) => {
           if (updatedProfile) {
             profile = updatedProfile;
             stat = updatedStat;

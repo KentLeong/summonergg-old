@@ -88,5 +88,5 @@ module.exports = {
   minuteRate: 30000,
   // archive matches in (days)
   archive: 7,
-  type: ["solo", "flex5v5", "flex3v3", "norm", "bot", "aram", "tft", "special", "custom"]
+  types: ["solo", "flex5v5", "flex3v3", "norm", "bot", "aram", "tft", "special", "custom"]
 }

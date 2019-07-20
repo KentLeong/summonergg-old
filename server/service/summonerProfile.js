@@ -3,6 +3,7 @@ const dev = require('../config/dev');
 const champions = require('../static/champions');
 const gameMode = require('../static/gameModes');
 const riot = require('../config/riot');
+const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
     await cb(this[i], i, this)
@@ -134,7 +135,11 @@ module.exports = (region) => {
         var temp = [];
         await profile.matches.asyncForEach(async (match, i) => {
           var found = false
-          await MatchService.getByGameId(match.gameId, retrievedMatch => {
+          var opt = {
+            epoch: match.timestamp,
+            type: match.queue
+          }
+          await MatchService.getByGameId(match.gameId, opt, retrievedMatch => {
             if (retrievedMatch) {
               found = true;
               temp.push(retrievedMatch);
@@ -144,7 +149,11 @@ module.exports = (region) => {
             await RiotMatch.byID(match.gameId, async retrievedMatch => {
               used++;
               if (retrievedMatch) {
-                await MatchService.new(retrievedMatch, updatedMatch => {
+                var opt = {
+                  epoch: retrievedMatch.gameCreation,
+                  type: retrievedMatch.queueId
+                }
+                await MatchService.new(retrievedMatch, opt, updatedMatch => {
                   temp.push(updatedMatch)
                 })
               }
@@ -155,15 +164,12 @@ module.exports = (region) => {
       }
       callback(profile, used)
     },
-    async generateChampions(profile, callback) {
+    async generateChampions(profile, season, callback) {
       if (!profile.champions) profile.recent = {};
       var matches = [];
       if (profile.matches.length > 0) {
-        await MatchService.getByAccount(profile.summoner.accountId, {
-          season: riot.season,
-          queueId: {"$in": [420, 440, 470]}
-        }, updatedMatches => {
-          matches = [...matches, ...updatedMatches]
+        await MatchService.getAllRankedMatches(profile.summoner.accountId, season, updatedMatches => {
+          matches = updatedMatches
         })
       }
       if (matches.length > 0) {
@@ -171,22 +177,42 @@ module.exports = (region) => {
         await matches.asyncForEach(match => {
           match.participants.some(part => {
             if (part.currentAccountId == profile.summoner.accountId) {
-              if (!champions[part.championId]) champions[part.championId] = {
-                games: 0,
-                kills: 0,
-                deaths: 0,
-                assists: 0,
-                wins: 0,
-                losses: 0
-              };
-              champions[part.championId].games++;
-              champions[part.championId].kills += part.stats.kills;
-              champions[part.championId].deaths += part.stats.deaths;
-              champions[part.championId].assists += part.stats.assists;
+              var queue;
+              if (match.queueId == "420" || match.queueId == "440" || match.queueid == "470") {
+                queue = match.queueId
+              } else {
+                queue = "norm"
+              }
+              if (!champions[part.championId]) {
+                champions[part.championId] = {};
+                champions[part.championId][queue] = {
+                  games: 0,
+                  kills: 0,
+                  deaths: 0,
+                  assists: 0,
+                  wins: 0,
+                  losses: 0
+                };
+              } else {
+                champions[part.championId][queue] = {
+                  games: 0,
+                  kills: 0,
+                  deaths: 0,
+                  assists: 0,
+                  wins: 0,
+                  losses: 0
+                };
+              }
+              
+              champions[part.championId][queue].kills += part.stats.kills;
+              champions[part.championId][queue].deaths += part.stats.deaths;
+              champions[part.championId][queue].assists += part.stats.assists;
               if (part.stats.win && match.gameDuration > 400) {
-                champions[part.championId].wins++
+                champions[part.championId][queue].wins++
+                champions[part.championId][queue].games++;
               } else if (!part.stats.win && match.gameDuration > 400) {
-                champions[part.championId].losses++
+                champions[part.championId][queue].losses++
+                champions[part.championId][queue].games++;
               }
             }
             return (part.currentAccountId == profile.summoner.accountId)
@@ -352,7 +378,7 @@ module.exports = (region) => {
     },
     async translate(profile, language, callback) {
       await profile.matches.asyncForEach(async (match, i) => {
-        profile.matches[i].queueId = gameMode[profile.matches[i].queueId]
+        profile.matches[i].queueId = gameMode[profile.matches[i].queueId]["English"]
         let key = match.championId;
         if (champions[language][key]) {
           profile.matches[i].championId = {
@@ -385,13 +411,30 @@ module.exports = (region) => {
       if (!profile.top5) profile.top5 = [];
       var championList = [];
       if (Object.keys(stat.champions).length > 0) {
-        await Object.keys(stat.champions).asyncForEach(champion => {
-          var games = stat.champions[champion].games;
-          var wins = stat.champions[champion].wins;
-          var losses = stat.champions[champion].losses;
-          var kills = stat.champions[champion].kills;
-          var deaths = stat.champions[champion].deaths;
-          var assists = stat.champions[champion].assists;
+        await Object.keys(stat.champions).asyncForEach(async champion => {
+          var rankedStats = {
+            games: 0,
+            wins: 0,
+            kills: 0,
+            deaths: 0,
+            assists: 0
+          }
+          await Object.keys(stat.champions[champion]).asyncForEach(queue => {
+            if (queue != "norm") {
+              rankedStats = {
+                games: rankedStats.games+stat.champions[champion][queue].games,
+                wins: rankedStats.wins+stat.champions[champion][queue].wins,
+                kills: rankedStats.kills+stat.champions[champion][queue].kills,
+                deaths: rankedStats.deaths+stat.champions[champion][queue].deaths,
+                assists: rankedStats.assists+stat.champions[champion][queue].assists
+              }
+            }
+          })
+          var games = rankedStats.games;
+          var wins = rankedStats.wins;
+          var kills = rankedStats.kills;
+          var deaths = rankedStats.deaths;
+          var assists = rankedStats.assists;
           var championStat = {
             id: champions["English"][champion].id,
             games: games,

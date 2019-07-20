@@ -22,6 +22,6 @@ var schema = new Schema({
 // Apply the uniqueValidator plugin to userSchema.
 schema.plugin(uniqueValidator);
 
-module.exports = (mongo)=> {
-  return mongo.model('Match', schema);
+module.exports = (mongo, location)=> {
+  return mongo.model(`Match_${location}`, schema);
 }

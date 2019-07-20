@@ -2,6 +2,7 @@ const log = require('../config/log');
 const dev = require('../config/dev');
 const riot = require('../config/riot');
 const gameModes = require('../static/gameModes');
+const seasons = require('../static/seasons');
 const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
@@ -19,7 +20,9 @@ module.exports = (region) => {
       var server = false;
       var now = new Date();
       //set location
-      if (time.length > 10) {
+      if (time == "recent") {
+        location = "recent";
+      } else if (time.length > 10) {
         var created = new Date(+time);
         var year = created.getUTCFullYear()
         var month = created.getUTCMonth()+1
@@ -27,7 +30,7 @@ module.exports = (region) => {
         if (type) location = `${year}_${month}_${type}`;
         if (daysAgo < riot.archive && type) location = "recent";
       } else {
-        location = time
+        location = time+"_"+type
       }
       //set server
       if (location != "recent") {
@@ -36,44 +39,59 @@ module.exports = (region) => {
       callback(server, location)
     },
     async formatMatchOptions(options, callback) {
+      // Epoch/Date  Type
+      // Epoch and date is Optional but must have one.
+      // Epoch takes presidence over date
       var query = [];
       var epoch = options.epoch;
       var date = options.date;
       var type = options.type;
-      
+      var failed = false;
 
-      if (!type || !epoch && !date) {
-        callback(false)
+      if (!epoch && !date) {
+        failed = true;
       } else {
         if (epoch) query.push("epoch="+epoch);
         if (date && !epoch) query.push("date="+date);
-        if (riot.type.includes(type)) {
+        if (riot.types.includes(type)) {
           query.push("type="+type)
-        } else {
-          query.push(gameModes[type].cat)
+        } else if (gameModes[type]) {
+          query.push("type="+gameModes[type].type)
         }
-  
-        callback(query.join("&"))
+        if (failed) {
+          callback(false)
+        } else {
+          callback(query.join("&"))
+        }
       }
     },
     async getByName(name, options, callback) {
-      await this.formatMatchOptions(options, async query => {
-        if (query) {
-          try {
-            var res = await local.get(`/matches/name/${name}?${epoch}`)
-            dev(`Found matches for ${name}`, 'success');
-            callback(res.data)
-          } catch(err) {
-            dev(`Could not find matches for ${name}`, 'warning');
-            callback(false)
-          }
+      var query;
+      await this.formatMatchOptions(options, async updatedQuery => {
+        if (updatedQuery) {
+          query = updatedQuery;
         } else {
-          dev(`Wrong options: getByName()`, 'error')
-          callback(false)
+          log(`Invalid Query: getByName()`, 'error')
         }
       })
+      try {
+        var res = await local.get(`/matches/name/${name}?${qeury}`)
+        dev(`Found matches for ${name}`, 'success');
+        callback(res.data)
+      } catch(err) {
+        dev(`Could not find matches for ${name}`, 'warning');
+        callback(false)
+      }
     },
-    async getById(id, callback) {
+    async getById(id, options, callback) {
+      var query
+      await this.formatMatchOptions(options, async updatedQuery => {
+        if (updatedQuery) {
+          query = updatedQuery
+        } else {
+          log("Invalid Query: Match.getById()", "error")
+        }
+      })
       try {
         var res = await local.get(`/matches/by-id/${id}`)
         dev(`Match ID: ${id} found from local database!`, 'success');
@@ -83,9 +101,17 @@ module.exports = (region) => {
         callback(false)
       }
     },
-    async getByGameId(id, callback) {
+    async getByGameId(id, options, callback) {
+      var query;
+      await this.formatMatchOptions(options, async updatedQuery => {
+        if (updatedQuery) {
+          query = updatedQuery;
+        } else {
+          log("Invalid Query: Match.getByGameId()", 'error')
+        }
+      })
       try {
-        var res = await local.get(`/matches/${id}`)
+        var res = await local.get(`/matches/${id}?${query}`)
         dev(`Match ID: ${id} found from local database!`, 'success');
         callback(res.data)
       } catch(err) {
@@ -93,16 +119,62 @@ module.exports = (region) => {
         callback(false)
       }
     },
-    async new(match, callback) {
+    async new(match, options, callback) {
+      var query
+      await this.formatMatchOptions(options, async updatedQuery => {
+        if (updatedQuery) {
+          query = updatedQuery;
+        } else {
+          log("query invalid: Match.new()", 'error')
+        }
+      })
       try {
-        var res = await local.post('/matches/', {match: match})
+        var res = await local.post('/matches/?'+query, {match: match})
         dev(`Match ID: ${match.gameId} was saved`, 'success')
         callback(res.data)
       } catch(err) {
         dev(`Match ID: ${match.gameId} was not saved`, 'error')
       }
     },
+    async getAllRankedMatches(id, season, callback) {
+      var matches = [];
+      var counter = 1;
+      var options = [{date:"recent"}];
+      var rankedQueues = ["solo", "flex5v5", "flex3v3"];
+      await seasons[season].duration.asyncForEach(async month => {
+        await rankedQueues.asyncForEach((queue, i) => {
+          var opt = {
+            date: month,
+            type: queue  
+          }
+          options.push(opt)
+        })
+      })
+      await options.asyncForEach(async opt => {
+        opt.seasonId = season;
+        await this.getByAccount(id, opt, updatedMatches => {
+          matches = [...matches, ...updatedMatches]
+        })
+      })
+      callback(matches)
+    },
     async getByAccount(id, options, callback) {
+      var matchOption = {
+        epoch: options.epoch,
+        date: options.date,
+        type: options.type
+      }
+      var query;
+      delete options.epoch;
+      delete options.date;
+      delete options.type;
+      await this.formatMatchOptions(matchOption, async updatedQuery => {
+        if (updatedQuery) {
+          query = updatedQuery;
+        } else {
+          log("Query Invalid: Match.getByAccountId()", 'error')
+        }
+      })
       /** 
         * OPTIONS***
         * champion
@@ -111,13 +183,13 @@ module.exports = (region) => {
         * limit
         * queueId
         **/
-      var query = "?"
+      var multi = "?"
       Object.keys(options).forEach((op, i) => {
-        if (i != 0) query += "&";
-        query += op + "=" +options[op]
+        if (i != 0) multi += "&";
+        multi += op + "=" +options[op]
       })
       try {
-        var res = await local.get(`/matches/multi/${id}${query}`)
+        var res = await local.get(`/matches/multi/${id}${multi+"&"+query}`)
         dev(`Retrieved matches for AccountID: ${id}`, 'success')
         callback(res.data)
       } catch(err) {
@@ -150,17 +222,24 @@ module.exports = (region) => {
       } while(!done)
       await matches.asyncForEach(async (match, i) => {
         var found = false;
-        await this.getByGameId(match.gameId, matchFound => {
+        var opt = {
+          epoch: match.timestamp,
+          type: match.queue
+        }
+        await this.getByGameId(match.gameId, opt, matchFound => {
           if (matchFound) {
             log(`[${i+1}] Match ID: ${match.gameId} already exists`,'warning')
             found = true
           }
         })
-        // await waitFor(60)
         if (!found) {
-          await waitFor(50);
+          await waitFor(50)
           RiotMatch.byID(match.gameId, updatedMatch => {
-            this.new(updatedMatch, done => {})
+            var opt = {
+              epoch: updatedMatch.gameCreation,
+              type: updatedMatch.queueId
+            }
+            this.new(updatedMatch, opt, done => {})
             log(`[${i+1}] finished saving match: ${match.gameId}`,'success')
           })
           
