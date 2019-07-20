@@ -193,7 +193,7 @@ module.exports = (region) => {
                   wins: 0,
                   losses: 0
                 };
-              } else {
+              } else if (!champions[part.championId][queue]){
                 champions[part.championId][queue] = {
                   games: 0,
                   kills: 0,
@@ -229,6 +229,176 @@ module.exports = (region) => {
           }
         })
       }
+    },
+    async generateRecentPlayers(profile, callback) {
+      if (!profile.recent) profile.recent = {};
+      profile.recent.players = [];
+      var list = {};
+      var players = [];
+      await profile.matches.asyncForEach(async match => {
+        var win;
+        match.outcome == "Victory" ? win = true : win = false;
+        var team = match.teamId;
+        
+        if (team == "100" && match.outcome != "Remake") {
+          await match.blueTeam.forEach(part => {
+            if (part.currentAccountId != profile.summoner.accountId) {
+              if (!list[part.summonerName]) {
+                if (win) {
+                  list[part.summonerName] = {
+                    win: 1,
+                    loss: 0
+                  }
+                } else {
+                  list[part.summonerName] = {
+                    win: 0,
+                    loss: 1
+                  }
+                }
+              } else {
+                if (win) {
+                  list[part.summonerName].win++
+                } else {
+                  list[part.summonerName].loss++
+                }
+              }
+            }
+          })
+        } else if (team == "200" && match.outcome != "Remake") {
+          await match.redTeam.forEach(part => {
+            if (part.currentAccountId != profile.summoner.accountId) {
+              if (!list[part.summonerName]) {
+                if (win) {
+                  list[part.summonerName] = {
+                    win: 1,
+                    loss: 0
+                  }
+                } else {
+                  list[part.summonerName] = {
+                    win: 0,
+                    loss: 1
+                  }
+                }
+              } else {
+                if (win) {
+                  list[part.summonerName].win++
+                } else {
+                  list[part.summonerName].loss++
+                }
+              }
+            }
+          })
+        }
+      })
+      await Object.keys(list).asyncForEach(player => {
+        var p = {
+          name: player,
+          total: list[player].win+list[player].loss,
+          wins: list[player].win,
+          losses: list[player].loss,
+          percent: 0
+        }
+        p.percent = Math.round((p.wins/(p.wins+p.losses))*100)
+        if (p.total > 1) players.push(p);
+      })
+      players.sort((a,b) => {
+        return b.total - a.total
+      })
+      profile.recent.players = players;
+      callback(profile)
+    },
+    async generateRecentChampions(profile, callback) {
+      if (!profile.recent) profile.recent = {};
+      profile.recent.champions = [];
+      profile.recent.roles = [];
+      var list = {
+        role: {},
+        champion: {}
+      };
+      await profile.matches.asyncForEach(match => {
+        if (match.queueId.type != "Convergence" && match.outcome != "Remake") {
+          if (!list.role[match.role] && match.role) {
+            if (match.queueId == "420" || match.queueId == "440" || match.queueId == "470") {
+              list.role[match.role] = {
+                total: 1,
+                wins: (match.outcome == "Victory") ? 1 : 0,
+                losses: (match.outcome == "Defeat") ? 1 : 0,
+              }
+            }
+          } else if (match.queueId == "420" || match.queueId == "440" || match.queueId == "470") {
+            if (match.outcome == "Victory") {
+              list.role[match.role].wins++
+              list.role[match.role].total++
+            } else if (match.outcome == "Defeat") {
+              list.role[match.role].losses++
+              list.role[match.role].total++
+            }
+          }
+          if (!list.champion[match.championId]) {
+            list.champion[match.championId] = {
+              total: 1,
+              wins: (match.outcome == "Victory") ? 1 : 0,
+              losses: (match.outcome == "Defeat") ? 1 : 0,
+              kills: match.kills,
+              deaths: match.deaths,
+              assists: match.assists
+            }
+          } else {
+            list.champion[match.championId].kills += match.kills
+            list.champion[match.championId].deaths += match.deaths
+            list.champion[match.championId].assists += match.assists
+            if (match.outcome == "Victory") {
+              list.champion[match.championId].wins++
+              list.champion[match.championId].total++
+            } else if (match.outcome == "Defeat") {
+              list.champion[match.championId].losses++
+              list.champion[match.championId].total++
+            }
+          }
+        }
+      })
+      await Object.keys(list.role).asyncForEach(role => {
+        var a = {
+          name: role,
+          total: list.role[role].total,
+          wins: list.role[role].wins,
+          losses: list.role[role].losses
+        }
+        profile.recent.roles.push(a)
+      })
+      await Object.keys(list.champion).asyncForEach(champ => {
+        var total = list.champion[champ].total;
+        var wins = list.champion[champ].wins;
+        var losses = list.champion[champ].losses;
+        var deaths = list.champion[champ].deaths;
+        var assists = list.champion[champ].assists;
+        var kills = list.champion[champ].kills;
+        var a = {
+          id: champ,
+          total: total,
+          wins: wins,
+          losses: losses,
+          kills: (kills/total).toFixed(1),
+          deaths: (deaths/total).toFixed(1),
+          assists: (assists/total).toFixed(1),
+          kda: ((kills+assists)/deaths).toFixed(2),
+          percent: Math.round((wins/total)*100)
+        }
+        profile.recent.champions.push(a)
+      })
+      profile.recent.champions.sort((a,b) => {
+        return b.kda - a.kda;
+      })
+      profile.recent.champions.sort((a,b) => {
+        return b.percent - a.percent;
+      })
+      profile.recent.champions.sort((a,b) => {
+        return b.total - a.total;
+      })
+      profile.recent.roles.sort((a,b) => {
+        return b.total - a.total;
+      })
+      callback(profile)
     },
     async generateStats(profile, callback) {
       if (!profile.stats) profile.stats = {};
@@ -377,8 +547,22 @@ module.exports = (region) => {
       callback(matches)
     },
     async translate(profile, language, callback) {
+      await profile.recent.champions.asyncForEach((champ, i) => {
+        if (champions[language][champ]) {
+          profile.recent.champions[i].id = {
+            id: champions[language][champ].id,
+            name: champions[language][champ].name
+          } 
+        }
+      })
       await profile.matches.asyncForEach(async (match, i) => {
-        profile.matches[i].queueId = gameMode[profile.matches[i].queueId]["English"]
+        profile.matches[i].queueId = {
+          type: gameMode[profile.matches[i].queueId]["English"].type,
+          description: gameMode[profile.matches[i].queueId]["English"].description,
+          name: gameMode[profile.matches[i].queueId]["English"].name,
+          id: gameMode[profile.matches[i].queueId]["id"],
+          queue: gameMode[profile.matches[i].queueId]["queue"]
+        }
         let key = match.championId;
         if (champions[language][key]) {
           profile.matches[i].championId = {
@@ -408,7 +592,8 @@ module.exports = (region) => {
       callback(profile)
     },
     async format(profile, stat, callback) {
-      if (!profile.top5) profile.top5 = [];
+      if (!profile.champions) profile.champions = {};
+      profile.champions.total = [];
       var championList = [];
       if (Object.keys(stat.champions).length > 0) {
         await Object.keys(stat.champions).asyncForEach(async champion => {
@@ -453,9 +638,9 @@ module.exports = (region) => {
           return b.games - a.games;
         })
         if (championList.length <= 5) {
-          profile.top5 = championList
+          profile.champions.total = championList
         } else {
-          profile.top5 = championList.slice(0, 5)
+          profile.champions.total = championList.slice(0, 5)
         }
       }
       await profile.matches.asyncForEach(async match => {

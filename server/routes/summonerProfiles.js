@@ -211,16 +211,24 @@ module.exports = (serverList) => {
         res.status(400).json("couldn't update from riot")
       } else {
         var stat = false;
+        var solo = [];
+        var flex5v5 = [];
+        var flex3v3 = [];
         //get leagues
         await SummonerProfileService.getLeagues(profile, (updatedProfile, used) => {
           profile = updatedProfile;
         })
 
         // matches for all ranked games
-        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "420")
-        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "440")
-        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "470")
-
+        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "420", updatedSolo => {
+          solo = updatedSolo
+        })
+        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "440", updatedFlex => {
+          flex5v5 = updatedFlex
+        })
+        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "470", updatedFlex => {
+          flex3v3 = updatedFlex
+        })
         // get first 10 matches
         var query = {
           season: riot.season,
@@ -230,6 +238,7 @@ module.exports = (serverList) => {
         await SummonerProfileService.getMatches(profile, query, (updatedProfile, used) => {
           profile = updatedProfile;
         })
+
         // format profile matches
         await SummonerProfileService.formatMatches(profile.summoner, profile.matches, formatedMatches => {
           if (formatedMatches) profile.matches = formatedMatches;
@@ -240,19 +249,30 @@ module.exports = (serverList) => {
           if (updatedProfile) profile = updatedProfile
         })
 
-        // generate champions
+        // generate champion stats
         await SummonerProfileService.generateChampions(profile, riot.season, (updatedProfile, updatedStat) => {
           if (updatedProfile) {
             profile = updatedProfile;
             stat = updatedStat;
           }
         })
+        
+        // generate recent players
+        await SummonerProfileService.generateRecentPlayers(profile, updatedProfile => {
+          if (updatedProfile) profile = updatedProfile;
+        })
 
-        // save profile match
+        // generate recent champions and role
+        await SummonerProfileService.generateRecentChampions(profile, updatedProfile => {
+          if (updatedProfile) profile = updatedProfile;
+        })
+
+        // format profile match and create ranked champion stats
         await SummonerProfileService.format(profile, stat, updatedProfile => {
           profile = updatedProfile;
         })
 
+        // save profile
         await SummonerProfileService.new(profile);
 
         // translate profile match

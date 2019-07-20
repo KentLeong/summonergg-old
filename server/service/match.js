@@ -56,7 +56,7 @@ module.exports = (region) => {
         if (riot.types.includes(type)) {
           query.push("type="+type)
         } else if (gameModes[type]) {
-          query.push("type="+gameModes[type].type)
+          query.push("type="+gameModes[type].queue)
         }
         if (failed) {
           callback(false)
@@ -196,7 +196,7 @@ module.exports = (region) => {
         dev(`Could not retrieve matches for AccountID: ${id}`, "error")
       }
     },
-    async getAllPlayerMatch(id, queue) {
+    async getAllPlayerMatch(id, queue, callback) {
       var done = false;
       var matches = [];
       var options = {
@@ -244,7 +244,12 @@ module.exports = (region) => {
           })
           
         }
+        delete matches[i].platformId
+        delete matches[i].champion
+        delete matches[i].role
+        delete matches[i].lane
       })
+      callback(matches)
     }
   }
 }

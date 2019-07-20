@@ -5,7 +5,8 @@ var modes = {
       description: "Custom Games",
       name: "Custom",
     },
-    type: "custom"
+    queue: "custom",
+    id: 0
   },
   2: {
     English: {
@@ -13,7 +14,8 @@ var modes = {
       description: "5v5 Blind Pick games",
       name: "Blind Pick",
     },
-    type: "norm"
+    queue: "norm",
+    id: 2
   },
   4: {
     English: {
@@ -21,7 +23,8 @@ var modes = {
       description: "5v5 Ranked Solo games",
       name: "Ranked Solo",
     },
-    type: "solo"
+    queue: "solo",
+    id: 4
   },
   6: {
     English: {
@@ -29,7 +32,8 @@ var modes = {
       description: "5v5 Ranked Premade games",
       name: "Ranked 5v5",
     },
-    type: "flex5v5"
+    queue: "flex5v5",
+    id: 6
   },
   7: {
     English: {
@@ -37,7 +41,8 @@ var modes = {
       description: "Co-op vs AI games",
       name: "Co-op vs AI",
     },
-    type: "bot"
+    queue: "bot",
+    id: 7
   },
   8: {
     English: {
@@ -45,7 +50,8 @@ var modes = {
       description: "3v3 Normal games",
       name: "3v3 TT",
     },
-    type: "norm"
+    queue: "norm",
+    id: 8
   },
   9: {
     English: {
@@ -53,7 +59,8 @@ var modes = {
       description: "3v3 Ranked Flex games",
       name: "Flex 3v3",
     },
-    type: "flex3v3"
+    queue: "flex3v3",
+    id: 9
   },
   14: {
     English: {
@@ -61,7 +68,8 @@ var modes = {
       description: "5v5 Draft Pick games",
       name: "Draft Pick",
     },
-    type: "norm"
+    queue: "norm",
+    id: 14
   },
   16: {
     English: {
@@ -69,7 +77,8 @@ var modes = {
       description: "5v5 Dominion Blind Pick games",
       name: "Crystal Scar: BP",
     },
-    type: "special"
+    queue: "special",
+    id: 16
   },
   17: {
     English: {
@@ -77,7 +86,8 @@ var modes = {
       description: "5v5 Dominion Draft Pick games",
       name: "Crystal Scar: DP",
     },
-    type: "special"
+    queue: "special",
+    id: 17
   },
   25: {
     English: {
@@ -85,7 +95,8 @@ var modes = {
       description: "Dominion Co-op vs AI games",
       name: "Crystal Scar: Co-op",
     },
-    type: "special"
+    queue: "special",
+    id: 25
   },
   31: {
     English: {
@@ -93,7 +104,8 @@ var modes = {
       description: "Co-op vs AI Intro Bot games",
       name: "Co-op vs AI Intro",
     },
-    type: "bot"
+    queue: "bot",
+    id: 31
   },
   32: {
     English: {
@@ -101,7 +113,8 @@ var modes = {
       description: "Co-op vs AI Beginner Bot games",
       name: "Co-op vs AI Beginner",
     },
-    type: "bot"
+    queue: "bot",
+    id: 32
   },
   33: {
     English: {
@@ -109,7 +122,8 @@ var modes = {
       description: "Co-op vs AI Intermediate Bot games",
       name: "Co-op vs AI Intermediate",
     },
-    type: "bot"
+    queue: "bot",
+    id: 33
   },
   41: {
     English: {
@@ -117,7 +131,8 @@ var modes = {
       description: "3v3 Ranked Team games",
       name: "Ranked Flex",
     },
-    type: "flex3v3"
+    queue: "flex3v3",
+    id: 41
   },
   42: {
     English: {
@@ -125,7 +140,8 @@ var modes = {
       description: "5v5 Ranked Team games",
       name: "Ranked Flex",
     },
-    type: "flex5v5"
+    queue: "flex5v5",
+    id: 42
   },
   52: {
     English: {
@@ -133,7 +149,8 @@ var modes = {
       description: "Co-op vs AI games",
       name: "Co-op vs AI",
     },
-    type: "bot"
+    queue: "bot",
+    id: 52
   },
   61: {
     English: {
@@ -141,7 +158,8 @@ var modes = {
       description: "5v5 Team Builder games",
       name: "Team Builder",
     },
-    type: "special"
+    queue: "special",
+    id: 61
   },
   65: {
     English: {
@@ -149,7 +167,8 @@ var modes = {
       description: "5v5 ARAM games",
       name: "ARAM",
     },
-    type: "aram"
+    type: "aram",
+    id: 65
   },
   67: {
     English: {
@@ -157,7 +176,8 @@ var modes = {
       description: "ARAM Co-op vs AI games",
       name: "ARAM Co-op",
     },
-    type: "bot"
+    queue: "bot",
+    id: 67
   },
   70: {
     English: {
@@ -165,7 +185,8 @@ var modes = {
       description: "One for All games",
       name: "One for All",
     },
-    type: "special"
+    queue: "special",
+    id: 70
   },
   72: {
     English: {
@@ -173,7 +194,8 @@ var modes = {
       description: "1v1 Snowdown Showdown games",
       name: "1v1 Snowdown",
     },
-    type: "special"
+    queue: "special",
+    id: 72
   },
   73: {
     English: {
@@ -181,7 +203,8 @@ var modes = {
       description: "2v2 Snowdown Showdown games",
       name: "2v2 Snowdown",
     },
-    type: "aram"
+    type: "aram",
+    id: 73
   },
   75: {
     English: {
@@ -189,7 +212,8 @@ var modes = {
       description: "6v6 Hexakill games",
       name: "6v6 Hexakill",
     },
-    type: "special"
+    queue: "special",
+    id: 75
   },
   76: {
     English: {
@@ -197,7 +221,8 @@ var modes = {
       description: "Ultra Rapid Fire games",
       name: "SR URF",
     },
-    type: "special"
+    queue: "special",
+    id: 76
   },
   78: {
     English: {
@@ -205,7 +230,8 @@ var modes = {
       description: "One For All: Mirror Mode games",
       name: "One for All",
     },
-    type: "special"
+    queue: "special",
+    id: 78
   },
   83: {
     English: {
@@ -213,7 +239,8 @@ var modes = {
       description: "Co-op vs AI Ultra Rapid Fire games",
       name: "Co-op AI URF",
     },
-    type: "special"
+    queue: "special",
+    id: 83
   },
   91: {
     English: {
@@ -221,7 +248,8 @@ var modes = {
       description: "Doom Bots Rank 1 games",
       name: "Doom Bots: R1",
     },
-    type: "special"
+    queue: "special",
+    id: 91
   },
   92: {
     English: {
@@ -229,7 +257,8 @@ var modes = {
       description: "Doom Bots Rank 2 games",
       name: "Doom Bots: R2",
     },
-    type: "special"
+    queue: "special",
+    id: 92
   },
   93: {
     English: {
@@ -237,7 +266,8 @@ var modes = {
       description: "Doom Bots Rank 3 games",
       name: "Doom Bots: R3",
     },
-    type: "special"
+    queue: "special",
+    id: 93
   },
   96: {
     English: {
@@ -245,7 +275,8 @@ var modes = {
       description: "Ascension games",
       name: "Ascension",
     },
-    type: "special"
+    queue: "special",
+    id: 96
   },
   98: {
     English: {
@@ -253,7 +284,8 @@ var modes = {
       description: "6v6 Hexakill games",
       name: "TT URF",
     },
-    type: "special"
+    queue: "special",
+    id: 98
   },
   100: {
     English: {
@@ -261,7 +293,8 @@ var modes = {
       description: "5v5 ARAM games",
       name: "Butcher's Bridge",
     },
-    type: "special"
+    queue: "special",
+    id: 100
   },
   300: {
     English: {
@@ -269,7 +302,8 @@ var modes = {
       description: "Legend of the Poro King games",
       name: "Poro King",
     },
-    type: "special"
+    queue: "special",
+    id: 300
   },
   310: {
     English: {
@@ -277,7 +311,8 @@ var modes = {
       description: "Nemesis games",
       name: "Nemesis",
     },
-    type: "special"
+    queue: "special",
+    id: 310
   },
   313: {
     English: {
@@ -285,7 +320,8 @@ var modes = {
       description: "Black Market Brawlers games",
       name: "BMBG",
     },
-    type: "special"
+    queue: "special",
+    id: 313
   },
   315: {
     English: {
@@ -293,7 +329,8 @@ var modes = {
       description: "Nexus Siege games",
       name: "Nexus Siege",
     },
-    type: "special"
+    queue: "special",
+    id: 315
   },
   317: {
     English: {
@@ -301,7 +338,8 @@ var modes = {
       description: "Definitely Not Dominion games",
       name: "DNDG",
     },
-    type: "special"
+    queue: "special",
+    id: 317
   },
   318: {
     English: {
@@ -309,7 +347,8 @@ var modes = {
       description: "ARURF games",
       name: "ARURF",
     },
-    type: "special"
+    queue: "special",
+    id: 318
   },
   325: {
     English: {
@@ -317,7 +356,8 @@ var modes = {
       description: "All Random games",
       name: "SRAR",
     },
-    type: "special"
+    queue: "special",
+    id: 325
   },
   400: {
     English: {
@@ -325,7 +365,8 @@ var modes = {
       description: "5v5 Draft Pick games",
       name: "Draft Pick",
     },
-    type: "norm"
+    queue: "norm",
+    id: 400
   },
   410: {
     English: {
@@ -333,7 +374,8 @@ var modes = {
       description: "5v5 Ranked Dynamic games",
       name: "Ranked Dynamic",
     },
-    type: "flex5v5"
+    queue: "flex5v5",
+    id: 410
   },
   420: {
     English: {
@@ -341,7 +383,8 @@ var modes = {
       description: "5v5 Ranked Solo games",
       name: "Ranked Solo",
     },
-    type: "solo"
+    queue: "solo",
+    id: 420
   },
   430: {
     English: {
@@ -349,7 +392,8 @@ var modes = {
       description: "5v5 Blind Pick games",
       name: "Blind Pick",
     },
-    type: "norm"
+    queue: "norm",
+    id: 430
   },
   440: {
     English: {
@@ -357,7 +401,8 @@ var modes = {
       description: "5v5 Ranked Flex games",
       name: "Ranked Flex",
     },
-    type: "flex5v5"
+    queue: "flex5v5",
+    id: 440
   },
   450: {
     English: {
@@ -365,7 +410,8 @@ var modes = {
       description: "5v5 ARAM games",
       name: "ARAM",
     },
-    type: "aram"
+    type: "aram",
+    id: 450
   },
   460: {
     English: {
@@ -373,7 +419,8 @@ var modes = {
       description: "3v3 Blind Pick games",
       name: "Blind Pick",
     },
-    type: "norm"
+    queue: "norm",
+    id: 460
   },
   470: {
     English: {
@@ -381,7 +428,8 @@ var modes = {
       description: "3v3 Ranked Flex games",
       name: "Ranked Flex",
     },
-    type: "flex3v3"
+    queue: "flex3v3",
+    id: 470
   },
   600: {
     English: {
@@ -389,7 +437,8 @@ var modes = {
       description: "Blood Hunt Assassin games",
       name: "Blood Hunt Assassin",
     },
-    type: "special"
+    queue: "special",
+    id: 600
   },
   610: {
     English: {
@@ -397,7 +446,8 @@ var modes = {
       description: "Dark Star: Singularity games",
       name: "Dark Star",
     },
-    type: "special"
+    queue: "special",
+    id: 610
   },
   700: {
     English: {
@@ -405,7 +455,8 @@ var modes = {
       description: "Clash games",
       name: "Clash",
     },
-    type: "special"
+    queue: "special",
+    id: 700
   },
   800: {
     English: {
@@ -413,7 +464,8 @@ var modes = {
       description: "Co-op vs. AI Intermediate Bot games",
       name: "Co-op Intermediate",
     },
-    type: "bot"
+    queue: "bot",
+    id: 800
   },
   810: {
     English: {
@@ -421,7 +473,8 @@ var modes = {
       description: "Co-op vs. AI Intro Bot games",
       name: "Co-op Intro",
     },
-    type: "bot"
+    queue: "bot",
+    id: 810
   },
   820: {
     English: {
@@ -429,7 +482,8 @@ var modes = {
       description: "Co-op vs. AI Beginner Bot games",
       name: "Co-op Beginner",
     },
-    type: "bot"
+    queue: "bot",
+    id: 820
   },
   830: {
     English: {
@@ -437,7 +491,8 @@ var modes = {
       description: "Co-op vs. AI Intro Bot games",
       name: "Co-op Intro",
     },
-    type: "bot"
+    queue: "bot",
+    id: 830
   },
   840: {
     English: {
@@ -445,7 +500,8 @@ var modes = {
       description: "Co-op vs. AI Beginner Bot games",
       name: "Co-op Beginner",
     },
-    type: "bot"
+    queue: "bot",
+    id: 840
   },
   850: {
     English: {
@@ -453,7 +509,8 @@ var modes = {
       description: "Co-op vs. AI Intermediate Bot games",
       name: "Co-op Intermediate",
     },
-    type: "bot"
+    queue: "bot",
+    id: 850
   },
   900: {
     English: {
@@ -461,7 +518,8 @@ var modes = {
       description: "ARURF games",
       name: "ARURF",
     },
-    type: "special"
+    queue: "special",
+    id: 900
   },
   910: {
     English: {
@@ -469,7 +527,8 @@ var modes = {
       description: "Ascension games",
       name: "Ascension",
     },
-    type: "special"
+    queue: "special",
+    id: 910
   },
   920: {
     English: {
@@ -477,7 +536,8 @@ var modes = {
       description: "Legend of the Poro King games",
       name: "Poro King",
     },
-    type: "special"
+    queue: "special",
+    id: 920
   },
   940: {
     English: {
@@ -485,7 +545,8 @@ var modes = {
       description: "Nexus Siege games",
       name: "Nexus Siege",
     },
-    type: "special"
+    queue: "special",
+    id: 940
   },
   950: {
     English: {
@@ -493,7 +554,8 @@ var modes = {
       description: "Doom Bots Voting games",
       name: "Doom Bot",
     },
-    type: "special"
+    queue: "special",
+    id: 950
   },
   960: {
     English: {
@@ -501,7 +563,8 @@ var modes = {
       description: "Doom Bots Standard games",
       name: "Doom Bot",
     },
-    type: "special"
+    queue: "special",
+    id: 960
   },
   980: {
     English: {
@@ -509,7 +572,8 @@ var modes = {
       description: "Star Guardian Invasion: Normal games",
       name: "Star Guardian Invasion: Normal",
     },
-    type: "special"
+    queue: "special",
+    id: 980
   },
   990: {
     English: {
@@ -517,7 +581,8 @@ var modes = {
       description: "Star Guardian Invasion: Onslaught games",
       name: "Star Guardian Invasion: Onslaught",
     },
-    type: "special"
+    queue: "special",
+    id: 990
   },
   1000: {
     English: {
@@ -525,7 +590,8 @@ var modes = {
       description: "PROJECT: Hunters games",
       name: "PROJECT: Hunters",
     },
-    type: "special"
+    queue: "special",
+    id: 1000
   },
   1010: {
     English: {
@@ -533,7 +599,8 @@ var modes = {
       description: "Snow ARURF games",
       name: "Snow ARURF",
     },
-    type: "special"
+    queue: "special",
+    id: 1010
   },
   1020: {
     English: {
@@ -541,7 +608,8 @@ var modes = {
       description: "One for All games",
       name: "One for All",
     },
-    type: "special"
+    queue: "special",
+    id: 1020
   },
   1030: {
     English: {
@@ -549,7 +617,8 @@ var modes = {
       description: "Odyssey Extraction: Intro games",
       name: "Odyssey Extraction: Intro",
     },
-    type: "special"
+    queue: "special",
+    id: 1030
   },
   1040: {
     English: {
@@ -557,7 +626,8 @@ var modes = {
       description: "Odyssey Extraction: Cadet games",
       name: "Odyssey Extraction: Cadet",
     },
-    type: "special"
+    queue: "special",
+    id: 1040
   },
   1050: {
     English: {
@@ -565,7 +635,8 @@ var modes = {
       description: "Odyssey Extraction: Crewmember games",
       name: "Odyssey Extraction: Crewmember",
     },
-    type: "special"
+    queue: "special",
+    id: 1050
   },
   1060: {
     English: {
@@ -573,7 +644,8 @@ var modes = {
       description: "Odyssey Extraction: Captain games",
       name: "Odyssey Extraction: Captain",
     },
-    type: "special"
+    queue: "special",
+    id: 1060
   },
   1070: {
     English: {
@@ -581,7 +653,8 @@ var modes = {
       description: "Odyssey Extraction: Onslaught games",
       name: "Odyssey Extraction: Onslaught",
     },
-    type: "special"
+    queue: "special",
+    id: 1070
   },
   1090: {
     English: {
@@ -589,7 +662,8 @@ var modes = {
       description: "Teamfight Tactics games",
       name: "TFT",
     },
-    type: "norm"
+    queue: "norm",
+    id: 1090
   },
   1100: {
     English: {
@@ -597,7 +671,8 @@ var modes = {
       description: "Teamfight Tactics games",
       name: "Ranked TFT",
     },
-    type: "tft"
+    queue: "tft",
+    id: 1100
   },
   1200: {
     English: {
@@ -605,7 +680,8 @@ var modes = {
       description: "Nexus Blitz games",
       name: "Nexus Blitz",
     },
-    type: "special"
+    queue: "special",
+    id: 1200
   }
 }
 
