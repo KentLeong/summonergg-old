@@ -51,7 +51,7 @@ module.exports = (region) => {
     },
     async getBySummonerID(id, callback){
       try {
-        var res = await client.get(`/lol/summoner/v4/summoners/by-summoner/`+
+        var res = await client.get(`/lol/summoner/v4/summoners/`+
         `${id}?api_key=${riot.key}`)
         dev(`Found summoner data: ${res.data.name} by summoner id from riot API`, 'success')
         callback(res.data)
