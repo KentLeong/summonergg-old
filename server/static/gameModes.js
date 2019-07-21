@@ -167,7 +167,7 @@ var modes = {
       description: "5v5 ARAM games",
       name: "ARAM",
     },
-    type: "aram",
+    queue: "aram",
     id: 65
   },
   67: {
@@ -203,7 +203,7 @@ var modes = {
       description: "2v2 Snowdown Showdown games",
       name: "2v2 Snowdown",
     },
-    type: "aram",
+    queue: "aram",
     id: 73
   },
   75: {
@@ -410,7 +410,7 @@ var modes = {
       description: "5v5 ARAM games",
       name: "ARAM",
     },
-    type: "aram",
+    queue: "aram",
     id: 450
   },
   460: {
@@ -682,6 +682,33 @@ var modes = {
     },
     queue: "special",
     id: 1200
+  },
+  2000: {
+    English: {
+      type: "Tutorial Part 1",
+      description: "Tutorial Part 1",
+      name: "Tutorial Part 1",
+    },
+    queue: "special",
+    id: 2000
+  },
+  2010: {
+    English: {
+      type: "Tutorial Part 2",
+      description: "Tutorial Part 2",
+      name: "Tutorial Part 2",
+    },
+    queue: "special",
+    id: 20010
+  },
+  2020: {
+    English: {
+      type: "Tutorial Part 3",
+      description: "Tutorial Part 3",
+      name: "Tutorial Part 3",
+    },
+    queue: "special",
+    id: 2020
   }
 }
 
