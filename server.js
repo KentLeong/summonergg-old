@@ -34,12 +34,25 @@ app.use((req, res, next) => {
 
 var connnect = (async () => {
   var serverList = {};
-
   // connect to region mongo db
-  log("Connecting to regional enpoints..", 'info')
   await Object.keys(endpoints).asyncForEach(async (endPoint, i) => {
-    serverList[endPoint] = await mongoose.createConnection(endpoints[endPoint].db+"/sgg_"+endPoint, {useNewUrlParser: true});
-    log(endpoints[endPoint].name+" connected at host: "+ endpoints[endPoint].db, 'success')
+    log("Connecting to "+endpoints[endPoint].name+" enpoints..", 'info')
+    serverList[endPoint] = {
+      main: "",
+      match: ""
+    }
+    try {
+      serverList[endPoint].main = await mongoose.createConnection(endpoints[endPoint].main+"/sgg_"+endPoint+"_main", {useNewUrlParser: true})
+      log("Connected to "+endpoints[endPoint].name+" main database", 'success')
+    } catch(err) {
+      log('Connection to '+endpoints[endPoint].name+" main database failed", 'error');
+    }
+    try {
+      serverList[endPoint].match = await mongoose.createConnection(endpoints[endPoint].match+"/sgg_"+endPoint+"_match", {useNewUrlParser: true})
+      log("Connected to "+endpoints[endPoint].name+" match database", 'success')
+    } catch(err) {
+      log('Connection to '+endpoints[endPoint].name+" match database failed", 'error');
+    }
   })
 
   fs.readdir("./server/routes", (err, files) => {
