@@ -1,3 +1,5 @@
+var login = "leong:E93c841k675";
+var main = "68.5.243.142"
 module.exports = {
   endpoints: {
     // "br": {
@@ -38,7 +40,8 @@ module.exports = {
     "na": {
       name: "North America",
       riot: "na1",
-      db: "mongodb://localhost:27017"
+      main: "mongodb://"+login+"@"+main+":27017",
+      match: "mongodb://"+login+"@"+main+":27018"
     },
     // "oce": {
     //   name: "Oceanic",
@@ -83,7 +86,7 @@ module.exports = {
   },
   season: 13,
   key: "RGAPI-f56e42ef-0c34-4b99-97c9-b0d2fe42f4e6",
-  ver: "9.13.1",
+  ver: "9.14.1",
   secondRate: 500,
   minuteRate: 30000,
   // archive matches in (days)
