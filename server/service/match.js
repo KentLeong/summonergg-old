@@ -33,10 +33,11 @@ module.exports = (region) => {
         location = time+"_"+type
       }
       //set server
-      if (location != "recent") {
-        // get server location
+      if (location == "recent") {
+        callback(true, location)
+      } else {
+        callback(false, location)
       }
-      callback(server, location)
     },
     async formatMatchOptions(options, callback) {
       // Epoch/Date  Type

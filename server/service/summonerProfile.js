@@ -316,7 +316,7 @@ module.exports = (region) => {
         champion: {}
       };
       await profile.matches.asyncForEach(match => {
-        if (match.queueId.type != "Convergence" && match.outcome != "Remake") {
+        if (match.queueId.type != "Convergence" && match.outcome != "Remake" && match.role) {
           if (!list.role[match.role] && match.role) {
             if (match.queueId == "420" || match.queueId == "440" || match.queueId == "470") {
               list.role[match.role] = {
