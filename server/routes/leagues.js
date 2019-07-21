@@ -9,7 +9,7 @@ module.exports = (serverList) => {
     ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     if (ip.substr(0, 7) == "::ffff:") ip = ip.substr(7);
     region = req.headers.host.split(".")[0].replace("http://", "")
-    League = require('../models/league')(serverList[region]);
+    League = require('../models/league')(serverList[region].main);
     LeagueService = require('../service/league')(region);
     RiotLeague = require('../riot/league')(region);
     next();

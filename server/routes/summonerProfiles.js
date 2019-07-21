@@ -35,7 +35,7 @@ module.exports = (serverList) => {
     region = req.headers.host.split(".")[0].replace("http://", "");
     
     //models
-    SummonerProfile = require('../models/summonerProfile')(serverList[region]);
+    SummonerProfile = require('../models/summonerProfile')(serverList[region].main);
   
     //services
     SummonerService = require('../service/summoner')(region);

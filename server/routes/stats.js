@@ -9,7 +9,7 @@ module.exports = (serverList) => {
     ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     if (ip.substr(0, 7) == "::ffff:") ip = ip.substr(7);
     region = req.headers.host.split(".")[0].replace("http://", "")
-    Stat = require('../models/stat')(serverList[region]);
+    Stat = require('../models/stat')(serverList[region].main);
     next();
   })
   

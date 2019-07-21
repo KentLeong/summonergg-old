@@ -13,7 +13,7 @@ module.exports = (serverList) => {
   
   router.use((req, res, next) => {
     region = req.headers.host.split(".")[0].replace("http://", "")
-    Summoner = require('../models/summoner')(serverList[region]);
+    Summoner = require('../models/summoner')(serverList[region].main);
     RiotSummoner = require('../riot/summoner')(region);
     next();
   })

@@ -18,11 +18,11 @@ module.exports = (serverList) => {
     if (!time) time = req.query.date;
     var type = req.query.type
     if (time && riot.types.includes(type) || time == "recent") {
-      MatchService.getLocation(time, type, (server, location) => {
-        if (!server) {
-          Match = require('../models/match')(serverList[region], location);
+      MatchService.getLocation(time, type, (recent, location) => {
+        if (recent) {
+          Match = require('../models/match')(serverList[region].main, location);
         } else {
-          Match = require('../models/match')(server, location);
+          Match = require('../models/match')(serverList[region].match, location);
         }
       })
       RiotMatch = require('../riot/match')(region);
