@@ -21,12 +21,12 @@ Array.prototype.asyncForEach = async function(cb) {
 var main = async function() {
   var ranks = {
     HIGH: [],
-    DIAMOND: [],
-    PLATINUM: [],
-    GOLD: [],
-    SILVER: [],
-    BRONZE: [],
-    IRON: []
+    // DIAMOND: [],
+    // PLATINUM: [],
+    // GOLD: [],
+    // SILVER: [],
+    // BRONZE: [],
+    // IRON: []
   }  
   await Object.keys(ranks).asyncForEach(async rank => {
     fs.readFile('./server/static/leagues/'+rank+'.json', (err, data) => {
@@ -41,22 +41,25 @@ var main = async function() {
     var list = ranks[rank];
     if (list.length > 0) {
       await list.asyncForEach(async league => {
+        var found = false;
+        var name = "";
         await SummonerProfileService.getById(league.summonerId, async profile => {
-          if (!profile) {
-            try {
-              var res = await localClient.post('/summonerProfiles/generateProfile?language='+region, {name: league.summonerName});
-              await waitFor
-              (500)
-              list.shift();
-              let data = JSON.stringify({list: list})
-
-              fs.writeFileSync('./server/static/leagues/'+rank+'.json', data)
-              log("Generated profile for "+league.summonerName+"!, "+list.length+" documents left.", 'success')
-            } catch(err) {
-              log(`Could not generate profile for ${league.summonerName}`, 'error')
-            }
+          if (profile) {
+            found = true;
+            log(`Profile ${profile.summoner.name} already exists, going next..`, 'warning')
+          } else {
+            name = league.summonerName
+            log(`Could not find a profile for ${league.summonerName}, creating..`, 'info')
           }
         })
+        if (!found) {
+          try {
+            var res = await localClient.post('/summonerProfiles/generateProfile?language=english', {name: name});
+            log("Generated profile for "+league.summonerName, 'success')
+          } catch(err) {
+            log(`Could not generate profile for ${league.summonerName}`, 'error')
+          }
+        }
       })
     }
   })

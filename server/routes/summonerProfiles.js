@@ -184,7 +184,6 @@ module.exports = (serverList) => {
   
   // Generate New Profile
   router.post('/generateProfile', async (req, res) => {
-    console.log("run")
     //for api rates
     var rateAvailable = true;
 
@@ -212,9 +211,7 @@ module.exports = (serverList) => {
         res.status(400).json("couldn't update from riot")
       } else {
         var stat = false;
-        var solo = [];
-        var flex5v5 = [];
-        var flex3v3 = [];
+        var rankedGames = [];
         //get leagues
         await SummonerProfileService.getLeagues(profile, (updatedProfile, used) => {
           profile = updatedProfile;
@@ -222,14 +219,15 @@ module.exports = (serverList) => {
 
         // matches for all ranked games
         await MatchService.getAllPlayerMatch(profile.summoner.accountId, "420", updatedSolo => {
-          solo = updatedSolo
+          rankedGames = [...rankedGames, ...updatedSolo]
         })
         await MatchService.getAllPlayerMatch(profile.summoner.accountId, "440", updatedFlex => {
-          flex5v5 = updatedFlex
+          rankedGames = [...rankedGames, ...updatedFlex]
         })
         await MatchService.getAllPlayerMatch(profile.summoner.accountId, "470", updatedFlex => {
-          flex3v3 = updatedFlex
+          rankedGames = [...rankedGames, ...updatedFlex]
         })
+
         // get first 10 matches
         var query = {
           season: riot.season,
@@ -265,6 +263,11 @@ module.exports = (serverList) => {
 
         // generate recent champions and role
         await SummonerProfileService.generateRecentChampions(profile, updatedProfile => {
+          if (updatedProfile) profile = updatedProfile;
+        })
+
+        // generate recent ranked matches
+        await SummonerProfileService.generateRecentRanked(profile, rankedGames, updatedProfile => {
           if (updatedProfile) profile = updatedProfile;
         })
 

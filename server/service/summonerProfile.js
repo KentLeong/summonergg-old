@@ -222,11 +222,10 @@ module.exports = (region) => {
           puuid: profile.summoner.puuid,
           champions: champions
         }, updatedStat => {
-          if (updatedStat) {
-            callback(profile, updatedStat);
-          } else {
-            callback(profile, false);
-          }
+          callback(profile, {
+            puuid: profile.summoner.puuid,
+            champions: champions
+          });
         })
       }
     },
@@ -414,6 +413,66 @@ module.exports = (region) => {
       
       callback(profile)
     },
+    async generateRecentRanked(profile, rankedGames, callback) {
+      var games = [];
+      var recent = [];
+      if (rankedGames.length > 0) {
+        await rankedGames.asyncForEach(async game => {
+          var now = new Date().getTime();
+          var played = game.timestamp;
+          var daysAgo = (((((now - played)/1000)/60)/60)/24).toFixed(1);
+          if (daysAgo < 8) {
+            var opt = {
+              epoch: game.timestamp,
+              type: game.queue
+            }
+            await MatchService.getByGameId(game.gameId, opt, updatedMatch => {
+              if (updatedMatch) games.push(updatedMatch);
+            })
+          }
+        })
+      }
+      if (games.length > 0) {
+        var list = {};
+        await this.formatMatches(profile.summoner, games, formatedMatches => {
+          if (formatedMatches) games = formatedMatches
+        })
+        await games.asyncForEach(game => {
+          if (!list[game.championId] && game.outcome != "Remake") {
+            list[game.championId] = {};
+            list[game.championId] = {
+              wins: game.outcome == "Victory" ? 1 : 0,
+              losses: game.outcome == "Defeat" ? 1 : 0
+            }
+          } else if (game.outcome != "Remake") {
+            if (game.outcome == "Victory") {
+              list[game.championId].wins++
+            } else if (game.outcome == "Defeat"){
+              list[game.championId].losses++
+            }
+          }
+        })
+        await Object.keys(list).asyncForEach(champ => {
+          var wins = list[champ].wins;
+          var losses = list[champ].losses
+          var a = {
+            id: champ,
+            wins: wins,
+            losses: losses,
+            percent: Math.round((wins/(wins+losses))*100)
+          }
+          recent.push(a)
+        })
+        recent.sort((a,b) => {
+          return b.percent - a.percent
+        })
+        recent.sort((a,b) => {
+          return (b.wins+b.losses) - (a.wins+a.losses)
+        })
+        profile.recent.ranked = recent
+      }
+      callback(profile)
+    },
     async formatMatches(summoner, matches, callback) {
       //role
       await matches.asyncForEach(async(match, i) => {
@@ -547,48 +606,76 @@ module.exports = (region) => {
       callback(matches)
     },
     async translate(profile, language, callback) {
-      await profile.recent.champions.asyncForEach((champ, i) => {
-        if (champions[language][champ]) {
-          profile.recent.champions[i].id = {
-            id: champions[language][champ].id,
-            name: champions[language][champ].name
-          } 
-        }
-      })
-      await profile.matches.asyncForEach(async (match, i) => {
-        profile.matches[i].queueId = {
-          type: gameMode[profile.matches[i].queueId]["English"].type,
-          description: gameMode[profile.matches[i].queueId]["English"].description,
-          name: gameMode[profile.matches[i].queueId]["English"].name,
-          id: gameMode[profile.matches[i].queueId]["id"],
-          queue: gameMode[profile.matches[i].queueId]["queue"]
-        }
-        let key = match.championId;
-        if (champions[language][key]) {
-          profile.matches[i].championId = {
-            id: champions[language][key].id,
-            name: champions[language][key].name
+      // translate top 5 champion ids
+      if (profile.champions.length > 0) {
+        await profile.champions.asyncForEach((champ, i) => {
+          if (champions[language][champ.id]) {
+            profile.champions[i].id = {
+              id: champions[language][champ.id].id,
+              name: champions[language][champ.id].name
+            }
           }
-        }
-        await match.blueTeam.asyncForEach(async (part, p) => {
-          let key = part.championId;
+        })
+      }
+      // translate recent ranked champion ids
+      if (profile.recent.ranked.length > 0) {
+        await profile.recent.ranked.asyncForEach((champ, i) => {
+          if (champions[language][champ.id]) {
+            profile.recent.ranked[i].id = {
+              id: champions[language][champ.id].id,
+              name: champions[language][champ.id].name
+            }
+          }
+        })
+      }
+      // translate recent champion ids
+      if (profile.recent.champions.length > 0) {
+        await profile.recent.champions.asyncForEach((champ, i) => {
+          if (champions[language][champ.id]) {
+            profile.recent.champions[i].id = {
+              id: champions[language][champ.id].id,
+              name: champions[language][champ.id].name
+            }
+          }
+        })
+      }
+      // translate champions in matches
+      if (profile.matches.length > 0) {
+        await profile.matches.asyncForEach(async (match, i) => {
+          profile.matches[i].queueId = {
+            type: gameMode[profile.matches[i].queueId]["English"].type,
+            description: gameMode[profile.matches[i].queueId]["English"].description,
+            name: gameMode[profile.matches[i].queueId]["English"].name,
+            id: gameMode[profile.matches[i].queueId]["id"],
+            queue: gameMode[profile.matches[i].queueId]["queue"]
+          }
+          let key = match.championId;
           if (champions[language][key]) {
-            profile.matches[i].blueTeam[p].championId = {
+            profile.matches[i].championId = {
               id: champions[language][key].id,
               name: champions[language][key].name
             }
           }
-        })
-        await match.redTeam.asyncForEach(async (part, p) => {
-          let key = part.championId;
-          if (champions[language][key]) {
-            profile.matches[i].redTeam[p].championId = {
-              id: champions[language][key].id,
-              name: champions[language][key].name
+          await match.blueTeam.asyncForEach(async (part, p) => {
+            let key = part.championId;
+            if (champions[language][key]) {
+              profile.matches[i].blueTeam[p].championId = {
+                id: champions[language][key].id,
+                name: champions[language][key].name
+              }
             }
-          }
+          })
+          await match.redTeam.asyncForEach(async (part, p) => {
+            let key = part.championId;
+            if (champions[language][key]) {
+              profile.matches[i].redTeam[p].championId = {
+                id: champions[language][key].id,
+                name: champions[language][key].name
+              }
+            }
+          })
         })
-      })
+      }
       callback(profile)
     },
     async format(profile, stat, callback) {
@@ -621,7 +708,7 @@ module.exports = (region) => {
           var deaths = rankedStats.deaths;
           var assists = rankedStats.assists;
           var championStat = {
-            id: champions["English"][champion].id,
+            id: champion,
             games: games,
             kills: (kills/games).toFixed(1),
             deaths: (deaths/games).toFixed(1),
