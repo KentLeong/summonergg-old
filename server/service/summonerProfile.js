@@ -606,17 +606,18 @@ module.exports = (region) => {
       callback(matches)
     },
     async translate(profile, language, callback) {
-      // // translate top 5 champion ids
-      // if (profile.champions.total.length > 0) {
-      //   await profile.champions.total.asyncForEach((champ, i) => {
-      //     if (champions[language][champ.id]) {
-      //       profile.champions.total[i].id = {
-      //         id: champions[language][champ.id].id,
-      //         name: champions[language][champ.id].name
-      //       }
-      //     }
-      //   })
-      // }
+      // translate top 5 champion ids
+      if (profile.champions.total.length > 0) {
+        await profile.champions.total.asyncForEach((champ, i) => {
+          if (champions[language][champ.id]) {
+            profile.champions.total[i].id = {
+              id: champions[language][champ.id].id,
+              name: champions[language][champ.id].name
+            }
+          }
+        })
+      }
+      
       // translate recent ranked champion ids
       if (profile.recent.ranked.length > 0) {
         await profile.recent.ranked.asyncForEach((champ, i) => {
