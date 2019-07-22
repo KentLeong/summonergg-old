@@ -3,6 +3,7 @@ import { SummonerService } from '../summoner.service';
 
 //models
 import { Summoner } from '../summoner.model';
+import { SummonerProfile } from '../summonerProfile.model';
 @Component({
   selector: 'app-summoner-detail',
   templateUrl: './summoner-detail.component.html',
@@ -14,7 +15,7 @@ export class SummonerDetailComponent implements OnChanges {
     private summonerService: SummonerService
   ) { }
 
-  @Input() profile: object;
+  @Input() profile: SummonerProfile;
 
   ngOnChanges() {
     console.log("hello")

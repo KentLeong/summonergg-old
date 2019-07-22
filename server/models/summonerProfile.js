@@ -20,7 +20,7 @@ var schema = new Schema({
   matches: [Object],
   stats: Object,
   recent: Object,
-  champions: [Object],
+  champions: Object,
   lastUpdated: {type: Date, default: Date.now()}
 })
 

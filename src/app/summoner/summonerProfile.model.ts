@@ -8,11 +8,14 @@ export class SummonerProfile {
   matches: [Match];
   lastUpdated: Date;
   stats: any;
+  champions: object;
 
   constructor(profile) {
     this.summoner = profile.summoner;
     this.leagues = profile.leagues;
     this.matches = profile.matches;
     this.stats = profile.stats;
+    this.champions = profile.champions;
+    this.lastUpdated = profile.lastUpdated;
   }
 }
