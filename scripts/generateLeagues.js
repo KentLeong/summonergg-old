@@ -21,11 +21,11 @@ Array.prototype.asyncForEach = async function(cb) {
 var main = async function() {
   var ranks = ["HIGH", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON"]
   ranks.forEach(rank => {
-    fs.readFile(__dirname+'\\..\\server\\static\\leagues\\'+rank+'.json', (err, data) => {
+    fs.readFile('./server/static/leagues/'+rank+'.json', (err, data) => {
       if (!data) {
         log(rank+'.json not found. create...', 'info')
         let data = JSON.stringify({list: []});
-        fs.writeFileSync(__dirname+'\\..\\server\\static\\leagues\\'+rank+'.json', data);
+        fs.writeFileSync('./server/static/leagues/'+rank+'.json', data);
       }
     })
   })
@@ -70,7 +70,7 @@ var main = async function() {
     await waitFor(1000);
     log(`Creating HIGH.. ${leagueList.length} documents`, 'info')
     let data = JSON.stringify({list: leagueList})
-    fs.writeFileSync(__dirname+'\\..\\server\\static\\leagues\\HIGH.json', data)
+    fs.writeFileSync('./server/static/leagues/', data)
     leagueList = [];
 
     await tiers.asyncForEach(async tier => {
@@ -97,7 +97,7 @@ var main = async function() {
       await waitFor(1000);
       log(`Creating ${tier}.. ${leagueList.length} documents`, 'info')
       let data = JSON.stringify({list: leagueList})
-      fs.writeFileSync(__dirname+'\\..\\server\\static\\leagues\\'+tier+'.json', data)
+      fs.writeFileSync('./server/static/leagues/'+tier+'.json', data)
       leagueList = [];
     })
   })

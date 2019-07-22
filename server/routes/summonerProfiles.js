@@ -184,6 +184,7 @@ module.exports = (serverList) => {
   
   // Generate New Profile
   router.post('/generateProfile', async (req, res) => {
+    console.log("run")
     //for api rates
     var rateAvailable = true;
 

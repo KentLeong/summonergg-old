@@ -30,7 +30,7 @@ var main = async function() {
     // IRON: []
   }  
   await Object.keys(ranks).asyncForEach(async rank => {
-    fs.readFile(__dirname+'\\..\\server\\static\\leagues\\'+rank+'.json', (err, data) => {
+    fs.readFile('./server/static/leagues/'+rank+'.json', (err, data) => {
       let parsedData = JSON.parse(data)
       ranks[rank] = parsedData.list
       log(`${ranks[rank].length} documents found for ${rank}.`, 'info')

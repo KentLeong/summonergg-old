@@ -29,7 +29,7 @@ var main = async function() {
     IRON: []
   }  
   await Object.keys(ranks).asyncForEach(async rank => {
-    fs.readFile(__dirname+'\\..\\server\\static\\leagues\\'+rank+'.json', (err, data) => {
+    fs.readFile('./server/static/leagues/'+rank+'.json', (err, data) => {
       let parsedData = JSON.parse(data)
       ranks[rank] = parsedData.list
       log(`${ranks[rank].length} documents found for ${rank}.`, 'info')
@@ -50,7 +50,7 @@ var main = async function() {
               list.shift();
               let data = JSON.stringify({list: list})
 
-              fs.writeFileSync(__dirname+'\\..\\server\\static\\leagues\\'+rank+'.json', data)
+              fs.writeFileSync('./server/static/leagues/'+rank+'.json', data)
               log("Generated profile for "+league.summonerName+"!, "+list.length+" documents left.", 'success')
             } catch(err) {
               log(`Could not generate profile for ${league.summonerName}`, 'error')
