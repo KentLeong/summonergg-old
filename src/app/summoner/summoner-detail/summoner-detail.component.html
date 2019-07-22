@@ -1,37 +1,37 @@
 <div>
   <div class="ranks container-info">
-    <div class="ranks__solo" *ngIf="!solo">
+    <div class="ranks__solo" *ngIf="!profile.leagues.solo">
       <img src="../../assets/rank-icons/unranked.png" alt="">
       <div>
         <span>Ranked Solo</span><br>
         <span>Unranked</span><br>
       </div>
     </div>
-    <div class="ranks__solo" *ngIf="solo">
-      <img src="../../assets/rank-icons/{{solo.tier.toLowerCase()}}_{{solo.rank}}.png" alt="">
+    <div class="ranks__solo" *ngIf="profile.leagues.solo">
+      <img src="../../assets/rank-icons/{{profile.leagues.solo.tier.toLowerCase()}}_{{profile.leagues.solo.rank}}.png" alt="">
       <div>
         <span>Ranked Solo</span><br>
-        <span>{{solo.tier}} {{solo.rank}}</span><br>
-        <span>{{solo.leaguePoints}} LP <span>/ {{solo.wins}}W {{solo.losses}}L</span></span><br>
-        <span>Win Ratio {{solo.winRatio}}%</span><br>
+        <span>{{profile.leagues.solo.tier}} {{profile.leagues.solo.rank}}</span><br>
+        <span>{{profile.leagues.solo.leaguePoints}} LP <span>/ {{profile.leagues.solo.wins}}W {{profile.leagues.solo.losses}}L</span></span><br>
+        <span>Win Ratio {{profile.leagues.solo.winRatio}}%</span><br>
       </div>
     </div>
-    <div *ngIf="flexSR" class="ranks__flex__5v5 flex">
-      <img src="../../assets/rank-icons/{{flexSR.tier.toLowerCase()}}_{{flexSR.rank}}.png" alt="">
+    <div *ngIf="profile.leagues.flexSR" class="ranks__flex__5v5 flex">
+      <img src="../../assets/rank-icons/{{profile.leagues.flexSR.tier.toLowerCase()}}_{{profile.leagues.flexSR.rank}}.png" alt="">
       <div class="details">
         <span>Flex 5v5</span><br>
-        <span>{{flexSR.tier}} {{flexSR.rank}}</span><br>
-        <span>{{flexSR.leaguePoints}} LP <span>/ {{flexSR.wins}}W {{flexSR.losses}}L</span></span><br>
+        <span>{{profile.leagues.flexSR.tier}} {{profile.leagues.flexSR.rank}}</span><br>
+        <span>{{profile.leagues.flexSR.leaguePoints}} LP <span>/ {{profile.leagues.flexSR.wins}}W {{profile.leagues.flexSR.losses}}L</span></span><br>
         <span>Unranked</span>
       </div>
     </div>
     <br>
-    <div *ngIf="flexTT" class="ranks__flex__3v3 flex">
-      <img src="../../assets/rank-icons/{{flexTT.tier.toLowerCase()}}_{{flexTT.rank}}.png" alt="">
+    <div *ngIf="profile.leagues.flexTT" class="ranks__flex__3v3 flex">
+      <img src="../../assets/rank-icons/{{profile.leagues.flexTT.tier.toLowerCase()}}_{{profile.leagues.flexTT.rank}}.png" alt="">
       <div class="details">
         <span>Flex 3v3</span><br>
-        <span>{{flexTT.tier}} {{flexTT.rank}}</span><br>
-        <span>{{flexTT.leaguePoints}} LP <span>/ {{flexTT.wins}}W {{flexTT.losses}}L</span></span><br>
+        <span>{{profile.leagues.flexTT.tier}} {{profile.leagues.flexTT.rank}}</span><br>
+        <span>{{profile.leagues.flexTT.leaguePoints}} LP <span>/ {{profile.leagues.flexTT.wins}}W {{profile.leagues.flexTT.losses}}L</span></span><br>
         <span>Unranked</span>
       </div>
     </div>
@@ -44,99 +44,23 @@
       <li>Flex 5v5</li>
       <li>Flex 3v3</li>
     </ul>
-    <ul class="champion__content">
-      <li class="champion-item">
+    <ul class="champion__content" *ngIf="profile">
+      <li class="champion-item" *ngFor="let champion of profile.champions.total">
         <ul>
           <li>
-            <img src="../../assets/champion/square/Evelynn.png" alt="">
+            <img src="../../assets/champion/square/{{champion.id.id}}.png" alt="">
           </li>
           <li>
-            <h5>Evelynn</h5>
+            <h5>{{champion.id.name}}</h5>
             <span>CS: 5.3</span>
           </li>
           <li>
-            <h5>3.49 KDA</h5>
-            <span>11.4 / 5.1 / 6.5</span>
+            <h5>{{champion.kda}} KDA</h5>
+            <span>{{champion.kills}} / {{champion.deaths}} / {{champion.assists}}</span>
           </li>
           <li>
-            <h5>66%</h5>
-            <span>85 Played</span>
-          </li>
-        </ul>
-      </li>
-      <li class="champion-item">
-        <ul>
-          <li>
-            <img src="../../assets/champion/square/Leona.png" alt="">
-          </li>
-          <li>
-            <h5>Leona</h5>
-            <span>CS: 2.0</span>
-          </li>
-          <li>
-            <h5>2.90 KDA</h5>
-            <span>3.0 / 5.3 / 12.3</span>
-          </li>
-          <li>
-            <h5>75%</h5>
-            <span>4 Played</span>
-          </li>
-        </ul>
-      </li>
-      <li class="champion-item">
-        <ul>
-          <li>
-            <img src="../../assets/champion/square/Alistar.png" alt="">
-          </li>
-          <li>
-            <h5>Alistar</h5>
-            <span>CS: 1.3</span>
-          </li>
-          <li>
-            <h5>2.27 KDA</h5>
-            <span>1.5 / 5.5 / 11.0</span>
-          </li>
-          <li>
-            <h5>25%</h5>
-            <span>4 Played</span>
-          </li>
-        </ul>
-      </li>
-      <li class="champion-item">
-        <ul>
-          <li>
-            <img src="../../assets/champion/square/Twitch.png" alt="">
-          </li>
-          <li>
-            <h5>Twitch</h5>
-            <span>CS: 5.7</span>
-          </li>
-          <li>
-            <h5>3.91 KDA</h5>
-            <span>8.3 / 3.7 / 6.0</span>
-          </li>
-          <li>
-            <h5>67%</h5>
-            <span>3 Played</span>
-          </li>
-        </ul>
-      </li>
-      <li class="champion-item">
-        <ul>
-          <li>
-            <img src="../../assets/champion/square/Hecarim.png" alt="">
-          </li>
-          <li>
-            <h5>Hecarim</h5>
-            <span>CS: 6.1</span>
-          </li>
-          <li>
-            <h5>2.31 KDA</h5>
-            <span>13.5 / 8.0 / 5.0</span>
-          </li>
-          <li>
-            <h5>50%</h5>
-            <span>2 Played</span>
+            <h5>{{champion.winPercent}}%</h5>
+            <span>{{champion.games}} Played</span>
           </li>
         </ul>
       </li>
@@ -148,14 +72,14 @@
   <div class="detail_recent container-info">
     <h4>Recently Played</h4>
     <ul class="recent__champions">
-      <li>
-        <img src="../../assets/champion/square/Evelynn.png" alt="" class="recent-center">
-        <h5 class="recent-center">Evelynn</h5>
-        <span class="recent-center">90%</span>
+      <li *ngFor="let champion of profile.recent.ranked">
+        <img src="../../assets/champion/square/{{champion.id.id}}.png" alt="" class="recent-center">
+        <h5 class="recent-center">{{champion.id.name}}</h5>
+        <span class="recent-center">{{champion.percent}}%</span>
         <div class="recent-graph recent-center">
           <div>
-            <span>9W</span>
-            <span class="clear-fix">1L</span>
+            <span>{{champion.wins}}W</span>
+            <span class="clear-fix">{{champion.losses}}L</span>
           </div>
           <div class="bar"></div>
           <div class="bar"></div>
@@ -176,20 +100,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Yung Amber</td>
-          <td>7</td>
-          <td>6</td>
-          <td>1</td>
-          <td>86%</td>
+        <tr *ngFor="let player of profile.recent.players">
+          <td>{{player.name}}</td>
+          <td>{{player.total}}</td>
+          <td>{{player.wins}}</td>
+          <td>{{player.losses}}</td>
+          <td>{{player.percent}}%</td>
         </tr>
-        <tr>
-          <td>KeepYoursęlfSafę</td>
-          <td>2</td>
-          <td>2</td>
-          <td>0</td>
-          <td>100%</td>
-          </tr>
       </tbody>
     </table>
   </div>

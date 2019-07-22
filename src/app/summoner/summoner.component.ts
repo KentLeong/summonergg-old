@@ -10,6 +10,7 @@ import { SummonerDetailComponent } from './summoner-detail/summoner-detail.compo
 import { Summoner } from './summoner.model';
 import { Match } from './summoner-match-history/match.model';
 import { SummonerProfile } from './summonerProfile.model';
+import * as pData from '../../../data.js';
 @Component({
   selector: 'app-summoner',
   templateUrl: './summoner.component.html',
@@ -37,6 +38,8 @@ export class SummonerComponent implements OnDestroy {
   initialise() {
     // Set default values and re-fetch any data you need.
     var name = this.router.url.split("/")[2];
+    // this.profile = pData
+    // console.log(this.profile)
     this.getProfile(name);
   }
   

@@ -607,10 +607,10 @@ module.exports = (region) => {
     },
     async translate(profile, language, callback) {
       // translate top 5 champion ids
-      if (profile.champions.length > 0) {
-        await profile.champions.asyncForEach((champ, i) => {
+      if (profile.champions.total.length > 0) {
+        await profile.champions.total.asyncForEach((champ, i) => {
           if (champions[language][champ.id]) {
-            profile.champions[i].id = {
+            profile.champions.total[i].id = {
               id: champions[language][champ.id].id,
               name: champions[language][champ.id].name
             }

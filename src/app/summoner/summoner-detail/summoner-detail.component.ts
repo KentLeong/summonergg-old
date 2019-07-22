@@ -14,15 +14,9 @@ export class SummonerDetailComponent implements OnChanges {
     private summonerService: SummonerService
   ) { }
 
-  @Input() solo: object;
-  @Input() flexSR: object;
-  @Input() flexTT: object;
+  @Input() profile: object;
 
   ngOnChanges() {
-  }
-  
-  update() {
-  }
-  getFromLocal() {
+    console.log("hello")
   }
 }

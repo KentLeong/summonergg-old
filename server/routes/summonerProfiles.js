@@ -2,6 +2,7 @@ const log = require('../config/log');
 const dev = require('../config/dev');
 const rate = require('../service/rate')();
 const riot = require('../config/riot');
+const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
 module.exports = (serverList) => {
   var express = require('express');
   var router = express.Router();
@@ -190,7 +191,6 @@ module.exports = (serverList) => {
     var name = req.body.name
     var language = req.query.language;
     var profile = {};
-
     if (!rateAvailable) {
       res.status(400).json("riot rate used up");
     } else {

@@ -54,7 +54,7 @@ var main = async function() {
         })
         if (!found) {
           try {
-            var res = await localClient.post('/summonerProfiles/generateProfile?language=english', {name: name});
+            var res = await localClient.post('/summonerProfiles/generateProfile?language=English', {name: name});
             log("Generated profile for "+league.summonerName, 'success')
           } catch(err) {
             log(`Could not generate profile for ${league.summonerName}`, 'error')
