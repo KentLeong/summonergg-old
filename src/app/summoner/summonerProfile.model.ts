@@ -4,11 +4,19 @@ import { Match } from './summoner-match-history/match.model';
 
 export class SummonerProfile {
   summoner: Summoner;
-  leagues: Object;
+  leagues: {
+    solo: Object,
+    flexSR: Object,
+    flexTT: Object
+  };
   matches: [Match];
   lastUpdated: Date;
   stats: any;
-  champions: object;
+  champions: {
+    total: Object,
+    solo: Object,
+    flexSR
+  };
 
   constructor(profile) {
     this.summoner = profile.summoner;

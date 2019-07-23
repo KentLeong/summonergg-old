@@ -47,12 +47,14 @@
     <ul class="champion__content" *ngIf="profile">
       <li class="champion-item" *ngFor="let champion of profile.champions.total">
         <ul>
-          <li>
-            <img src="../../assets/champion/square/{{champion.id.id}}.png" alt="">
+          <li class="champion-back">
+            <img src="../../assets/test/{{champion.id.id}}.png" alt="">
+            <div class="champion-right-left"></div>
+            <div class="champion-diagonal"></div>
+            <div class="champion-bottom-top"></div>
           </li>
-          <li>
+          <!-- <li>
             <h5>{{champion.id.name}}</h5>
-            <span>CS: 5.3</span>
           </li>
           <li>
             <h5>{{champion.kda}} KDA</h5>
@@ -61,7 +63,7 @@
           <li>
             <h5>{{champion.winPercent}}%</h5>
             <span>{{champion.games}} Played</span>
-          </li>
+          </li> -->
         </ul>
       </li>
     </ul>

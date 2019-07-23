@@ -62,22 +62,42 @@ h4 {
     list-style-type: none;
 
     .champion-item {
-      margin-top: 0.5rem;
       display: table;
       height: 6rem;
       ul {
-        display: table;
+        display: table; 
+        .champion-back {
+          height: 8rem;
+        }
         li {
           display: table-cell;
-          vertical-align: middle;
           text-align: center;
+          .champion-diagonal {
+            position: absolute;
+            height: 8rem;
+            width: 24rem;
+            background: linear-gradient(137deg, rgba(255,255,255,0) 12%, rgba(36,40,44,1) 99%);
+          }
+          .champion-right-left {
+            position: absolute;
+            height: 8rem;
+            width: 24rem;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 22%, rgba(36,40,44,1) 98%);
+          }
+          .champion-bottom-top {
+            position: absolute;
+            margin-top: .5rem;
+            height: 8rem;
+            width: 24rem;
+            background: linear-gradient(180deg, rgba(255,255,255,0) 80%, rgba(36,40,44,1) 100%);
+          }
           img {
+            border-top: .1rem rgba(255,255,255,0.25) solid;
+            position: absolute;
             display: table-cell;
             vertical-align: middle;
-            width: 5rem;
-            height: 5rem;
-            border-radius: 50%;
-            margin: 0 1rem 0 1rem;
+            width: 24rem;
+            height: 8rem;
           }
           h5 {
             display: block;
