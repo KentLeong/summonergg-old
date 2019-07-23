@@ -37,8 +37,6 @@ module.exports = (serverList) => {
     SummonerProfile = require('../models/summonerProfile')(serverList[region].main);
   
     //services
-    SummonerService = require('../service/summoner')(region);
-    LeagueService = require('../service/league')(region);
     MatchService = require('../service/match')(region);
     SummonerProfileService = require('../service/summonerProfile')(region);
   

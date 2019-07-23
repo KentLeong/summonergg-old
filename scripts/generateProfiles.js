@@ -20,8 +20,8 @@ Array.prototype.asyncForEach = async function(cb) {
 
 var main = async function() {
   var ranks = {
-    HIGH: [],
-    // DIAMOND: [],
+    // HIGH: [],
+    DIAMOND: [],
     // PLATINUM: [],
     // GOLD: [],
     // SILVER: [],

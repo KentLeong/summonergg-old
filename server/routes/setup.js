@@ -39,12 +39,15 @@ module.exports = (serverList) => {
   
   // GET summoner queue
   router.get('/summoners/', (req, res) => {
-    SummonerQueue.find().limit(500).exec((err, summoners) => {
-      if (err) {
-        res.status(500).json(err)
-      } else {
-        res.status(200).json(summoners)
-      }
+    SummonerQueue.count().exec(function (err, count) {
+      var random = Math.floor((Math.random() * count)/50)
+      SummonerQueue.find().skip(random).limit(50).exec((err, summoners) => {
+        if (err) {
+          res.status(500).json(err)
+        } else {
+          res.status(200).json(summoners)
+        }
+      })
     })
   })
 
@@ -86,12 +89,12 @@ module.exports = (serverList) => {
 
   // POST Summoner
   router.post('/summoners/', (req, res) => {
-    var newSummoners = new SummonerQueue(req.body.summoner)
-    SummonerQueue.findOne({summonerId: newSummoners.summonerId}, (err, summoner) => {
+    var newSummoner = new SummonerQueue(req.body.summoner)
+    SummonerQueue.findOne({summonerId: newSummoner.summonerId}, (err, summoner) => {
       if (summoner) {
         res.status(400).json("exists")
       } else {
-        newSummoners.save((err, summoner) => {
+        newSummoner.save((err, summoner) => {
           if (err) {
             res.status(500).json(err)
           } else {

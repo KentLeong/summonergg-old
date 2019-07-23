@@ -11,10 +11,7 @@ Array.prototype.asyncForEach = async function(cb) {
 }
 module.exports = (region) => {
   var local = require('../config/localClient')(region);
-  var static = require('./static')(region);
-  
-  var SummonerService = require('./summoner')(region);
-  var LeagueService = require('./league')(region);
+
   var MatchService = require('./match')(region);
   var RiotMatch = require('../riot/match')(region);
   var RiotSummoner = require('../riot/summoner')(region);
@@ -617,9 +614,9 @@ module.exports = (region) => {
           }
         })
       }
-      
+
       // translate recent ranked champion ids
-      if (profile.recent.ranked.length > 0) {
+      if (profile.recent.ranked) {
         await profile.recent.ranked.asyncForEach((champ, i) => {
           if (champions[language][champ.id]) {
             profile.recent.ranked[i].id = {
@@ -630,7 +627,7 @@ module.exports = (region) => {
         })
       }
       // translate recent champion ids
-      if (profile.recent.champions.length > 0) {
+      if (profile.recent.champions) {
         await profile.recent.champions.asyncForEach((champ, i) => {
           if (champions[language][champ.id]) {
             profile.recent.champions[i].id = {
