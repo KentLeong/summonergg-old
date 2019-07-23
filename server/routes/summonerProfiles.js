@@ -22,8 +22,6 @@ module.exports = (serverList) => {
   var SummonerProfile;
   
   // Services
-  var SummonerService;
-  var LeagueService;
   var MatchService;
   var SummonerProfileService;
   

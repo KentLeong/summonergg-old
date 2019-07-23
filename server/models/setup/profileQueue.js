@@ -16,5 +16,5 @@ var schema = new Schema({
 schema.plugin(uniqueValidator);
 
 module.exports = (mongo)=> {
-  return mongo.model('Summoner', schema);
+  return mongo.model('Profile_Queue', schema);
 }
