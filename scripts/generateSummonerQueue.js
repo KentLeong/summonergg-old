@@ -88,7 +88,7 @@ var main = async () => {
           }
         })
         await waitFor(60)
-      } while (!done);
+      } while (!done)
     })
     await leagueList.asyncForEach(async league => {
       var found = false;
