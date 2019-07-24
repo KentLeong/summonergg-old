@@ -234,7 +234,7 @@ module.exports = (region) => {
           }
         })
         if (!found) {
-          await waitFor(400)
+          await waitFor(300)
           RiotMatch.byID(match.gameId, updatedMatch => {
             var opt = {
               epoch: updatedMatch.gameCreation,
