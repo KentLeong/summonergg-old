@@ -220,6 +220,7 @@ module.exports = (region) => {
             options.query.endIndex += 100;
           }
         })
+        await waitFor(450);
       } while(!done)
       await matches.asyncForEach(async (match, i) => {
         var found = false;
@@ -234,7 +235,7 @@ module.exports = (region) => {
           }
         })
         if (!found) {
-          await waitFor(300)
+          await waitFor(450)
           RiotMatch.byID(match.gameId, updatedMatch => {
             var opt = {
               epoch: updatedMatch.gameCreation,
