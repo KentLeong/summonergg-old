@@ -6,6 +6,16 @@
   margin: 1rem;
 }
 
+.emblem {
+  width: 16rem;
+  height: 14rem;
+  img {
+    position: absolute;
+    width: 16rem;
+    height: 14rem;
+  }
+}
+
 h4 {
   padding: 1rem;
   font-weight: 500;
@@ -20,7 +30,6 @@ h4 {
     div {
       display: inline-block;
       position: absolute;
-      margin-top: 3rem;
       font-size: 1.5rem;
     }
   }

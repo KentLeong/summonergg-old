@@ -8,7 +8,14 @@
       </div>
     </div>
     <div class="ranks__solo" *ngIf="profile.leagues.solo">
-      <img src="../../assets/rank-icons/{{profile.leagues.solo.tier.toLowerCase()}}_{{profile.leagues.solo.rank}}.png" alt="">
+      <div class="emblem">
+        <img src="../../assets/rank-icons/{{profile.leagues.solo.tier.toLowerCase()}}/{{profile.leagues.solo.tier.toLowerCase()}}_sr1.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.solo.tier.toLowerCase()}}/{{profile.leagues.solo.tier.toLowerCase()}}_sr2.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.solo.tier.toLowerCase()}}/{{profile.leagues.solo.tier.toLowerCase()}}_sr3.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.solo.tier.toLowerCase()}}/{{profile.leagues.solo.tier.toLowerCase()}}_base.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.solo.tier.toLowerCase()}}/{{profile.leagues.solo.tier.toLowerCase()}}_face.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.solo.tier.toLowerCase()}}/{{profile.leagues.solo.tier.toLowerCase()}}_crown_{{profile.leagues.solo.rank}}.png" alt="">
+      </div>
       <div>
         <span>Ranked Solo</span><br>
         <span>{{profile.leagues.solo.tier}} {{profile.leagues.solo.rank}}</span><br>

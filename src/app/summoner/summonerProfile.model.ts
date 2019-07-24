@@ -10,7 +10,8 @@ export class SummonerProfile {
     flexTT: Object
   };
   recent: {
-    ranked: Object
+    ranked: Object,
+    players: Object
   }
   matches: [Match];
   lastUpdated: Date;

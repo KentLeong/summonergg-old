@@ -1,5 +1,11 @@
 <div *ngIf="profile" class="champion-image">
-  <img src="../../assets/champion/splash/{{profile.stats.lastPlayed}}_0.jpg" alt="">
+  <div class="image-container">
+    <img src="../../assets/champion/splash/{{profile.stats.lastPlayed}}_0.jpg" alt="">
+    <div class="right-left"></div>
+    <div class="left-right"></div>
+    <div class="right-left-subtle"></div>
+    <div class="left-right-subtle"></div>
+  </div>
 </div>
 <div *ngIf="profile" class="container">
   <div class="profile">
