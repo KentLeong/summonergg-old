@@ -65,6 +65,11 @@ export class SummonerService {
         this.profile.matches[i].played = played
       })
 
+      if (this.profile.recent) {
+        this.formatRecentChampionBar(this.profile.recent, updatedRecent=> {
+          this.profile.recent = updatedRecent
+        })
+      }
       // find outcome of game
       match.showToggle = false;
       match.toggleContent = {'display': "none"};
@@ -117,6 +122,37 @@ export class SummonerService {
     })
   }
 
+  async formatRecentChampionBar(recent, callback) {
+    if (recent.ranked) {
+      recent.ranked.forEach((ranked:any, i: number) => {
+        if (ranked.wins == 0) {
+          recent.ranked[i].left = {
+            'display': 'none'
+          }
+          recent.ranked[i].right = {
+            'border-radius': '.4rem',
+            'width': '100%'
+          }
+        } else if (ranked.losses == 0) {
+          recent.ranked[i].left = {
+            'width': '100%',
+            'border-radius': '.4rem'
+          }
+          recent.ranked[i].right = {
+            'display': 'none'
+          }
+        } else {
+          recent.ranked[i].left = {
+            'width': `${ranked.percent}%`
+          }
+          recent.ranked[i].right = {
+            'width': `${100 - ranked.percent}%`
+          }
+        }
+      })
+    }
+    callback(recent)
+  }
   timePlayed(gameCreation, callback) {
     var lastPlayed = new Date(gameCreation).getTime();
     let playedMinutes = Math.floor(((new Date()).getTime() - lastPlayed)/60000);

@@ -53,17 +53,17 @@
             <div class="champion-diagonal"></div>
             <div class="champion-bottom-top"></div>
           </li>
-          <!-- <li>
+          <li class="champion-detail first-detail">
             <h5>{{champion.id.name}}</h5>
           </li>
-          <li>
-            <h5>{{champion.kda}} KDA</h5>
+          <li class="champion-detail second-detail">
+            <h6>{{champion.kda}} KDA</h6>
             <span>{{champion.kills}} / {{champion.deaths}} / {{champion.assists}}</span>
           </li>
-          <li>
-            <h5>{{champion.winPercent}}%</h5>
+          <li class="champion-detail">
+            <h6>{{champion.winPercent}}%</h6>
             <span>{{champion.games}} Played</span>
-          </li> -->
+          </li>
         </ul>
       </li>
     </ul>
@@ -76,15 +76,15 @@
     <ul class="recent__champions">
       <li *ngFor="let champion of profile.recent.ranked">
         <img src="../../assets/champion/square/{{champion.id.id}}.png" alt="" class="recent-center">
-        <h5 class="recent-center">{{champion.id.name}}</h5>
-        <span class="recent-center">{{champion.percent}}%</span>
+        <h5 class="recent-center recent-name">{{champion.id.name}}</h5>
+        <span class="recent-center recent-percent">{{champion.percent}}%</span>
         <div class="recent-graph recent-center">
           <div>
             <span>{{champion.wins}}W</span>
             <span class="clear-fix">{{champion.losses}}L</span>
           </div>
-          <div class="bar"></div>
-          <div class="bar"></div>
+          <div class="bar" [ngStyle]="champion.left" ></div>
+          <div class="bar" [ngStyle]="champion.right"></div>
         </div>
       </li>
     </ul>

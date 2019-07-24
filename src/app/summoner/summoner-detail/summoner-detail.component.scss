@@ -1,4 +1,5 @@
 @import '../../../scss/values';
+
 .container-info {
   background-color: $content-dark;
   border-radius: .5rem;
@@ -69,6 +70,21 @@ h4 {
         .champion-back {
           height: 8rem;
         }
+        .champion-detail {
+          margin-left: 2rem;
+          position: relative;
+          display: inline-block;
+        }
+        .first-detail {
+          position: absolute;
+          margin-left: 11rem;
+          margin-top: .2rem;
+          padding: .3rem;
+        }
+        .second-detail {
+          margin-left: 12.5rem;
+          margin-top: 2.8rem;
+        }
         li {
           display: table-cell;
           text-align: center;
@@ -105,6 +121,12 @@ h4 {
             overflow: hidden;
             text-overflow: ellipsis;
           }
+          h6 {
+            display: block;
+            font-size: 1.55rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
           span {
             font-size: 1.2rem;
             margin-top: .4rem;
@@ -113,7 +135,6 @@ h4 {
         }
         li:nth-child(2) {
           text-align: left;
-          width: 9rem;
         }
         li:nth-child(3) {
           width: 9.5rem;
@@ -124,7 +145,8 @@ h4 {
       }
     }
   }
-  .more {
+  &__more {
+    position: relative;
     text-align: center;
     padding: .8rem;
   }
@@ -133,8 +155,10 @@ h4 {
 .recent {
   &__champions {
     list-style-type: none;
+    overflow: overlay;
+    max-height: 30rem;
     li {
-      padding:1rem;
+      padding:.5rem;
       img {
         border-radius: 50%;
         width: 4rem;
@@ -158,8 +182,14 @@ h4 {
       .recent-center:first-child {
         margin-left: .4rem;
       }
+      .recent-name {
+        width: 8rem;
+      }
+      .recent-percent {
+        text-align:center;
+      }
       .recent-graph {
-        width: 15rem;
+        width: 14rem;
         div {
           display: grid;
           grid-template-columns: 50% 50%;
@@ -173,7 +203,6 @@ h4 {
           }
         }
         .bar {
-          width: 90%;
           height: 1.2rem;
           display: inline-block;
           border-radius: .4rem 0 0 .4rem;
@@ -181,12 +210,30 @@ h4 {
           background-color: $blue-dark;
         }
         .bar:last-child {
-          width: 10%;
           border-radius: 0 .4rem .4rem 0;
           background-color: $red-dark;
         }
       }
     }
+  }
+  /* width */
+  &__champions::-webkit-scrollbar {
+    width: 1rem;
+  }
+
+  /* Track */
+  &__champions::-webkit-scrollbar-track {
+    background: $content-dark; 
+  }
+
+  /* Handle */
+  &__champions::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+
+  /* Handle on hover */
+  &__champions::-webkit-scrollbar-thumb:hover {
+    background: #555; 
   }
 }
 
