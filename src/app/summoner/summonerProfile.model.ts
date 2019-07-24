@@ -9,6 +9,9 @@ export class SummonerProfile {
     flexSR: Object,
     flexTT: Object
   };
+  recent: {
+    ranked: Object
+  }
   matches: [Match];
   lastUpdated: Date;
   stats: any;
