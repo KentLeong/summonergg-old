@@ -401,17 +401,18 @@ module.exports = (region) => {
       if (profile.matches.length > 0) {
         profile.stats.lastPlayed = champions["English"][profile.matches[0].championId].id
       }
-      this.calculateStreak(profile, updatedProfile => {
+
+      await this.calculateStreak(profile, updatedProfile => {
         profile = updatedProfile;
       })
-      this.caclulateKda(profile, updatedProfile => {
+
+      await this.calculateKda(profile, updatedProfile => {
         profile = updatedProfile;
       })
-      
       callback(profile)
     },
     async generateRecentRanked(profile, rankedGames, callback) {
-      var games = [];
+      var games = rankedGames;
       var recent = [];
       if (rankedGames.length > 0) {
         await rankedGames.asyncForEach(async game => {
@@ -627,7 +628,7 @@ module.exports = (region) => {
         })
       }
       // translate recent champion ids
-      if (profile.recent.champions) {
+      if (profile.recent.champions.length > 0) {
         await profile.recent.champions.asyncForEach((champ, i) => {
           if (champions[language][champ.id]) {
             profile.recent.champions[i].id = {
@@ -820,7 +821,7 @@ module.exports = (region) => {
       })
       callback(profile)
     },
-    async caclulateKda(profile, callback) {
+    async calculateKda(profile, callback) {
       //calculate kda
       var totalKills = 0;
       var totalAssists = 0;

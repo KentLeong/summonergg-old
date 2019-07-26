@@ -142,6 +142,7 @@ module.exports = (region) => {
       var counter = 1;
       var options = [{date:"recent"}];
       var rankedQueues = ["solo", "flex5v5", "flex3v3"];
+      log("getting queries", 'info')
       await seasons[season].duration.asyncForEach(async month => {
         await rankedQueues.asyncForEach((queue, i) => {
           var opt = {
@@ -151,9 +152,11 @@ module.exports = (region) => {
           options.push(opt)
         })
       })
+      log('getting match datas')
       await options.asyncForEach(async opt => {
         opt.seasonId = season;
         await this.getByAccount(id, opt, updatedMatches => {
+          log('Got data: '+updatedMatches.length, 'success')
           matches = [...matches, ...updatedMatches]
         })
       })
@@ -220,7 +223,7 @@ module.exports = (region) => {
             options.query.endIndex += 100;
           }
         })
-        await waitFor(450);
+        await waitFor(21);
       } while(!done)
       await matches.asyncForEach(async (match, i) => {
         var found = false;
@@ -235,8 +238,8 @@ module.exports = (region) => {
           }
         })
         if (!found) {
-          await waitFor(450)
-          RiotMatch.byID(match.gameId, updatedMatch => {
+          await waitFor(21)
+          RiotMatch.byID(match.gameId, async updatedMatch => {
             var opt = {
               epoch: updatedMatch.gameCreation,
               type: updatedMatch.queueId
@@ -250,8 +253,8 @@ module.exports = (region) => {
         delete matches[i].champion
         delete matches[i].role
         delete matches[i].lane
+        callback(matches)
       })
-      callback(matches)
     }
   }
 }

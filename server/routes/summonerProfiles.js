@@ -223,7 +223,6 @@ module.exports = (serverList) => {
         await MatchService.getAllPlayerMatch(profile.summoner.accountId, "470", updatedFlex => {
           rankedGames = [...rankedGames, ...updatedFlex]
         })
-
         // get first 10 matches
         var query = {
           season: riot.season,
@@ -233,7 +232,6 @@ module.exports = (serverList) => {
         await SummonerProfileService.getMatches(profile, query, (updatedProfile, used) => {
           profile = updatedProfile;
         })
-
         // format profile matches
         await SummonerProfileService.formatMatches(profile.summoner, profile.matches, formatedMatches => {
           if (formatedMatches) profile.matches = formatedMatches;
