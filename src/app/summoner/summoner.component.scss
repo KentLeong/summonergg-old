@@ -13,40 +13,40 @@
   overflow: hidden;
   text-align: center;
   .image-container  {
-    width: 120rem;
+    width: 140rem;
     height: 31rem;
     margin: auto;
     display: flex;
     img {
       margin-top: 5.5rem;
-      width: 120rem;
-      height: 71rem;
+      width: 140rem;
+      height: 82rem;
       position: relative;
       filter: opacity(0.8);
     }
     .left-right {
       position: absolute;
-      width: 120rem;
+      width: 140rem;
       height: 31rem;
       background: linear-gradient(270deg, rgba(15,17,19,0) 82%, $darkest-dark 100%);
     }
     .right-left {
       position: absolute;
-      width: 120rem;
+      width: 140rem;
       height: 31rem;
       background: linear-gradient(90deg, rgba(15,17,19,0) 82%, $darkest-dark 100%);
     }
     .left-right-subtle {
       filter: opacity(.4);
       position: absolute;
-      width: 120rem;
+      width: 140rem;
       height: 31rem;
       background: linear-gradient(270deg, rgba(15,17,19,0) 65%, $darkest-dark 100%);
     }
     .right-left-subtle {
       filter: opacity(.4);
       position: absolute;
-      width: 120rem;
+      width: 140rem;
       height: 31rem;
       background: linear-gradient(90deg, rgba(15,17,19,0) 65%, $darkest-dark 100%);
     }
