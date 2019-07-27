@@ -223,6 +223,7 @@ module.exports = (serverList) => {
         await MatchService.getAllPlayerMatch(profile.summoner.accountId, "470", updatedFlex => {
           rankedGames = [...rankedGames, ...updatedFlex]
         })
+
         // get first 10 matches
         var query = {
           season: riot.season,
@@ -243,7 +244,7 @@ module.exports = (serverList) => {
         })
 
         // generate champion stats
-        await SummonerProfileService.generateChampions(profile, riot.season, (updatedProfile, updatedStat) => {
+        await SummonerProfileService.generateChampions(profile, rankedGames, (updatedProfile, updatedStat) => {
           if (updatedProfile) {
             profile = updatedProfile;
             stat = updatedStat;

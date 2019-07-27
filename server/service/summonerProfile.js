@@ -161,59 +161,55 @@ module.exports = (region) => {
       }
       callback(profile, used)
     },
-    async generateChampions(profile, season, callback) {
+    async generateChampions(profile, matches, callback) {
       if (!profile.champions) profile.recent = {};
-      var matches = [];
-      if (profile.matches.length > 0) {
-        await MatchService.getAllRankedMatches(profile.summoner.accountId, season, updatedMatches => {
-          matches = updatedMatches
-        })
-      }
       if (matches.length > 0) {
         var champions = {};
         await matches.asyncForEach(match => {
-          match.participants.some(part => {
-            if (part.currentAccountId == profile.summoner.accountId) {
-              var queue;
-              if (match.queueId == "420" || match.queueId == "440" || match.queueid == "470") {
-                queue = match.queueId
-              } else {
-                queue = "norm"
+          if (match.participants) {
+            match.participants.some(part => {
+              if (part.currentAccountId == profile.summoner.accountId) {
+                var queue;
+                if (match.queueId == "420" || match.queueId == "440" || match.queueid == "470") {
+                  queue = match.queueId
+                } else {
+                  queue = "norm"
+                }
+                if (!champions[part.championId]) {
+                  champions[part.championId] = {};
+                  champions[part.championId][queue] = {
+                    games: 0,
+                    kills: 0,
+                    deaths: 0,
+                    assists: 0,
+                    wins: 0,
+                    losses: 0
+                  };
+                } else if (!champions[part.championId][queue]){
+                  champions[part.championId][queue] = {
+                    games: 0,
+                    kills: 0,
+                    deaths: 0,
+                    assists: 0,
+                    wins: 0,
+                    losses: 0
+                  };
+                }
+                
+                champions[part.championId][queue].kills += part.stats.kills;
+                champions[part.championId][queue].deaths += part.stats.deaths;
+                champions[part.championId][queue].assists += part.stats.assists;
+                if (part.stats.win && match.gameDuration > 400) {
+                  champions[part.championId][queue].wins++
+                  champions[part.championId][queue].games++;
+                } else if (!part.stats.win && match.gameDuration > 400) {
+                  champions[part.championId][queue].losses++
+                  champions[part.championId][queue].games++;
+                }
               }
-              if (!champions[part.championId]) {
-                champions[part.championId] = {};
-                champions[part.championId][queue] = {
-                  games: 0,
-                  kills: 0,
-                  deaths: 0,
-                  assists: 0,
-                  wins: 0,
-                  losses: 0
-                };
-              } else if (!champions[part.championId][queue]){
-                champions[part.championId][queue] = {
-                  games: 0,
-                  kills: 0,
-                  deaths: 0,
-                  assists: 0,
-                  wins: 0,
-                  losses: 0
-                };
-              }
-              
-              champions[part.championId][queue].kills += part.stats.kills;
-              champions[part.championId][queue].deaths += part.stats.deaths;
-              champions[part.championId][queue].assists += part.stats.assists;
-              if (part.stats.win && match.gameDuration > 400) {
-                champions[part.championId][queue].wins++
-                champions[part.championId][queue].games++;
-              } else if (!part.stats.win && match.gameDuration > 400) {
-                champions[part.championId][queue].losses++
-                champions[part.championId][queue].games++;
-              }
-            }
-            return (part.currentAccountId == profile.summoner.accountId)
-          })
+              return (part.currentAccountId == profile.summoner.accountId)
+            })
+          }
         })
         await StatService.new({
           puuid: profile.summoner.puuid,
@@ -412,21 +408,15 @@ module.exports = (region) => {
       callback(profile)
     },
     async generateRecentRanked(profile, rankedGames, callback) {
-      var games = rankedGames;
+      var games = [];
       var recent = [];
       if (rankedGames.length > 0) {
         await rankedGames.asyncForEach(async game => {
           var now = new Date().getTime();
-          var played = game.timestamp;
+          var played = new Date(game.gameCreation).getTime();
           var daysAgo = (((((now - played)/1000)/60)/60)/24).toFixed(1);
           if (daysAgo < 8) {
-            var opt = {
-              epoch: game.timestamp,
-              type: game.queue
-            }
-            await MatchService.getByGameId(game.gameId, opt, updatedMatch => {
-              if (updatedMatch) games.push(updatedMatch);
-            })
+            games.push(game);
           }
         })
       }

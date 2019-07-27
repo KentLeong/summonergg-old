@@ -235,6 +235,11 @@ module.exports = (region) => {
           if (matchFound) {
             log(`[${i+1}] Match ID: ${match.gameId} already exists`,'warning')
             found = true
+            matches[i] = matchFound
+            if (i+1 == matches.length) {
+              log("match done", 'success')
+              callback(matches)
+            }
           }
         })
         if (!found) {
@@ -244,7 +249,15 @@ module.exports = (region) => {
               epoch: updatedMatch.gameCreation,
               type: updatedMatch.queueId
             }
-            this.new(updatedMatch, opt, done => {})
+            this.new(updatedMatch, opt, done => {
+              matches[i] = done
+              if (i+1 == matches.length) {
+                setTimeout(()=> {
+                  log("match done", 'success')
+                  callback(matches)
+                }, 100)
+              }
+            })
             log(`[${i+1}] finished saving match: ${match.gameId}`,'success')
           })
           
@@ -253,7 +266,6 @@ module.exports = (region) => {
         delete matches[i].champion
         delete matches[i].role
         delete matches[i].lane
-        callback(matches)
       })
     }
   }
