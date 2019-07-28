@@ -11,6 +11,8 @@ import { Summoner } from './summoner.model';
 import { Match } from './summoner-match-history/match.model';
 import { SummonerProfile } from './summonerProfile.model';
 import * as pData from '../../../data.js';
+import championOffset from '../../assets/championSplashPositions.json';
+
 @Component({
   selector: 'app-summoner',
   templateUrl: './summoner.component.html',
@@ -51,8 +53,6 @@ export class SummonerComponent implements OnDestroy {
     console.log(name)
     this.summonerService.getProfile(name, "English")
       .subscribe((profile: SummonerProfile) => {
-        console.log("raw")
-        console.log(profile)
         this.setProfile(profile);
       }, res => {
         if (res.error == "not found") {
@@ -82,7 +82,6 @@ export class SummonerComponent implements OnDestroy {
     this.summonerService.formatProfile(profile, (updatedProfile: SummonerProfile) => {
       this.profile = updatedProfile
     })
-    console.log("formated")
     console.log(profile)
     this.profile = profile;
   }
@@ -92,5 +91,12 @@ export class SummonerComponent implements OnDestroy {
 
   clearProfile() {
     this.summoner = new Summoner;
+  }
+
+  getChampionOffset(champion) {
+    var style = {
+      'top': championOffset[champion][0]+1+"rem"
+    }
+    return style;
   }
 }

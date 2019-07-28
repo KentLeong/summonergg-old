@@ -5,8 +5,8 @@
       <img src="../../assets/roles/top.png" alt="">
       <img src="../../assets/roles/jungle.png" alt="">
       <img src="../../assets/roles/middle.png" alt="">
-      <img src="../../assets/roles/support.png" alt="">
       <img src="../../assets/roles/bottom.png" alt="">
+      <img src="../../assets/roles/support.png" alt="">
     </div>
     <div class="queue-query query-content">
       <span>All Queues</span>
@@ -25,37 +25,45 @@
   <div class="search__stats">
     <div class="stat-pie">
       <div class="stat-games">
-        <span>{{profile.stats.totalMatches}}G {{profile.stats.totalWins}}W {{profile.stats.totalLosses}}L</span>
+        <span>
+          {{profile.stats.totalMatches}}<span class="stat-game-info">G</span> 
+          {{profile.stats.totalWins}}<span class="stat-game-info">W</span> 
+          {{profile.stats.totalLosses}}<span class="stat-game-info">L</span>
+        </span>
       </div>
       <div class="pie-inside">
-        <span>{{profile.stats.winRate}}%</span>
+        <span [ngStyle]="profile.stats.winRateStyle">{{profile.stats.winRate}}%</span>
       </div>
     </div>
     <div class="total-kda">
       <div class="kda-container">
-          <span>{{profile.stats.averageKills}} <span class="paren">/</span> {{profile.stats.averageDeaths}} <span class="paren">/</span> {{profile.stats.averageAssists}}</span>
-          <span>{{profile.stats.kda}} KDA</span>
-          <span>{{profile.stats.totalPart}}% p</span>
+          <span class="total-kda">{{profile.stats.averageKills}} <span class="total-kda-info">/</span> {{profile.stats.averageDeaths}} <span class="total-kda-info">/</span> {{profile.stats.averageAssists}}</span>
+          <span [ngStyle]="profile.stats.kdaStyle" class="total-kda">{{profile.stats.kda}} <span class="total-kda-info">KDA</span></span>
+          <span class="total-kda total-kda-info">{{profile.stats.totalPart}}% p</span>
       </div>
     </div>
     <div class="stat-streak">
       <div class="streak-container">
         <span>{{profile.stats.streak.outcome}} Streak</span>
-        <span>{{profile.stats.streak.num}}</span>
+        <span [ngStyle]="profile.stats.streakStyle">{{profile.stats.streak.num}}</span>
       </div>
     </div>
     <div class="stat-performance">
       <div class="performance-container">
         <span>Performance Rating</span>
-        <span>0</span>
+        <span>-</span>
       </div>
     </div>
     <div class="recent-champions">
       <div *ngFor="let champion of profile.recent.champions" class="recent-champions__champion">
         <img src="../../assets/champion/square/{{champion.id.id}}.png" alt="">
         <div class="recent-champion-detail">
-          <span>{{champion.id.name}}</span>
-          <span class="champion-more-detail">{{champion.percent}}% ({{champion.wins}}W {{champion.losses}}L) | {{champion.kda}} KDA</span>
+          <span class="recent-champion-name">{{champion.id.name}}</span>
+          <span class="champion-more-detail">
+            <span [ngStyle]="champion.percentStyle">{{champion.percent}}%</span>
+             <span class="info-detail"> (</span> {{champion.wins}}<span class="info-detail">W</span> {{champion.losses}}<span class="info-detail">L</span> <span class="info-detail"> )</span> 
+            <span [ngStyle]="champion.kdaStyle"> {{champion.kda}}</span> <span class="info-detail"> KDA</span>
+          </span>
         </div>
       </div>
     </div>
@@ -63,8 +71,8 @@
       <div *ngFor="let role of profile.recent.roles" class="recent-roles__role">
         <img src="../../assets/roles/{{role.name}}.png" alt="">
         <div class="recent-role-detail">
-          <span>{{role.name}}</span>
-          <span class="role-more-detail">pholder</span>
+          <span class="role-name">{{role.name}}</span>
+          <span class="role-more-detail" [ngStyle]="role.style"><span class="role-detail-info">Win Rate: </span>{{role.percent}}%</span>
         </div>
       </div>
     </div>
@@ -138,13 +146,13 @@
         <div class="team">
           <div class="player" *ngFor="let part of match.blueTeam" (click)="clearProfile()">
             <img src="../../assets/champion/square/{{part.championId.id}}.png" alt="" *ngIf="part.teamId == 100">
-            <span routerLink="/summoner/{{part.summonerName}}" *ngIf="part.teamId == 100" [ngStyle]="{'font-weight': part.weight}">{{part.summonerName}}</span>
+            <span routerLink="/summoner/{{part.summonerName}}" *ngIf="part.teamId == 100" [ngStyle]="part.styles">{{part.summonerName}}</span>
           </div>
         </div>
         <div class="team">
           <div class="player" *ngFor="let part of match.redTeam" (click)="clearProfile()">
             <img src="../../assets/champion/square/{{part.championId.id}}.png" alt="" *ngIf="part.teamId == 200">
-            <span routerLink="/summoner/{{part.summonerName}}" *ngIf="part.teamId == 200" [ngStyle]="{'font-weight': part.weight}">{{part.summonerName}}</span>
+            <span routerLink="/summoner/{{part.summonerName}}" *ngIf="part.teamId == 200" [ngStyle]="part.styles">{{part.summonerName}}</span>
           </div>
         </div>
       </div>

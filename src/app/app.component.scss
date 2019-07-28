@@ -20,7 +20,7 @@
   height: 5.5rem;
   width: 100%;
   z-index: 10;
-  background-color: $base-dark;
+  background-color: transparent;
   &__header {
     display: grid;
     grid-template-columns: 150px auto 300px;
@@ -48,7 +48,6 @@
   padding: .2rem;
   width: 100%;
   padding-top: 4.2rem;
-  background-color: $content-dark;
   z-index: 9;
   &__items {
     list-style-type: none;

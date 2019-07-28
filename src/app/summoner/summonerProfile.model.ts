@@ -11,7 +11,9 @@ export class SummonerProfile {
   };
   recent: {
     ranked: Object,
-    players: Object
+    players: Object,
+    roles: role[],
+    champions: champion[],
   }
   matches: [Match];
   lastUpdated: Date;
@@ -30,4 +32,26 @@ export class SummonerProfile {
     this.champions = profile.champions;
     this.lastUpdated = profile.lastUpdated;
   }
+}
+class champion {
+  assists: number;
+  deaths: number;
+  id: {
+    id: string,
+    name: string
+  };
+  kda: number;
+  kills: number;
+  losses: number;
+  percent: number;
+  total: number;
+  wins: number;
+  percentStyle: object;
+  kdaStyle: object;
+}
+
+class role {
+  percent: number;
+  name: string;
+  style: object;
 }

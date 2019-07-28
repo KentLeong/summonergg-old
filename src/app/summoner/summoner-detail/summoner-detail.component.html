@@ -88,12 +88,12 @@
             <h5>{{champion.id.name}}</h5>
           </li>
           <li class="champion-detail second-detail">
-            <h6>{{champion.kda}} KDA</h6>
-            <span>{{champion.kills}} / {{champion.deaths}} / {{champion.assists}}</span>
+            <h6 [ngStyle]="champion.kdaStyle">{{champion.kda}} KDA</h6>
+            <span>{{champion.kills}} <span class="champion-info">/</span> {{champion.deaths}} <span class="champion-info">/</span> {{champion.assists}}</span>
           </li>
           <li class="champion-detail">
-            <h6>{{champion.winPercent}}%</h6>
-            <span>{{champion.games}} Played</span>
+            <h6 [ngStyle]="champion.percentStyle">{{champion.winPercent}}%</h6>
+            <span>{{champion.games}} <span class="champion-info">Played</span></span>
           </li>
         </ul>
       </li>

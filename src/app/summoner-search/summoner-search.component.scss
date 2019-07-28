@@ -9,7 +9,7 @@
     height: 3.6rem;
     width: 13rem;
     border: none;
-    background: $content-dark;
+    background: rgba(36, 40, 44, 0.5);
     color: white;
     padding: .5rem;
     padding-left: 1.5rem;
@@ -27,7 +27,7 @@
     display: inline-block;
     width: 3.6rem;
     height: 3.6rem;
-    background: rgba(26, 29, 32, 0.6);
+    background: rgba(26, 29, 32, 0.5);
   }
   button {
     margin-top: .3rem;
@@ -52,11 +52,11 @@
   }
   .left {
     border-radius: 50% 0 0 50%;
-    background: $content-dark;
+    background: rgba(36, 40, 44, 0.5);;
   }
   .right {
     border-radius: 0 50% 50% 0;
-    background: $content-dark;
+    background: rgba(36, 40, 44, 0.6);;
   }
   .center {
     position: absolute;

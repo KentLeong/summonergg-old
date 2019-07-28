@@ -33,8 +33,14 @@ export class Match {
   spell2: string;
   perk1: string;
   perk2: string;
-  blueTeam: object[];
-  redTeam: object[];
+  blueTeam: player[];
+  redTeam: player[];
+  kdaStyle: object;
+  kda: number;
+}
+
+class player {
+  styles: Object
 }
 
 class team {

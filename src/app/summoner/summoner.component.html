@@ -1,6 +1,6 @@
 <div *ngIf="profile" class="champion-image">
   <div class="image-container">
-    <img src="../../assets/champion/splash/{{profile.stats.lastPlayed}}_0.jpg" alt="">
+    <img src="../../assets/champion/splash/{{profile.stats.lastPlayed}}_0.jpg" alt="" [ngStyle]="getChampionOffset(profile.stats.lastPlayed)">
     <div class="right-left"></div>
     <div class="left-right"></div>
     <div class="right-left-subtle"></div>

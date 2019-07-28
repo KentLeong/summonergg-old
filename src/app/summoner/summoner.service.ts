@@ -53,11 +53,77 @@ export class SummonerService {
   // profile formating main
   async formatProfile(profile, callback) {
     this.profile = profile;
+    this.formatChampions();
+    this.formatRecentStats();
+    this.formatRecentChampions();
+    this.formatRecentRoles();
     this.formatLeagues();
     this.formatMatches();
     this.deleteEmptyLeagues();
     callback(this.profile)
   }
+  async formatChampions() {
+    Object.keys(this.profile.champions).forEach(queue => {
+      this.profile.champions[queue].forEach((champion: any, i: number) => {
+        this.kdaColor(+champion.kda, color => {
+          this.profile.champions[queue][i].kdaStyle = {
+            'color': color
+          }
+        })
+        this.percentColor(+champion.winPercent, color => {
+          this.profile.champions[queue][i].percentStyle = {
+            'color': color
+          }
+        })
+      })
+    })
+  }
+
+  async formatRecentStats() {
+    this.kdaColor(+this.profile.stats.kda, color => {
+      this.profile.stats.kdaStyle = {
+        'color': color
+      }
+    })
+    this.percentColor(+this.profile.stats.winRate, color => {
+      this.profile.stats.winRateStyle = {
+        'color': color
+      }
+    })
+    if (this.profile.stats.streak.outcome == "Loss") {
+      this.profile.stats.streakStyle = {
+        'color': "#973f3f"
+      }
+    } else {
+      this.profile.stats.streakStyle = {
+        'color': "#345688"
+      }
+    }
+  }
+  async formatRecentChampions() {
+    this.profile.recent.champions.forEach((champion: any, i: number) => {
+      this.profile.recent.champions[i].percentStyle = {
+        'color': "#345688"
+      }
+      this.kdaColor(+champion.kda, color => {
+        this.profile.recent.champions[i].kdaStyle = {
+          'color': color
+        }
+      })
+    })
+  }
+
+  async formatRecentRoles() {
+    this.profile.recent.roles.forEach((role:any, i:number) => {
+      var name = this.profile.recent.roles[i].name
+      this.profile.recent.roles[i].name = name.charAt(0).toUpperCase() + name.slice(1);
+      this.profile.recent.roles[i].percent = Math.round((role.wins/role.total)*100)      
+      this.profile.recent.roles[i].style = {
+        'color': "#345688"
+      }
+    })
+  }
+
   async formatLeagues() {
     if (this.profile.leagues) {
       Object.keys(this.profile.leagues).forEach(league => {
@@ -84,6 +150,13 @@ export class SummonerService {
 
   async formatMatches() {
     this.profile.matches.forEach((match, i) => {
+      // set kda style
+      console.log(+match.kda)
+      this.kdaColor(+match.kda, color => {
+        this.profile.matches[i].kdaStyle = {
+          'color': color
+        }
+      })
       // set game played
       this.timePlayed(match.gameCreation, played => {
         this.profile.matches[i].played = played
@@ -121,18 +194,24 @@ export class SummonerService {
       }
 
       // find summmoner in players and make bold
-      match.blueTeam.forEach((player: any) => {
+      match.blueTeam.forEach((player: any, x: number) => {
+        console.log(this.profile.matches[i].blueTeam[x])
+        this.profile.matches[i].blueTeam[x].styles = {
+          'font-weight': 500
+        }
         if (player.summonerName == this.profile.summoner.name) {
-          player.weight = 700
-        } else {
-          player.weight = 500
+          this.profile.matches[i].blueTeam[x].styles = {
+            'font-weight': 800,
+            'color': "rgba(0,0,0,0.65)"
+          }
         }
       })
-      match.redTeam.forEach((player: any) => {
+      match.redTeam.forEach((player: any, x: number) => {
         if (player.summonerName == this.profile.summoner.name) {
-          player.weight = 700
-        } else {
-          player.weight = 500
+          this.profile.matches[i].redTeam[x].styles = {
+            'font-weight': 800,
+            'color': "rgba(0,0,0,0.65)"
+          }
         }
       })
     })
@@ -215,13 +294,11 @@ export class SummonerService {
   }
   kdaColor(kda, callback) {
     if (kda >= 6) {
-      callback("#ff8000");
-    } else if (kda >= 5) {
-      callback("#a335ee");
+      callback("#c9721b");
     } else if (kda >= 4) {
-      callback("#0070dd");
+      callback("#634ac7");
     } else if (kda >= 3) {
-      callback("#1eff00");
+      callback("#345688");
     } else if (kda >= 2) {
       callback("");
     } else {
@@ -230,13 +307,11 @@ export class SummonerService {
   }
   percentColor(percent, callback) {
     if (percent >= 70) {
-      callback("#ff8000");
-    } else if (percent >= 65) {
-      callback("#a335ee");
+      callback("#c9721b");
     } else if (percent >= 60) {
-      callback("#0070dd");
+      callback("#634ac7");
     } else if (percent >= 55) {
-      callback("#1eff00");
+      callback("#345688");
     } else if (percent >= 50) {
       callback("");
     } else {

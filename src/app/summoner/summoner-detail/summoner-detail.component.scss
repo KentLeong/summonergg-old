@@ -176,19 +176,24 @@ h4 {
             text-overflow: ellipsis;
           }
           span {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
+            font-weight: 700;
             margin-top: .4rem;
             color: lightgrey;
+          }
+          .champion-info {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.5);
           }
         }
         li:nth-child(2) {
           text-align: left;
         }
         li:nth-child(3) {
-          width: 9.5rem;
+          width: 10rem;
         }
         li:last-child {
-          width: 8.5rem;
+          width: 8rem;
         }
       }
     }
