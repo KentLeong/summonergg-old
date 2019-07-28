@@ -16,30 +16,53 @@
         <img src="../../assets/rank-icons/{{profile.leagues.solo.tier.toLowerCase()}}/{{profile.leagues.solo.tier.toLowerCase()}}_face.png" alt="">
         <img src="../../assets/rank-icons/{{profile.leagues.solo.tier.toLowerCase()}}/{{profile.leagues.solo.tier.toLowerCase()}}_crown_{{profile.leagues.solo.rank}}.png" alt="">
       </div>
-      <div>
-        <span>Ranked Solo</span><br>
-        <span>{{profile.leagues.solo.tier}} {{profile.leagues.solo.rank}}</span><br>
-        <span>{{profile.leagues.solo.leaguePoints}} LP <span>/ {{profile.leagues.solo.wins}}W {{profile.leagues.solo.losses}}L</span></span><br>
-        <span>Win Ratio {{profile.leagues.solo.winRatio}}%</span><br>
+      <div class="solo-detail">
+        <span class="queue_type">Ranked Solo</span><br>
+        <span>{{profile.leagues.solo.name}} {{profile.leagues.solo.leaguePoints}} <span class="detail-info">LP</span></span><br>
+        <span>{{profile.leagues.solo.wins}} <span class="detail-info">W</span> {{profile.leagues.solo.losses}} <span class="detail-info">L</span></span><br>
+        <span>
+          <span class="queue_type">Win Rate: </span>
+          <span [ngStyle]="profile.leagues.solo.percentStyle">{{profile.leagues.solo.percent}}%</span>
+        </span><br>
       </div>
     </div>
     <div *ngIf="profile.leagues.flexSR" class="ranks__flex__5v5 flex">
-      <img src="../../assets/rank-icons/{{profile.leagues.flexSR.tier.toLowerCase()}}_{{profile.leagues.flexSR.rank}}.png" alt="">
+      <div class="emblem-secondary">
+        <img src="../../assets/rank-icons/{{profile.leagues.flexSR.tier.toLowerCase()}}/{{profile.leagues.flexSR.tier.toLowerCase()}}_sr1.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.flexSR.tier.toLowerCase()}}/{{profile.leagues.flexSR.tier.toLowerCase()}}_sr2.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.flexSR.tier.toLowerCase()}}/{{profile.leagues.flexSR.tier.toLowerCase()}}_sr3.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.flexSR.tier.toLowerCase()}}/{{profile.leagues.flexSR.tier.toLowerCase()}}_base.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.flexSR.tier.toLowerCase()}}/{{profile.leagues.flexSR.tier.toLowerCase()}}_face.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.flexSR.tier.toLowerCase()}}/{{profile.leagues.flexSR.tier.toLowerCase()}}_crown_{{profile.leagues.flexSR.rank}}.png" alt="">
+      </div>
       <div class="details">
-        <span>Flex 5v5</span><br>
-        <span>{{profile.leagues.flexSR.tier}} {{profile.leagues.flexSR.rank}}</span><br>
-        <span>{{profile.leagues.flexSR.leaguePoints}} LP <span>/ {{profile.leagues.flexSR.wins}}W {{profile.leagues.flexSR.losses}}L</span></span><br>
-        <span>Unranked</span>
+        <span class="queue_type">Flex 5v5</span><br>
+        <span>{{profile.leagues.flexSR.name}} {{profile.leagues.flexSR.leaguePoints}} <span class="detail-info">LP</span></span><br>
+        <span>{{profile.leagues.flexSR.wins}} <span class="detail-info">W</span> {{profile.leagues.flexSR.losses}} <span class="detail-info">L</span></span><br>
+        <span>
+          <span class="queue_type">Win Rate: </span>
+          <span [ngStyle]="profile.leagues.flexSR.percentStyle">{{profile.leagues.flexSR.percent}}%</span>
+        </span><br>
       </div>
     </div>
     <br>
     <div *ngIf="profile.leagues.flexTT" class="ranks__flex__3v3 flex">
-      <img src="../../assets/rank-icons/{{profile.leagues.flexTT.tier.toLowerCase()}}_{{profile.leagues.flexTT.rank}}.png" alt="">
+      <div class="emblem-secondary">
+        <img src="../../assets/rank-icons/{{profile.leagues.flexTT.tier.toLowerCase()}}/{{profile.leagues.flexTT.tier.toLowerCase()}}_sr1.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.flexTT.tier.toLowerCase()}}/{{profile.leagues.flexTT.tier.toLowerCase()}}_sr2.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.flexTT.tier.toLowerCase()}}/{{profile.leagues.flexTT.tier.toLowerCase()}}_sr3.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.flexTT.tier.toLowerCase()}}/{{profile.leagues.flexTT.tier.toLowerCase()}}_base.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.flexTT.tier.toLowerCase()}}/{{profile.leagues.flexTT.tier.toLowerCase()}}_face.png" alt="">
+        <img src="../../assets/rank-icons/{{profile.leagues.flexTT.tier.toLowerCase()}}/{{profile.leagues.flexTT.tier.toLowerCase()}}_crown_{{profile.leagues.flexTT.rank}}.png" alt="">
+      </div>
       <div class="details">
         <span>Flex 3v3</span><br>
-        <span>{{profile.leagues.flexTT.tier}} {{profile.leagues.flexTT.rank}}</span><br>
-        <span>{{profile.leagues.flexTT.leaguePoints}} LP <span>/ {{profile.leagues.flexTT.wins}}W {{profile.leagues.flexTT.losses}}L</span></span><br>
-        <span>Unranked</span>
+        <span>{{profile.leagues.flexTT.name}} {{profile.leagues.flexTT.leaguePoints}} <span class="detail-info">LP</span></span><br>
+        <span>{{profile.leagues.flexTT.wins}} <span class="detail-info">W</span> {{profile.leagues.flexTT.losses}} <span class="detail-info">L</span></span><br>
+        <span>
+          <span class="queue_type">Win Rate: </span>
+          <span [ngStyle]="profile.leagues.flexTT.percentStyle">{{profile.leagues.flexTT.percent}}%</span>
+        </span><br>
       </div>
     </div>
   </div>

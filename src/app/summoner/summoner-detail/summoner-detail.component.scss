@@ -21,23 +21,57 @@ h4 {
   font-weight: 500;
 }
 .ranks {
+  font-weight: 600;
+  .detail-info {
+    font-size: 1rem;
+    color: rgba(255,255,255, 0.5);
+  }
+  .queue_type {
+    font-size: 1.2rem;
+    color: rgba(255,255,255, 0.5);
+  }
   &__solo {
+    height: 14rem;
     border-bottom: .5rem solid $base-dark;
-    img {
-      width: 12rem;
-      margin: 1rem;
-    }
-    div {
+    .emblem {
+      margin-left: 1rem;
       display: inline-block;
       position: absolute;
       font-size: 1.5rem;
+      img {
+        position: absolute;
+        width: 10rem;
+        height: 11rem;
+        margin: 1rem;
+      }
+    }
+    .solo-detail {
+      display: inline-block;
+      margin-top: 3rem;
+      margin-left: 15rem;
+      font-size: 1.4rem;
     }
   }
   .flex {
     width: 34rem;
     display: inline-block;
     font-size: 1.4rem;
+    height: 11.5rem;
+    .emblem-secondary {
+      margin-left: 1.95rem;
+      display: inline-block;
+      position: absolute;
+      font-size: 1.5rem;
+      img {
+        position: absolute;
+        width: 8rem;
+        height: 9rem;
+        margin: 1rem;
+      }
+    }
     .details {
+      margin-left: 15rem;
+      margin-top: 2rem;
       display: inline-block;
       vertical-align: middle;
     }

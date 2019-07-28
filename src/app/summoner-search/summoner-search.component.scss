@@ -9,7 +9,7 @@
     height: 3.6rem;
     width: 13rem;
     border: none;
-    background: rgba(26, 29, 32, 0.6);
+    background: $content-dark;
     color: white;
     padding: .5rem;
     padding-left: 1.5rem;
@@ -52,15 +52,17 @@
   }
   .left {
     border-radius: 50% 0 0 50%;
+    background: $content-dark;
   }
   .right {
     border-radius: 0 50% 50% 0;
+    background: $content-dark;
   }
   .center {
     position: absolute;
     vertical-align: middle;
     margin-top: .5rem;
-    background: $content-dark;
+    background: $base-dark;
   }
   .center:hover {
     cursor: pointer;

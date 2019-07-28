@@ -53,9 +53,33 @@ export class SummonerService {
   // profile formating main
   async formatProfile(profile, callback) {
     this.profile = profile;
+    this.formatLeagues();
     this.formatMatches();
     this.deleteEmptyLeagues();
     callback(this.profile)
+  }
+  async formatLeagues() {
+    if (this.profile.leagues) {
+      Object.keys(this.profile.leagues).forEach(league => {
+        this.profile.leagues[league].tier = this.profile.leagues[league].tier.charAt(0) + this.profile.leagues[league].tier.toLowerCase().slice(1);
+        var tier = this.profile.leagues[league].tier;
+        var rank = this.profile.leagues[league].rank;
+        if (tier == "Grandmaster" || tier == "Master" || tier == "Challenger") {
+          this.profile.leagues[league].name = tier
+        } else {
+          this.profile.leagues[league].name = tier + " "+ rank
+        }
+        var wins = this.profile.leagues[league].wins;
+        var losses = this.profile.leagues[league].losses;
+        this.profile.leagues[league].percent = Math.round((wins/(wins+losses))*100)
+        this.percentColor(this.profile.leagues[league].percent, color => {
+          console.log(color)
+          this.profile.leagues[league].percentStyle = {
+            'color': color
+          }
+        })
+      })
+    }
   }
 
   async formatMatches() {
@@ -188,5 +212,35 @@ export class SummonerService {
       }
     }
     callback(played)
+  }
+  kdaColor(kda, callback) {
+    if (kda >= 6) {
+      callback("#ff8000");
+    } else if (kda >= 5) {
+      callback("#a335ee");
+    } else if (kda >= 4) {
+      callback("#0070dd");
+    } else if (kda >= 3) {
+      callback("#1eff00");
+    } else if (kda >= 2) {
+      callback("");
+    } else {
+      callback("#9d9d9d");
+    }
+  }
+  percentColor(percent, callback) {
+    if (percent >= 70) {
+      callback("#ff8000");
+    } else if (percent >= 65) {
+      callback("#a335ee");
+    } else if (percent >= 60) {
+      callback("#0070dd");
+    } else if (percent >= 55) {
+      callback("#1eff00");
+    } else if (percent >= 50) {
+      callback("");
+    } else {
+      callback("#9d9d9d");
+    }
   }
 }

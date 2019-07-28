@@ -27,8 +27,6 @@
       <div class="stat-games">
         <span>{{profile.stats.totalMatches}}G {{profile.stats.totalWins}}W {{profile.stats.totalLosses}}L</span>
       </div>
-      <div class="pie-chart">
-      </div>
       <div class="pie-inside">
         <span>{{profile.stats.winRate}}%</span>
       </div>
@@ -50,6 +48,24 @@
       <div class="performance-container">
         <span>Performance Rating</span>
         <span>0</span>
+      </div>
+    </div>
+    <div class="recent-champions">
+      <div *ngFor="let champion of profile.recent.champions" class="recent-champions__champion">
+        <img src="../../assets/champion/square/{{champion.id.id}}.png" alt="">
+        <div class="recent-champion-detail">
+          <span>{{champion.id.name}}</span>
+          <span class="champion-more-detail">{{champion.percent}}% ({{champion.wins}}W {{champion.losses}}L) | {{champion.kda}} KDA</span>
+        </div>
+      </div>
+    </div>
+    <div class="recent-roles">
+      <div *ngFor="let role of profile.recent.roles" class="recent-roles__role">
+        <img src="../../assets/roles/{{role.name}}.png" alt="">
+        <div class="recent-role-detail">
+          <span>{{role.name}}</span>
+          <span class="role-more-detail">pholder</span>
+        </div>
       </div>
     </div>
   </div>

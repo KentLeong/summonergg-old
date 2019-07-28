@@ -106,45 +106,34 @@
     padding: .5rem;
     display: grid;
     width: 100%;
-    grid-template-columns: 11rem 10rem 9rem 10rem 5rem;
+    grid-template-columns: 11rem 10rem 9rem 10rem 20rem 14rem;
     grid-template-rows: 10rem;
-    grid-template-areas: "pie . streak performance .";
+    grid-template-areas: "pie kda streak performance champions roles";
     text-align: center;
     .stat-pie {
       grid-area: pie;
       .stat-games {
-        margin-top:.2rem;
-        position: absolute;
+        position: inline-block;
         font-size: 1.3rem;
         width: 11rem;
-        span {
-          margin-left: .4rem;
-        }
-      }
-      .pie-chart {
-        position: absolute;
-        margin-left: 2rem;
-        margin-top: 2.3rem;
-        width: 7.5rem;
-        height: 7.5rem;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(37,78,95,1) 40%, rgba(37,57,95,1) 100%);
+        margin:auto;
+        margin-top: 2rem;
       }
       .pie-inside {
-        position: absolute;
-        margin-left: 3rem;
-        margin-top: 3.3rem;
-        width: 5.5rem;
-        height: 5.5rem;
+        position: inline-block;
         border-radius: 50%;
+        margin: auto;
         background: $content-dark;
         span {
-          margin-top: 1.8rem;
+          font-weight: 700;
+          font-size: 3rem;
+          margin-top: .5rem;
           display: inline-block;
         }
       }
     }
     .total-kda {
+      grid-area: kda;
       font-size: 1.6rem;
       font-weight: 700;
       display: inline-block;
@@ -196,6 +185,116 @@
         font-weight: 700;
       }
     }
+    .recent-champions {
+      grid-area: champions;
+      text-align: left;
+      height: 10rem;
+      overflow: auto;
+      margin-top: .5rem;
+      &__champion {
+        display: block;
+        width: 18.5rem;
+        margin-left: .5rem;
+        height: 3.5rem;
+        font-size: 1.2rem;
+        img {
+          width: 3rem;
+          height: 3rem;
+          border-radius: 50%;
+          display: inline-block;
+          vertical-align: middle;
+        }
+        .recent-champion-detail {
+          font-weight: 700;
+          margin-left: .5rem;
+          display: inline-block;
+          vertical-align: middle;
+          span {
+            display: block;
+          }
+          .champion-more-detail {
+            font-size: 1rem;
+          }
+        }
+      }
+      &__champion:hover {
+        cursor: pointer;
+        filter: brightness(.8);
+      }
+    }
+    /* width */
+    .recent-champions::-webkit-scrollbar {
+      width: 1rem;
+    }
+
+    /* Track */
+    .recent-champions::-webkit-scrollbar-track {
+      background: $content-dark; 
+    }
+
+    /* Handle */
+    .recent-champions::-webkit-scrollbar-thumb {
+      background: #888; 
+    }
+
+    /* Handle on hover */
+    .recent-champions::-webkit-scrollbar-thumb:hover {
+      background: #555; 
+    }
+    .recent-roles {
+      grid-area: roles;
+      overflow: auto;
+      height: 10rem;
+      text-align: left;
+      &__role {
+        width: 12.5rem;
+        height: 3.5rem;
+        display: block;
+        margin-left: .5rem;
+        img {
+          display: inline-block;
+          width: 3.5rem;
+          height: 3.5rem;
+          vertical-align: middle;
+        }
+        .recent-role-detail {
+          margin-left: .5rem;
+          font-weight: 700;
+          vertical-align: middle;
+          display: inline-block;
+          font-size: 1.2rem;
+          span {
+            display: block;
+          }
+          .role-more-detail {
+            font-size: 1rem;
+          }
+        }
+      }
+      &__role:hover {
+        cursor: pointer;
+        filter: brightness(.8);
+      }
+    }
+    /* width */
+    .recent-roles::-webkit-scrollbar {
+      width: 1rem;
+    }
+
+    /* Track */
+    .recent-roles::-webkit-scrollbar-track {
+      background: $content-dark; 
+    }
+
+    /* Handle */
+    .recent-roles::-webkit-scrollbar-thumb {
+      background: #888; 
+    }
+
+    /* Handle on hover */
+    .recent-roles::-webkit-scrollbar-thumb:hover {
+      background: #555; 
+    }
   }
 }
 .game {
@@ -223,9 +322,6 @@
 .main:hover {
   cursor: pointer;
   filter: brightness(1.1);
-  .stats {
-    // box-shadow: 1.7rem 0rem 1.1rem 0rem rgba(0,0,0,0.08);
-  }
 }
 
 .outcome {
@@ -560,9 +656,6 @@
       &__red-team {
         grid-area: redTeam;
         width: inherit;
-      }
-      .header {
-
       }
     }
     .replay {
