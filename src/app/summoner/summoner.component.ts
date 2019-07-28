@@ -56,7 +56,7 @@ export class SummonerComponent implements OnDestroy {
         this.setProfile(profile);
       }, res => {
         if (res.error == "not found") {
-          this.generateProfile(name)
+          // this.generateProfile(name)
         } else {
           console.error(res) 
         }
