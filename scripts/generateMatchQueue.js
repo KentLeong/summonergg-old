@@ -31,6 +31,7 @@ var main = async function() {
       }
     })
     await summonerList.asyncForEach(async summoner => {
+      await Queue.deleteSummoner(summoner.summonerId);
       var found = false;
       var name = summoner.name;
       await SummonerProfileService.getById(summoner.summonerId, async profile => {
@@ -49,7 +50,6 @@ var main = async function() {
           log(`Could not generate profile for ${name}`, 'error')
         }
       }
-      await Queue.deleteSummoner(summoner.summonerId);
     })
   } while (!done)
 }
