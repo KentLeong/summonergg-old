@@ -40,8 +40,8 @@ module.exports = (serverList) => {
   // GET summoner queue
   router.get('/summoners/', (req, res) => {
     SummonerQueue.count().exec(function (err, count) {
-      var random = Math.floor((Math.random() * count)/300)
-      SummonerQueue.find().skip(random).limit(300).exec((err, summoners) => {
+      var random = Math.floor((Math.random() * count))
+      SummonerQueue.find().skip(random).limit(1).exec((err, summoners) => {
         if (err) {
           res.status(500).json(err)
         } else {

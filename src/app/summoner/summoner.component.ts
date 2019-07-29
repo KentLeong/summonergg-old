@@ -64,10 +64,10 @@ export class SummonerComponent implements OnDestroy {
   }
 
   updateProfile(profile: SummonerProfile) {
-    this.summonerService.updateProfile(profile.summoner.puuid, "English")
-      .subscribe((profile: SummonerProfile) => {
-        this.setProfile(profile)
-      })
+    // this.summonerService.updateProfile(profile.summoner.puuid, "English")
+    //   .subscribe((profile: SummonerProfile) => {
+    //     this.setProfile(profile)
+    //   })
   }
 
   generateProfile(name: string) {

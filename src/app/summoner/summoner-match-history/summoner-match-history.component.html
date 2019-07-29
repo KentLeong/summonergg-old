@@ -71,7 +71,7 @@
     </div>
     <div class="recent-roles">
       <div *ngFor="let role of profile.recent.roles" class="recent-roles__role">
-        <img src="../../assets/roles/{{role.name}}.png" alt="">
+        <img src="../../assets/roles/{{role.name.toLowerCase()}}.png" alt="">
         <div class="recent-role-detail">
           <span class="role-name">{{role.name}}</span>
           <span class="role-more-detail" [ngStyle]="role.style"><span class="role-detail-info">Win Rate: </span>{{role.percent}}%</span>

@@ -233,51 +233,53 @@ module.exports = (serverList) => {
         await SummonerProfileService.getMatches(profile, query, (updatedProfile, used) => {
           profile = updatedProfile;
         })
-        // format profile matches
-        await SummonerProfileService.formatMatches(profile.summoner, profile.matches, formatedMatches => {
-          if (formatedMatches) profile.matches = formatedMatches;
-        })
+        if (profile.matches) {
+          // format profile matches
+          await SummonerProfileService.formatMatches(profile.summoner, profile.matches, formatedMatches => {
+            if (formatedMatches) profile.matches = formatedMatches;
+          })
 
-        // generate stats
-        await SummonerProfileService.generateStats(profile, updatedProfile => {
-          if (updatedProfile) profile = updatedProfile
-        })
+          // generate stats
+          await SummonerProfileService.generateStats(profile, updatedProfile => {
+            if (updatedProfile) profile = updatedProfile
+          })
 
-        // generate champion stats
-        await SummonerProfileService.generateChampions(profile, rankedGames, (updatedProfile, updatedStat) => {
-          if (updatedProfile) {
+          // generate champion stats
+          await SummonerProfileService.generateChampions(profile, rankedGames, (updatedProfile, updatedStat) => {
+            if (updatedProfile) {
+              profile = updatedProfile;
+              stat = updatedStat;
+            }
+          })
+          
+          // generate recent players
+          await SummonerProfileService.generateRecentPlayers(profile, updatedProfile => {
+            if (updatedProfile) profile = updatedProfile;
+          })
+
+          // generate recent champions and role
+          await SummonerProfileService.generateRecentChampions(profile, updatedProfile => {
+            if (updatedProfile) profile = updatedProfile;
+          })
+
+          // generate recent ranked matches
+          await SummonerProfileService.generateRecentRanked(profile, rankedGames, updatedProfile => {
+            if (updatedProfile) profile = updatedProfile;
+          })
+
+          // format profile match and create ranked champion stats
+          await SummonerProfileService.format(profile, stat, updatedProfile => {
             profile = updatedProfile;
-            stat = updatedStat;
-          }
-        })
+          })
+          // save profile
+          await SummonerProfileService.new(profile);
+
+          // translate profile match
+          await SummonerProfileService.translate(profile, language, translatedProfile => {
+            profile = translatedProfile;
+          })
+        }
         
-        // generate recent players
-        await SummonerProfileService.generateRecentPlayers(profile, updatedProfile => {
-          if (updatedProfile) profile = updatedProfile;
-        })
-
-        // generate recent champions and role
-        await SummonerProfileService.generateRecentChampions(profile, updatedProfile => {
-          if (updatedProfile) profile = updatedProfile;
-        })
-
-        // generate recent ranked matches
-        await SummonerProfileService.generateRecentRanked(profile, rankedGames, updatedProfile => {
-          if (updatedProfile) profile = updatedProfile;
-        })
-
-        // format profile match and create ranked champion stats
-        await SummonerProfileService.format(profile, stat, updatedProfile => {
-          profile = updatedProfile;
-        })
-
-        // save profile
-        await SummonerProfileService.new(profile);
-
-        // translate profile match
-        await SummonerProfileService.translate(profile, language, translatedProfile => {
-          profile = translatedProfile;
-        })
         log(`Finished creating profile for ${profile.summoner.name}`, "complete")
         res.status(200).json(profile);
       }

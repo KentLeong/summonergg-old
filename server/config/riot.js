@@ -2,7 +2,7 @@ var login = "leong:E93c841k675";
 var main = "68.5.243.142"
 var Bottleneck = require("bottleneck/es5")
 const limiter = new Bottleneck({
-  minTime: 21
+  minTime: 41
 })
 module.exports = {
   limiter: limiter,
