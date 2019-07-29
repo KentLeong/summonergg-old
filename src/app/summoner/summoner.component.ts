@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { SummonerService } from './summoner.service';
 
@@ -36,7 +36,10 @@ export class SummonerComponent implements OnDestroy {
   }
   @ViewChild(SummonerMatchHistoryComponent) matchHistory;
   @ViewChild(SummonerDetailComponent) details;
-
+  @HostListener('window:scroll', ['$event'])
+  doSomething(event) {
+    console.log("Scroll Event " + window.pageYOffset)
+  }
   initialise() {
     // Set default values and re-fetch any data you need.
     var name = this.router.url.split("/")[2];
