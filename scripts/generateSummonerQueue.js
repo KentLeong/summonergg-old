@@ -95,10 +95,10 @@ var main = async () => {
       var found = false;
       await SummonerProfileService.getById(league.summonerId, summoner => {
         if (summoner) {
-          // log(`${summoner.name} already exists, going next`, "info");
+          log(`${summoner.name} already exists, going next`, "info");
           found = true;
         } else {
-          // log(`${league.summonerName} does not exist, adding to the queue..`, 'info')
+          log(`${league.summonerName} does not exist, adding to the queue..`, 'info')
         }
       })
       if (!found) {
