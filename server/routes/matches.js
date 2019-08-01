@@ -62,6 +62,8 @@ module.exports = (serverList) => {
     Match.findOne({gameId: newMatch.gameId}, (err, match) => {
       if (match) {
         res.status(400).json("exists")
+      } else if (match.queueId != "420" || match.queueId != "440" || match.queueId != "470" || match.queueId != "0") {
+        res.status(400).json("not saving this queue type")
       } else {
         newMatch.participants.forEach(part => {
           if (part.matchHistoryUri) delete part.matchHistoryUri;
