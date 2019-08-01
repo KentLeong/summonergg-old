@@ -22,52 +22,52 @@ var main = async () => {
   
   var leagueList = [];
   
-  // await RiotLeague.retrieveChallenger(queue, async challengerList => {
-  //   var list = challengerList['entries'];
-  //   await list.asyncForEach(l => {
-  //     l.queueType = challengerList['queue'];
-  //     l.leagueId = challengerList['leagueId'];
-  //     l.tier = challengerList['tier'];
-  //   })
-  //   if (challengerList) leagueList = [...leagueList, ...list];
-  // })
-  // await RiotLeague.retrieveGrandMaster(queue, async grandmasterList => {
-  //   var list = grandmasterList['entries'];
-  //   await list.asyncForEach(l => {
-  //     l.queueType = grandmasterList['queue'];
-  //     l.leagueId = grandmasterList['leagueId'];
-  //     l.tier = grandmasterList['tier'];
-  //   })
-  //   if (grandmasterList) leagueList = [...leagueList, ...list];
-  // })
-  // await RiotLeague.retrieveMaster(queue, async masterList => {
-  //   var list = masterList['entries']
-  //   await list.asyncForEach(l => {
-  //     l.queueType = masterList['queue'];
-  //     l.leagueId = masterList['leagueId'];
-  //     l.tier = masterList['tier'];
-  //   })
-  //   if (masterList) leagueList = [...leagueList, ...list];
-  // })
-  // await leagueList.asyncForEach(async league => {
-  //   var found = false;
-  //   await SummonerProfileService.getById(league.summonerId, summoner => {
-  //     if (summoner) {
-  //       log(`${league.summonerName} already exists, going next`, "info");
-  //       found = true;
-  //     } else {
-  //       log(`${league.summonerName} does not exist, adding to the queue..`, 'info')
-  //     }
-  //   })
-  //   if (!found) {
-  //     var summoner = {
-  //       summonerId: league.summonerId,
-  //       name: league.summonerName
-  //     }
-  //     await Queue.newSummoner(summoner);
-  //   }
-  // })
-  // leagueList = [];
+  await RiotLeague.retrieveChallenger(queue, async challengerList => {
+    var list = challengerList['entries'];
+    await list.asyncForEach(l => {
+      l.queueType = challengerList['queue'];
+      l.leagueId = challengerList['leagueId'];
+      l.tier = challengerList['tier'];
+    })
+    if (challengerList) leagueList = [...leagueList, ...list];
+  })
+  await RiotLeague.retrieveGrandMaster(queue, async grandmasterList => {
+    var list = grandmasterList['entries'];
+    await list.asyncForEach(l => {
+      l.queueType = grandmasterList['queue'];
+      l.leagueId = grandmasterList['leagueId'];
+      l.tier = grandmasterList['tier'];
+    })
+    if (grandmasterList) leagueList = [...leagueList, ...list];
+  })
+  await RiotLeague.retrieveMaster(queue, async masterList => {
+    var list = masterList['entries']
+    await list.asyncForEach(l => {
+      l.queueType = masterList['queue'];
+      l.leagueId = masterList['leagueId'];
+      l.tier = masterList['tier'];
+    })
+    if (masterList) leagueList = [...leagueList, ...list];
+  })
+  await leagueList.asyncForEach(async league => {
+    var found = false;
+    await SummonerProfileService.getById(league.summonerId, summoner => {
+      if (summoner) {
+        log(`${league.summonerName} already exists, going next`, "info");
+        found = true;
+      } else {
+        log(`${league.summonerName} does not exist, adding to the queue..`, 'info')
+      }
+    })
+    if (!found) {
+      var summoner = {
+        summonerId: league.summonerId,
+        name: league.summonerName
+      }
+      await Queue.newSummoner(summoner);
+    }
+  })
+  leagueList = [];
 
   await tiers.asyncForEach(async tier => {
     await divisions.asyncForEach(async div => {
