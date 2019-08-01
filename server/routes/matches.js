@@ -59,28 +59,30 @@ module.exports = (serverList) => {
   // POST Match
   router.post('/', (req, res) => {
     var newMatch = new Match(req.body.match)
-    Match.findOne({gameId: newMatch.gameId}, (err, match) => {
-      if (match) {
-        res.status(400).json("exists")
-      } else if (match.queueId != "420" || match.queueId != "440" || match.queueId != "470" || match.queueId != "0") {
-        res.status(400).json("not saving this queue type")
-      } else {
-        newMatch.participants.forEach(part => {
-          if (part.matchHistoryUri) delete part.matchHistoryUri;
-          if (part.profileIcon) delete part.profileIcon;
-          if (part.highestAchievedSeasonTier) delete part.highestAchievedSeasonTier;
-          if (part.participantId) delete part.participantId;
-          if (part.platformId) delete part.platformId;
-        })
-        newMatch.save((err, match) => {
-          if (err) {
-            res.status(500).json(err)
-          } else {
-            res.status(200).json(match)
-          }
-        })
-      }
-    })
+    if (newMatch.queueId != "420" || newMatch.queueId != "440" || newMatch.queueId != "470" || newMatch.queueId != "0") {
+      res.status(400).json("not saving this queue type")
+    } else {
+      Match.findOne({gameId: newMatch.gameId}, (err, match) => {
+        if (match) {
+          res.status(400).json("exists")
+        } else {
+          newMatch.participants.forEach(part => {
+            if (part.matchHistoryUri) delete part.matchHistoryUri;
+            if (part.profileIcon) delete part.profileIcon;
+            if (part.highestAchievedSeasonTier) delete part.highestAchievedSeasonTier;
+            if (part.participantId) delete part.participantId;
+            if (part.platformId) delete part.platformId;
+          })
+          newMatch.save((err, match) => {
+            if (err) {
+              res.status(500).json(err)
+            } else {
+              res.status(200).json(match)
+            }
+          })
+        }
+      })
+    }
   })
   
   // DELETE Match
