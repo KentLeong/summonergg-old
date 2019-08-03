@@ -119,13 +119,11 @@ module.exports = (region) => {
       callback(profile, used)
     },
     async getMatches(profile, query, callback) {
-      var used = 0;
       options = {
         accountId: profile.summoner.accountId,
         query: query
       }
       await RiotMatch.getMatches(options, retrievedMatches => {
-        used++;
         if (retrievedMatches) profile.matches = retrievedMatches.matches;
       })
       if (profile.matches) {
@@ -144,7 +142,6 @@ module.exports = (region) => {
           })
           if (!found) {
             await RiotMatch.byID(match.gameId, async retrievedMatch => {
-              used++;
               if (retrievedMatch) {
                 var opt = {
                   epoch: retrievedMatch.gameCreation,
@@ -159,7 +156,7 @@ module.exports = (region) => {
         })
         profile.matches = temp
       }
-      callback(profile, used)
+      callback(profile)
     },
     async generateChampions(profile, matches, callback) {
       if (!profile.champions) profile.recent = {};
@@ -170,7 +167,7 @@ module.exports = (region) => {
             match.participants.some(part => {
               if (part.currentAccountId == profile.summoner.accountId) {
                 var queue;
-                if (match.queueId == "420" || match.queueId == "440" || match.queueid == "470") {
+                if (match.queueId == "420" || match.queueId == "440") {
                   queue = match.queueId
                 } else {
                   queue = "norm"

@@ -90,7 +90,6 @@ var main = async () => {
         await waitFor(60)
       } while (!done)
     })
-    console.log(leagueList.length)
     await leagueList.asyncForEach(async league => {
       var found = false;
       await SummonerProfileService.getById(league.summonerId, summoner => {

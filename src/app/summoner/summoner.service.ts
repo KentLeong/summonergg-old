@@ -195,14 +195,13 @@ export class SummonerService {
 
       // find summmoner in players and make bold
       match.blueTeam.forEach((player: any, x: number) => {
-        console.log(this.profile.matches[i].blueTeam[x])
         this.profile.matches[i].blueTeam[x].styles = {
           'font-weight': 500
         }
         if (player.summonerName == this.profile.summoner.name) {
           this.profile.matches[i].blueTeam[x].styles = {
             'font-weight': 800,
-            'color': "rgba(0,0,0,0.65)"
+            'color': "rgba(15,15,15,0.65)"
           }
         }
       })
@@ -210,7 +209,7 @@ export class SummonerService {
         if (player.summonerName == this.profile.summoner.name) {
           this.profile.matches[i].redTeam[x].styles = {
             'font-weight': 800,
-            'color': "rgba(0,0,0,0.65)"
+            'color': "rgba(15,15,15,0.65)"
           }
         }
       })

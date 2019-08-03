@@ -215,9 +215,6 @@ module.exports = (serverList) => {
       await MatchService.getAllPlayerMatch(profile.summoner.accountId, "440", updatedFlex => {
         rankedGames = [...rankedGames, ...updatedFlex]
       })
-      await MatchService.getAllPlayerMatch(profile.summoner.accountId, "470", updatedFlex => {
-        rankedGames = [...rankedGames, ...updatedFlex]
-      })
 
       // get first 10 matches
       var query = {
@@ -225,7 +222,7 @@ module.exports = (serverList) => {
         beginIndex: 0,
         endIndex: 10
       }
-      await SummonerProfileService.getMatches(profile, query, (updatedProfile, used) => {
+      await SummonerProfileService.getMatches(profile, query, updatedProfile => {
         profile = updatedProfile;
       })
       if (profile.matches) {
@@ -285,82 +282,71 @@ module.exports = (serverList) => {
     var puuid = req.body.puuid;
     var language = req.query.language;
     var profile;
-    //for api rates
-    var totalUsed = 0;
-    var max = 13;
-    var rateAvailable = true;
-
-    await rate.reserverListingRate((currentRate, second, minute) => {
-      if (second < max || minute < max) {
-        rateAvailable = false;
-        log(`Riot rate used up, please wait`, "warning")
-      }
+    var stat = false;
+    //find summoner profile from local database by puuid
+    await SummonerProfileService.byPuuid(puuid, updatedProfile => {
+      profile = updatedProfile;
     })
-    if (!rateAvailable) {
-      res.status(400).json("riot rate used up")
+    if (!profile) {
+      res.status(400).json("doesnt exist")
     } else {
-      var stat = false;
-      //find summoner profile from local database by puuid
-      await SummonerProfileService.byPuuid(puuid, updatedProfile => {
-        profile = updatedProfile;
-      })
+      var lastUpdated = new Date(profile.lastUpdated).getTime();
+      var now = new Date().getTime();
+      var difference = Math.round((now - lastUpdated)/30000)
+  
+      if (difference < 1) {
+        res.status(400).json("cant update too early")
+      } else {
+        var rankedGames = [];
+        
+        // matches for all ranked games
+        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "420", updatedSolo => {
+          rankedGames = [...rankedGames, ...updatedSolo]
+        })
+        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "440", updatedFlex => {
+          rankedGames = [...rankedGames, ...updatedFlex]
+        })
 
-      // get summoner by puuid from riot and set summoner
-      await RiotSummoner.getByPUUID(puuid, foundSummoner => {
-        totalUsed++
-        if (foundSummoner) profile.summoner = foundSummoner;
-      })
-
-      // get leagues from riot with updated summoner and set leagues
-      var queues = {
-        RANKED_SOLO_5x5: "solo",
-        RANKED_FLEX_SR: "flexSR",
-        RANKED_FLEX_TT: "flexTT"
-      }
-      await RiotLeague.bySummonerId(profile.summoner.id, async leagues => {
-        totalUsed++
-        if (leagues.length > 0) {
-          await leagues.asyncForEach(league => {
-            profile.leagues[queues[league.queueType]] = league
-          })
-        }
-      })
-
-      // update last 10 matches
+        // update last 10 matches
         var query = {
           season: riot.season,
           beginIndex: 0,
           endIndex: 10
         }
-      await SummonerProfileService.getMatches(profile, query, (updatedProfile, used) => {
-        totalUsed += used;
-        profile = updatedProfile;
-      })
-
-      // format profile matches
-      await SummonerProfileService.formatMatches(profile.summoner, profile.matches, formatedMatches => {
-        if (formatedMatches) profile.matches = formatedMatches;
-      })
-
-      // generate stats
-      await SummonerProfileService.generateStats(profile, updatedProfile => {
-        if (updatedProfile) profile = updatedProfile
-      })
-
-      // update profile match
-      await SummonerProfileService.format(profile, stat, updatedProfile => {
-        profile = updatedProfile;
-      })
-
-      await SummonerProfileService.update(profile)
-      // translate profile match
-      await SummonerProfileService.translate(profile, language, translatedProfile => {
-        profile = translatedProfile;
-      })
-      rate.rateUsed(totalUsed);
-      log(`Finished Updating profile: ${profile.summoner.name}`, 'complete')
-      res.status(200).json(profile)
+  
+        await SummonerProfileService.getMatches(profile, query, updatedProfile => {
+          profile = updatedProfile;
+        })
+  
+        // format profile matches
+        await SummonerProfileService.formatMatches(profile.summoner, profile.matches, formatedMatches => {
+          if (formatedMatches) profile.matches = formatedMatches;
+        })
+        // generate stats
+        await SummonerProfileService.generateStats(profile, updatedProfile => {
+          if (updatedProfile) profile = updatedProfile
+        })
+        res.status(200).json(profile)
+      }
     }
+    
+    
+
+
+
+    // // update profile match
+    // await SummonerProfileService.format(profile, stat, updatedProfile => {
+    //   profile = updatedProfile;
+    // })
+
+    // await SummonerProfileService.update(profile)
+    // // translate profile match
+    // await SummonerProfileService.translate(profile, language, translatedProfile => {
+    //   profile = translatedProfile;
+    // })
+    // rate.rateUsed(totalUsed);
+    // log(`Finished Updating profile: ${profile.summoner.name}`, 'complete')
+    // res.status(200).json(profile)
   })
   // retrieve matches
   router.get('/retrieveMatches/:accountId', async (req, res) => {

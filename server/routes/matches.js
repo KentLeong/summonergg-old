@@ -59,9 +59,7 @@ module.exports = (serverList) => {
   // POST Match
   router.post('/', (req, res) => {
     var newMatch = new Match(req.body.match)
-    if (newMatch.queueId != "420" || newMatch.queueId != "440" || newMatch.queueId != "470" || newMatch.queueId != "0") {
-      res.status(400).json("not saving this queue type")
-    } else if(newMatch.seasonId != "13") {
+    if (newMatch.seasonId != "13") {
       res.status(400).json("wrong season")
     } else {
       Match.findOne({gameId: newMatch.gameId}, (err, match) => {

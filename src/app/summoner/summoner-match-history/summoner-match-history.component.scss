@@ -397,6 +397,7 @@
       border: .3rem rgba(0,0,0,0.25)solid;
       position: absolute;
       width: 8.8rem;
+      height: 8.8rem;
       padding: .3rem;
       border-radius: 50%;
     }
@@ -464,6 +465,7 @@
       &__primary {
         padding: .2rem;
         width: 4rem;
+        height: 4rem;
         position: absolute;
         border-radius: 50%;
         background-color: rgba(0, 0, 0, 0.3);
@@ -471,6 +473,7 @@
       &__secondary {
         padding: .3rem;
         width: 2.5rem;
+        height: 2.5rem;
         position: absolute;
         border-radius: 50%;
         margin-top: 3.7rem;
