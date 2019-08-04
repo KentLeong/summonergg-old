@@ -82,41 +82,43 @@ module.exports = (region) => {
         dev(`${profile.summoner.name} summoner profile was not created`, 'error')
       }
     },
+    async getSummonerByPuuid(puuid, callback) {
+      await RiotSummoner.getByPUUID(puuid, foundSummoner => {
+        if (foundSummoner) {
+          callback(foundSummoner)
+        } else {
+          callback(false)
+        }
+      })
+    },
     async getSummoner(profile, name, callback) {
       var summoner = false;
-      var used = 0;
       if (profile.summoner) {
         if (profile.summoner.accountId) summoner = true;
       }
       if (!summoner) {
         //find summoner
         await RiotSummoner.getByName(name, foundSummoner => {
-          used++
           if (foundSummoner) profile.summoner = foundSummoner;
         })
       }
-      callback(profile, used)
+      callback(profile)
     },
     async getLeagues(profile, callback) {
       //get leagues
-      var used = 0;
       var queues = {
         RANKED_SOLO_5x5: "solo",
-        RANKED_FLEX_SR: "flexSR",
-        RANKED_FLEX_TT: "flexTT"
+        RANKED_FLEX_SR: "flexSR"
       }
-      if (!profile.leagues) {
-        profile.leagues = {};
-        await RiotLeague.bySummonerId(profile.summoner.id, async leagues => {
-          used++;
-          if (leagues.length > 0) {
-            await leagues.asyncForEach(league => {
-              profile.leagues[queues[league.queueType]] = league
-            })
-          }
-        })
-      }
-      callback(profile, used)
+      profile.leagues = {};
+      await RiotLeague.bySummonerId(profile.summoner.id, async leagues => {
+        if (leagues.length > 0) {
+          await leagues.asyncForEach(league => {
+            profile.leagues[queues[league.queueType]] = league
+          })
+        }
+      })
+      callback(profile)
     },
     async getMatches(profile, query, callback) {
       options = {
@@ -307,14 +309,14 @@ module.exports = (region) => {
       await profile.matches.asyncForEach(match => {
         if (match.queueId.type != "Convergence" && match.outcome != "Remake" && match.role) {
           if (!list.role[match.role] && match.role) {
-            if (match.queueId == "420" || match.queueId == "440" || match.queueId == "470") {
+            if (match.queueId == "420" || match.queueId == "440") {
               list.role[match.role] = {
                 total: 1,
                 wins: (match.outcome == "Victory") ? 1 : 0,
                 losses: (match.outcome == "Defeat") ? 1 : 0,
               }
             }
-          } else if (match.queueId == "420" || match.queueId == "440" || match.queueId == "470") {
+          } else if (match.queueId == "420" || match.queueId == "440") {
             if (match.outcome == "Victory") {
               list.role[match.role].wins++
               list.role[match.role].total++
@@ -530,8 +532,10 @@ module.exports = (region) => {
             matches[i].minionsPerMin = (minionsKilled/gameMinutes).toFixed(1)
 
             // kda
-            matches[i].kda = ((part.stats.kills+part.stats.assists)/part.stats.assists).toFixed(2)
-
+            matches[i].kda = ((part.stats.kills+part.stats.assists)/part.stats.deaths).toFixed(2)
+            if (part.stats.deaths == 0) {
+              matches[i].kda = "PERFECT"
+            }
             // part
             var t1TotalKills = 0
             var t2TotalKills = 0
@@ -699,7 +703,7 @@ module.exports = (region) => {
             kills: (kills/games).toFixed(1),
             deaths: (deaths/games).toFixed(1),
             assists: (assists/games).toFixed(1),
-            kda: ((kills+assists)/assists).toFixed(2),
+            kda: ((kills+assists)/deaths).toFixed(2),
             winPercent: Math.round((wins/games).toFixed(2)*100)
           }
           championList.push(championStat)

@@ -37,7 +37,7 @@ export class SummonerComponent implements OnDestroy {
 
   @HostListener('window:scroll', ['$event'])
   doSomething(event) {
-    console.log("Scroll Event " + window.pageYOffset)
+    //scroll event
   }
   initialise() {
     // Set default values and re-fetch any data you need.
@@ -52,7 +52,6 @@ export class SummonerComponent implements OnDestroy {
   }
 
   getProfile(name: string) {
-    console.log(name)
     this.summonerService.getProfile(name, "English")
       .subscribe((profile: SummonerProfile) => {
         this.setProfile(profile);

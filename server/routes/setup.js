@@ -39,7 +39,7 @@ module.exports = (serverList) => {
   
   // GET summoner queue
   router.get('/summoners/', (req, res) => {
-    SummonerQueue.count().exec(function (err, count) {
+    SummonerQueue.estimatedDocumentCount().exec(function (err, count) {
       var random = Math.floor((Math.random() * count))
       SummonerQueue.find().skip(random).limit(1).exec((err, summoners) => {
         if (err) {

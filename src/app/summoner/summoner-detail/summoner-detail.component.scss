@@ -134,26 +134,26 @@ h4 {
             position: absolute;
             height: 8rem;
             width: 24rem;
-            background: linear-gradient(137deg, rgba(255,255,255,0) 12%, rgba(36,40,44,1) 99%);
+            background: linear-gradient(137deg, rgba(36, 40, 44, 0) 12%, $content-dark 99%);
           }
           .champion-right-left {
             position: absolute;
             height: 8rem;
             width: 24rem;
-            background: linear-gradient(90deg, rgba(255,255,255,0) 22%, rgba(36,40,44,1) 98%);
+            background: linear-gradient(90deg, rgba(36, 40, 44, 0) 22%, $content-dark 98%);
           }
           .champion-right-left-name {
             position: absolute;
             height: 2.5rem;
             width: 24rem;
-            background: linear-gradient(90deg, rgba(255,255,255,0) 40%, rgba(36,40,44,1) 98%);
+            background: linear-gradient(90deg, rgba(36, 40, 44, 0) 40%, $content-dark 98%);
           }
           .champion-bottom-top {
             position: absolute;
             margin-top: .5rem;
             height: 8rem;
             width: 24rem;
-            background: linear-gradient(180deg, rgba(255,255,255,0) 80%, rgba(36,40,44,1) 100%);
+            background: linear-gradient(180deg, rgba(36, 40, 44, 0) 80%, $content-dark 100%);
           }
           img {
             border-top: .1rem rgba(255,255,255,0.55) solid;
@@ -243,7 +243,7 @@ h4 {
         text-align:center;
       }
       .recent-graph {
-        width: 14rem;
+        width: 13rem;
         div {
           display: grid;
           grid-template-columns: 50% 50%;

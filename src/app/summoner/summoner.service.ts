@@ -151,7 +151,6 @@ export class SummonerService {
   async formatMatches() {
     this.profile.matches.forEach((match, i) => {
       // set kda style
-      console.log(+match.kda)
       this.kdaColor(+match.kda, color => {
         this.profile.matches[i].kdaStyle = {
           'color': color
@@ -292,11 +291,11 @@ export class SummonerService {
     callback(played)
   }
   kdaColor(kda, callback) {
-    if (kda >= 6) {
+    if (kda >= 4) {
       callback("#c9721b");
-    } else if (kda >= 4) {
-      callback("#634ac7");
     } else if (kda >= 3) {
+      callback("#634ac7");
+    } else if (kda >= 2.5) {
       callback("#345688");
     } else if (kda >= 2) {
       callback("");

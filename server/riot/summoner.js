@@ -41,7 +41,7 @@ module.exports = (region) => {
     },
     async getByPUUID(id, callback) {
       try {
-        var res = await limiter.schedule(()=> client.get(`/lol/summoner/v4/summoners/by-PUUID/`+
+        var res = await limiter.schedule(()=> client.get(`/lol/summoner/v4/summoners/by-puuid/`+
         `${id}?api_key=${riot.key}`))
         dev(`Found summoner data: ${res.data.name} by puuid from riot API`, 'success')
         callback(res.data)

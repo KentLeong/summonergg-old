@@ -31,3 +31,4 @@ export class SummonerSearchComponent implements OnInit {
     }
   }
 } 
+

@@ -20,6 +20,13 @@
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
+input, textarea {
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
 html {
   font-size: 62.5%;
 }
@@ -29,6 +36,6 @@ body {
   box-sizing: border-box;
   font-size: 1.6rem;
   font-weight: 500;
-  height: 3000px;
+  min-height: 1000px;
   color: $font-dark;
 }

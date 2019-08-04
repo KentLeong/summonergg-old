@@ -9,7 +9,9 @@ const riot = require('./server/config/riot');
 const app = express();
 
 var mongoose = require('mongoose');
-
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
     await cb(this[i], i, this)
