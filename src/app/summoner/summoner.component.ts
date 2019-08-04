@@ -34,8 +34,7 @@ export class SummonerComponent implements OnDestroy {
       }
     });
   }
-  @ViewChild(SummonerMatchHistoryComponent) matchHistory;
-  @ViewChild(SummonerDetailComponent) details;
+
   @HostListener('window:scroll', ['$event'])
   doSomething(event) {
     console.log("Scroll Event " + window.pageYOffset)
