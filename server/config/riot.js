@@ -46,7 +46,8 @@ module.exports = {
       name: "North America",
       riot: "na1",
       main: "mongodb://"+login+"@"+main+":27017",
-      match: "mongodb://"+login+"@"+main+":27018"
+      match: "mongodb://"+login+"@"+main+":27018",
+      inhouse: "mongodb://"+login+"@"+main+":27019",
     },
     // "oce": {
     //   name: "Oceanic",
