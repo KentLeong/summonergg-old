@@ -71,6 +71,10 @@ export class SummonerComponent implements OnDestroy {
     //   })
   }
 
+  searchLive(profile: SummonerProfile) {
+    
+  }
+
   generateProfile(name: string) {
     this.summonerService.generateProfile(name, "English")
       .subscribe((profile: SummonerProfile) => {

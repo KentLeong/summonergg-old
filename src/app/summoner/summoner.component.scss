@@ -1,5 +1,12 @@
 @import '../../scss/values';
 
+.ellipsis {
+  float: right;
+  margin-right: 1.5rem;
+  width: 2rem;
+  height: 2rem;
+}
+
 .container-info {
   background-color: $content-dark;
   border-radius: .5rem;
@@ -52,7 +59,7 @@
   }
 }
 .btn {
-  width: 12.5rem;
+  width: 15.5rem;
   height: 4.5rem;
   border-radius: .3rem;
   background: $content-dark;
