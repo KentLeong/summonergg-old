@@ -10,6 +10,7 @@ import { SummonerDetailComponent } from './summoner-detail/summoner-detail.compo
 import { Summoner } from './summoner.model';
 import { Match } from './summoner-match-history/match.model';
 import { SummonerProfile } from './summonerProfile.model';
+import { ProfileStyle } from './profileStyle.model';
 import * as pData from '../../../data.js';
 import championOffset from '../../assets/championSplashPositions.json';
 
@@ -21,6 +22,7 @@ import championOffset from '../../assets/championSplashPositions.json';
 export class SummonerComponent implements OnDestroy {
   navigationSubscription;
   profile: SummonerProfile;
+  styles: ProfileStyle;
   summoner: Summoner;
 
   constructor(
@@ -64,15 +66,64 @@ export class SummonerComponent implements OnDestroy {
       })
   }
 
-  updateProfile(profile: SummonerProfile) {
+  async updateProfile(profile: SummonerProfile) {
+    const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
+    this.styles.update.style = {
+      'width': "5rem",
+      'filter': "hue-rotate(0deg)"
+    }
+    var wordLen = this.styles.update.action.length - 1
+    this.styles.update.action = "Updat"
+    await waitFor(360/wordLen);
+    this.styles.update.action = "Upda"
+    await waitFor(360/wordLen);
+    this.styles.update.action = "Upd"
+    await waitFor(360/wordLen);
+    this.styles.update.action = "Up"
+    await waitFor(360/wordLen);
+    this.styles.update.action = "U"
+    await waitFor(360/wordLen);
+    this.styles.update.action = ""
+    this.styles.update.show = {
+      'display': "inline-block"
+    };
+    await waitFor(2500);
+    this.styles.update.show = {
+      'display': "none"
+    };
+    this.styles.update.style = {
+      'width': "9.5rem",
+      'filter': "hue-rotate(-80deg)"
+    }
+    var wordLen = "Updated".length - 1
+    this.styles.update.action = "U"
+    await waitFor(360/wordLen);
+    this.styles.update.action = "Up"
+    await waitFor(360/wordLen);
+    this.styles.update.action = "Upd"
+    await waitFor(360/wordLen);
+    this.styles.update.action = "Upda"
+    await waitFor(360/wordLen);
+    this.styles.update.action = "Updat"
+    await waitFor(360/wordLen);
+    this.styles.update.action = "Update"
+    await waitFor(360/wordLen);
+    this.styles.update.action = "Updated"
+
     // this.summonerService.updateProfile(profile.summoner.puuid, "English")
     //   .subscribe((profile: SummonerProfile) => {
     //     this.setProfile(profile)
+    //     console.log("done")
+    //     console.log(profile)
     //   })
   }
 
   searchLive(profile: SummonerProfile) {
-    
+    // this.styles.live.show = {
+    //   'display': "inline-block"
+    // };
+    // this.styles.live.style = {}
+    // this.styles.live.action = "Searching"
   }
 
   generateProfile(name: string) {
@@ -84,8 +135,26 @@ export class SummonerComponent implements OnDestroy {
 
   setProfile(profile: SummonerProfile) {
     // format stats
-    this.summonerService.formatProfile(profile, (updatedProfile: SummonerProfile) => {
+    var styles = {
+      update: {
+        style: {},
+        action: "Update",
+        show: {
+          'display': "none"
+        },
+        updated: ""
+      },
+      live: {
+        style: {},
+        action: "Live",
+        show: {
+          'display': "none"
+        }
+      }
+    }
+    this.summonerService.formatProfile(profile, styles, (updatedProfile: SummonerProfile, updatedStyles: ProfileStyle) => {
       this.profile = updatedProfile
+      this.styles = updatedStyles
     })
     console.log(profile)
     this.profile = profile;

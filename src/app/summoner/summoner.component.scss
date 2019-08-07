@@ -3,8 +3,8 @@
 .ellipsis {
   float: right;
   margin-right: 1.5rem;
-  width: 2rem;
-  height: 2rem;
+  width: 1.9rem;
+  height: 1.9rem;
 }
 
 .container-info {
@@ -59,15 +59,23 @@
   }
 }
 .btn {
-  width: 15.5rem;
+  width: 9.5rem;
   height: 4.5rem;
   border-radius: .3rem;
   background: $content-dark;
   border: none;
-  color: white;
-  font-weight: 700;
-  font-size: 1.6rem;
-  padding-left: 1.5rem;
+  filter: hue-rotate(0deg);
+  -webkit-transition: all .36s ease-in-out;
+  -moz-transition: all .36s ease-in-out;
+  -o-transition: all .36s ease-in-out;
+  transition: all .36s ease-in-out;
+  span {
+    color: white;
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin-left: 1rem;
+    margin-right: .5rem;
+  }
 }
 .btn:focus {
   outline: none;
@@ -149,11 +157,6 @@
       font-size: 3rem;
       margin-bottom: 1rem;
     }
-    span {
-      font-size: 1.25rem;
-      color: grey;
-    }
-
     button {
       display: inline-block;
     }

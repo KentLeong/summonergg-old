@@ -5,8 +5,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Summoner } from './summoner.model';
 import { Match } from './summoner-match-history/match.model';
 import { SummonerProfile } from './summonerProfile.model';
+import { ProfileStyle } from './profileStyle.model';
 
 import * as config from '../../../config'
+import { AnonymousSubject } from 'rxjs/internal/Subject';
 // import { Observable } from 'rxjs';
 
 const httpOptions = {
@@ -24,6 +26,7 @@ export class SummonerService {
   region: string = window.location.hostname.split(".")[0];
   protocal: string = config.protocal+this.region+"."+config.host;
   profile: SummonerProfile;
+  styles: ProfileStyle;
 
   constructor(
     private http: HttpClient
@@ -51,8 +54,10 @@ export class SummonerService {
 
 
   // profile formating main
-  async formatProfile(profile, callback) {
+  async formatProfile(profile, styles, callback) {
     this.profile = profile;
+    this.styles = styles;
+    this.formatUpdate();
     this.formatChampions();
     this.formatRecentStats();
     this.formatRecentChampions();
@@ -60,8 +65,20 @@ export class SummonerService {
     this.formatLeagues();
     this.formatMatches();
     this.deleteEmptyLeagues();
-    callback(this.profile)
+    callback(this.profile, styles)
   }
+  async formatUpdate() {
+    var lastUpdated = new Date(this.profile.lastUpdated).getTime();
+    var now = new Date().getTime();
+    var difference = Math.round((now - lastUpdated)/1000)
+    if (difference < 300) {
+      this.styles.update.action = "Updated"
+    }
+    this.timePlayed(this.profile.lastUpdated, updated => {
+      this.styles.update.updated = updated
+    })
+  }
+
   async formatChampions() {
     Object.keys(this.profile.champions).forEach(queue => {
       this.profile.champions[queue].forEach((champion: any, i: number) => {

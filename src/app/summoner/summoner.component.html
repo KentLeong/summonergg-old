@@ -15,14 +15,15 @@
     </div>
     <div class="profile__info">
       <h4 class="selectable">{{profile.summoner.name}}</h4>
-      <button (click)="updateProfile(profile)" class="btn update">
-        Update
-        <img src="../../assets/general/double_ring.svg" alt="" class="ellipsis">
+      <button (click)="updateProfile(profile)" class="btn update" [ngStyle]="styles.update.style">
+        <span>{{styles.update.action}}</span>
+        <img src="../../assets/general/double_ring.svg" alt="" class="ellipsis" [ngStyle]="styles.update.show">
       </button>
-      <button (click)="searchLive(profile)" class="btn live">
-        Live
-        <img src="../../assets/general/double_ring.svg" alt="" class="ellipsis">
+      <button (click)="searchLive(profile)" class="btn live" [ngStyle]="styles.live.style">
+        <span>{{styles.live.action}}</span>
+        <img src="../../assets/general/double_ring.svg" alt="" class="ellipsis" [ngStyle]="styles.live.show">
       </button>
+      <p>Last updated: {{styles.update.updated}}</p>
     </div>
   </div>
   <app-summoner-detail class="detail"
