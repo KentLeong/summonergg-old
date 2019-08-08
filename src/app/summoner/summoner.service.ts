@@ -73,6 +73,10 @@ export class SummonerService {
     var difference = Math.round((now - lastUpdated)/1000)
     if (difference < 300) {
       this.styles.update.action = "Updated"
+      this.styles.update.style = {
+        'width': "9.5rem",
+        'filter': "hue-rotate(-80deg)"
+      }
     }
     this.timePlayed(this.profile.lastUpdated, updated => {
       this.styles.update.updated = updated
@@ -292,7 +296,7 @@ export class SummonerService {
       }
     } else if (playedMinutes < 40320){
       let days = Math.floor(playedMinutes/1440)
-      if (days = 1) {
+      if (days == 1) {
         played = `${days} day ago`
       } else {
         played = `${days} days ago`

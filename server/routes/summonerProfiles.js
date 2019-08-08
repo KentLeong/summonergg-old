@@ -193,11 +193,8 @@ module.exports = (serverList) => {
       })
 
       // matches for all ranked games
-      await MatchService.getAllPlayerMatch(profile.summoner.accountId, "420", updatedSolo => {
+      await MatchService.getAllPlayerMatch(profile.summoner.accountId, ["420", "440"], updatedSolo => {
         rankedGames = [...rankedGames, ...updatedSolo]
-      })
-      await MatchService.getAllPlayerMatch(profile.summoner.accountId, "440", updatedFlex => {
-        rankedGames = [...rankedGames, ...updatedFlex]
       })
 
       // get first 10 matches
@@ -294,11 +291,8 @@ module.exports = (serverList) => {
         }) 
 
         // matches for all ranked games
-        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "420", updatedSolo => {
+        await MatchService.getAllPlayerMatch(profile.summoner.accountId, ["420", "440"], updatedSolo => {
           rankedGames = [...rankedGames, ...updatedSolo]
-        })
-        await MatchService.getAllPlayerMatch(profile.summoner.accountId, "440", updatedFlex => {
-          rankedGames = [...rankedGames, ...updatedFlex]
         })
 
         // update last 10 matches

@@ -87,35 +87,33 @@ export class SummonerComponent implements OnDestroy {
     this.styles.update.show = {
       'display': "inline-block"
     };
-    await waitFor(2500);
-    this.styles.update.show = {
-      'display': "none"
-    };
-    this.styles.update.style = {
-      'width': "9.5rem",
-      'filter': "hue-rotate(-80deg)"
-    }
-    var wordLen = "Updated".length - 1
-    this.styles.update.action = "U"
-    await waitFor(360/wordLen);
-    this.styles.update.action = "Up"
-    await waitFor(360/wordLen);
-    this.styles.update.action = "Upd"
-    await waitFor(360/wordLen);
-    this.styles.update.action = "Upda"
-    await waitFor(360/wordLen);
-    this.styles.update.action = "Updat"
-    await waitFor(360/wordLen);
-    this.styles.update.action = "Update"
-    await waitFor(360/wordLen);
-    this.styles.update.action = "Updated"
 
-    // this.summonerService.updateProfile(profile.summoner.puuid, "English")
-    //   .subscribe((profile: SummonerProfile) => {
-    //     this.setProfile(profile)
-    //     console.log("done")
-    //     console.log(profile)
-    //   })
+    this.summonerService.updateProfile(profile.summoner.puuid, "English")
+      .subscribe(async (profile: SummonerProfile) => {
+        this.setProfile(profile)
+        this.styles.update.show = {
+          'display': "none"
+        };
+        this.styles.update.style = {
+          'width': "9.5rem",
+          'filter': "hue-rotate(-80deg)"
+        }
+        var wordLen = "Updated".length - 1
+        this.styles.update.action = "U"
+        await waitFor(360/wordLen);
+        this.styles.update.action = "Up"
+        await waitFor(360/wordLen);
+        this.styles.update.action = "Upd"
+        await waitFor(360/wordLen);
+        this.styles.update.action = "Upda"
+        await waitFor(360/wordLen);
+        this.styles.update.action = "Updat"
+        await waitFor(360/wordLen);
+        this.styles.update.action = "Update"
+        await waitFor(360/wordLen);
+        this.styles.update.action = "Updated"
+        this.styles.update.updated = "a few seconds ago"
+      })
   }
 
   searchLive(profile: SummonerProfile) {
