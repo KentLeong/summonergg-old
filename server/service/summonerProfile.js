@@ -221,6 +221,70 @@ module.exports = (region) => {
         })
       }
     },
+    async updateChampions(profile, matches, callback) {
+      if (!profile.champions) profile.recent = {};
+      if (matches.length > 0) {
+        var stats;
+        await StatService.get(profile.summoner.puuid, updatedStats => {
+          if (updatedStats) stats = updatedStats;
+        })
+        if (!stats) {
+          callback(profile, false)
+        } else {
+          var champions = stats.champions
+          await matches.asyncForEach(match => {
+            if (match.participants) {
+              match.participants.some(part => {
+                if (part.currentAccountId == profile.summoner.accountId) {
+                  var queue;
+                  if (match.queueId == "420" || match.queueId == "440") {
+                    queue = match.queueId
+                  } else {
+                    queue = "norm"
+                  }
+                  if (!champions[part.championId]) {
+                    champions[part.championId] = {};
+                    champions[part.championId][queue] = {
+                      games: 0,
+                      kills: 0,
+                      deaths: 0,
+                      assists: 0,
+                      wins: 0,
+                      losses: 0
+                    };
+                  } else if (!champions[part.championId][queue]){
+                    champions[part.championId][queue] = {
+                      games: 0,
+                      kills: 0,
+                      deaths: 0,
+                      assists: 0,
+                      wins: 0,
+                      losses: 0
+                    };
+                  }
+                  
+                  champions[part.championId][queue].kills += part.stats.kills;
+                  champions[part.championId][queue].deaths += part.stats.deaths;
+                  champions[part.championId][queue].assists += part.stats.assists;
+                  if (part.stats.win && match.gameDuration > 400) {
+                    champions[part.championId][queue].wins++
+                    champions[part.championId][queue].games++;
+                  } else if (!part.stats.win && match.gameDuration > 400) {
+                    champions[part.championId][queue].losses++
+                    champions[part.championId][queue].games++;
+                  }
+                }
+                return (part.currentAccountId == profile.summoner.accountId)
+              })
+            }
+          })
+          stats.champions = champions;
+          await StatService.update(stats, updatedStat => {
+            callback(profile, updatedStat);
+          })
+        }
+      }
+    },
     async generateRecentPlayers(profile, callback) {
       if (!profile.recent) profile.recent = {};
       profile.recent.players = [];
@@ -414,7 +478,7 @@ module.exports = (region) => {
           var now = new Date().getTime();
           var played = new Date(game.gameCreation).getTime();
           var daysAgo = (((((now - played)/1000)/60)/60)/24).toFixed(1);
-          if (daysAgo < 8) {
+          if (daysAgo < 7) {
             games.push(game);
           }
         })

@@ -262,6 +262,7 @@ module.exports = (serverList) => {
   router.put('/updateProfile', async (req, res) => {
     var puuid = req.body.puuid;
     var language = req.query.language;
+    var hardReset = req.query.hardReset || false;
     var profile;
     var stat = false;
     //find summoner profile from local database by puuid
@@ -273,9 +274,8 @@ module.exports = (serverList) => {
     } else {
       var lastUpdated = new Date(profile.lastUpdated).getTime();
       var now = new Date().getTime();
-      var difference = Math.round((now - lastUpdated)/30000)
-  
-      if (difference < 1) {
+      var seconds = Math.floor((now - lastUpdated)/1000)
+      if (seconds < 30) {
         res.status(400).json("cant update too early")
       } else {
         var rankedGames = [];
@@ -291,10 +291,25 @@ module.exports = (serverList) => {
         }) 
 
         // matches for all ranked games
-        await MatchService.getAllPlayerMatch(profile.summoner.accountId, ["420", "440"], updatedSolo => {
-          rankedGames = [...rankedGames, ...updatedSolo]
-        })
-
+        var minutes = Math.floor(seconds/60);
+        var hours = Math.floor(minutes/60);
+        var days = Math.floor(hours/24);
+        var weeks = Math.ceil(days/7);
+        var options = {
+          weeks: weeks,
+          lastUpdated: lastUpdated,
+          queues: ["420", "440"]
+        }
+        if (days > 28) hardReset = true;
+        if (hardReset) {
+          await MatchService.getAllPlayerMatch(profile.summoner.accountId, options.queues, updatedGames => {
+            if (updatedGames) rankedGames = [...rankedGames, ...updatedGames]
+          })
+        } else {
+          await MatchService.getUnupdatedMatches(profile.summoner.accountId, options, updatedGames => {
+            if (updatedGames) rankedGames = [...rankedGames, ...updatedGames]
+          })
+        }
         // update last 10 matches
         var query = {
           season: riot.season,
@@ -310,19 +325,28 @@ module.exports = (serverList) => {
         await SummonerProfileService.formatMatches(profile.summoner, profile.matches, formatedMatches => {
           if (formatedMatches) profile.matches = formatedMatches;
         })
+
         // generate stats
         await SummonerProfileService.generateStats(profile, updatedProfile => {
           if (updatedProfile) profile = updatedProfile
         })
 
         // generate champion stats
-        await SummonerProfileService.generateChampions(profile, rankedGames, (updatedProfile, updatedStat) => {
-          if (updatedProfile) {
-            profile = updatedProfile;
-            stat = updatedStat;
-          }
-        })
-
+        if (hardReset) {
+          await SummonerProfileService.generateChampions(profile, rankedGames, (updatedProfile, updatedStat) => {
+            if (updatedProfile) {
+              profile = updatedProfile;
+              stat = updatedStat;
+            }
+          })
+        } else {
+          await SummonerProfileService.updateChampions(profile, rankedGames, (updatedProfile, updatedStat) => {
+            if (updatedProfile) {
+              profile = updatedProfile;
+              stat = updatedStat;
+            }
+          })
+        }
         // generate recent players
         await SummonerProfileService.generateRecentPlayers(profile, updatedProfile => {
           if (updatedProfile) profile = updatedProfile;
@@ -338,19 +362,19 @@ module.exports = (serverList) => {
           if (updatedProfile) profile = updatedProfile;
         })
 
-        // format profile match and create ranked champion stats
-        await SummonerProfileService.format(profile, stat, updatedProfile => {
-          profile = updatedProfile;
-        })
-        // save profile
-        await SummonerProfileService.update(profile);
+        // // format profile match and create ranked champion stats
+        // await SummonerProfileService.format(profile, stat, updatedProfile => {
+        //   profile = updatedProfile;
+        // })
+        // // save profile
+        // await SummonerProfileService.update(profile);
 
-        // translate profile match
-        await SummonerProfileService.translate(profile, language, translatedProfile => {
-          profile = translatedProfile;
-        })
+        // // translate profile match
+        // await SummonerProfileService.translate(profile, language, translatedProfile => {
+        //   profile = translatedProfile;
+        // })
 
-        res.status(200).json(profile)
+        // res.status(200).json(profile)
       }
     }
   })

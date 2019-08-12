@@ -13,7 +13,7 @@ module.exports = (serverList) => {
     next();
   })
   
-  // GET League
+  // GET by puuid
   router.get('/:id', (req, res) => {
     Stat.findOne({puuid: req.params.id}, (err, stat) => {
       if (err) {
@@ -41,6 +41,19 @@ module.exports = (serverList) => {
             res.status(200).json(stat)
           }
         })
+      }
+    })
+  })
+
+  // PUT stat
+  router.put('/', (req, res) => {
+    var updatedStat = req.body.stat;
+    updatedStat.lastUpdated = new Date();
+    Stat.findOneAndUpdate({puuid: updatedStat.puuid}, updatedStat, (err, stat)=> {
+      if (err) {
+        res.status(500).json(err)
+      } else {
+        res.status(200).json(stat)
       }
     })
   })

@@ -270,6 +270,72 @@ module.exports = (region) => {
         await checkDone();
       } while(!done)
       callback(updatedMatches);
+    },
+    async getUnupdatedMatches(id, options, callback) {
+      var matches = [];
+      var updatedMatches = [];
+      var weeks = options.weeks;
+      var queues = options.queues;
+      var lastUpdated = options.lastUpdated;
+
+      await queues.asyncForEach(async queue => {
+        var done = false;
+        var options = {
+          accountId: id,
+          query: {
+            season: riot.season,
+            beginIndex: 0,
+            endIndex: 100
+          }
+        }
+        options.query.queue = queue;
+        for (var i = 0; i < weeks; i++) {
+          if (weeks > 1 && i+1 != weeks) {
+            options.query.beginTime = lastUpdated + (604800000*i);
+            options.query.endTime = lastUpdated + (604800000*(i+1));
+            if (i != 0) options.query.beginTime += 1;
+            do {
+              await RiotMatch.getMatches(options, async res => {
+                if (!res.matches) {
+                  done = true
+                } else {
+                  matches = [...matches, ...res.matches]
+                  if (res.matches.length != 100) {
+                    done = true;
+                    options.query.beginIndex = 0;
+                    options.query.endIndex = 100;
+                  } else {
+                    options.query.beginIndex += 100;
+                    options.query.endIndex += 100;
+                  }
+                }
+              })
+            } while(!done)
+          } else {
+            options.query.beginTime = lastUpdated + (604800000*(i));
+            options.query.endTime = new Date().getTime();
+            if (i != 0 && weeks != 1) options.query.beginTime += 1;
+            do {
+              await RiotMatch.getMatches(options, async res => {
+                if (!res.matches) {
+                  done = true
+                } else {
+                  matches = [...matches, ...res.matches]
+                  if (res.matches.length != 100) {
+                    done = true;
+                    options.query.beginIndex = 0;
+                    options.query.endIndex = 100;
+                  } else {
+                    options.query.beginIndex += 100;
+                    options.query.endIndex += 100;
+                  }
+                }
+              })
+            } while(!done)
+          }
+        }
+      })
+      callback(matches)
     }
   }
 }

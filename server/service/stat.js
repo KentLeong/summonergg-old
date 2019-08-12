@@ -18,6 +18,25 @@ module.exports = (region) => {
         dev(`${stat.puuid} was not saved`, "error")
         callback(false)
       }
+    },
+    async get(puuid, callback) {
+      try {
+        var res = await local.get(`/stats/${puuid}`)
+        dev(`Stat retrieved for: ${puuid}`, "success")
+        callback(res.data)
+      } catch(err) {
+        dev(`Could not retrieve stats for: ${puuid}`, "error")
+        callback(false)
+      }
+    },
+    async update(stat, callback) {
+      try {
+        var res = await local.put('/stats/', {stat: stat})
+        callback(res.data)
+        dev(`Stat was updated for: ${puuid}`, "success")
+      } catch (err) {
+        dev(`Stat was not updated for: ${puuid}`, "error")
+      }
     }
   }
 }
