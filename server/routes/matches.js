@@ -13,19 +13,22 @@ module.exports = (serverList) => {
   
   router.use((req, res, next) => {
     region = req.headers.host.split(".")[0].replace("http://", "")
+    // epoch, date, type
     var MatchService = require('../service/match')(region);
     var time = req.query.epoch;
     if (!time) time = req.query.date;
     var type = req.query.type
-    if (time && riot.types.includes(type) || time == "recent") {
+    if (time != "recent" && time && riot.types.includes(type)) {
       MatchService.getLocation(time, type, (recent, location) => {
         if (recent) {
-          Match = require('../models/match')(serverList[region].main, location);
+          Match = require('../models/match')(serverList[region].main, "recent");
         } else {
           Match = require('../models/match')(serverList[region].match, location);
         }
       })
-      RiotMatch = require('../riot/match')(region);
+      next();
+    } else if (time == "recent") {
+      Match = require('../models/match')(serverList[region].main, "recent");
       next();
     }
   })
@@ -55,7 +58,7 @@ module.exports = (serverList) => {
       }
     })
   })
-    
+
   // POST Match
   router.post('/', (req, res) => {
     var newMatch = new Match(req.body.match)

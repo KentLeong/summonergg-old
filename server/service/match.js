@@ -15,6 +15,51 @@ module.exports = (region) => {
   var RiotMatch =require('../riot/match')(region);
   var rate = require('./rate')();
   return {
+    async getMatchesFromLocal(matches, callback) {
+      var updatedMatches = [];
+      await matches.asyncForEach(async (match, i) => {
+        var found = false;
+        var opt = {
+          epoch: match.timestamp,
+          type: match.queue
+        }
+        await this.getByGameId(match.gameId, opt, matchFound => {
+          if (matchFound) {
+            log(`[${i+1}] Match ID: ${match.gameId} already exists`,'warning')
+            found = true;
+            updatedMatches.push(matchFound)
+          }
+        })
+        if (!found) {
+          RiotMatch.byID(match.gameId, async updatedMatch => {
+            var opt = {
+              epoch: updatedMatch.gameCreation,
+              type: updatedMatch.queueId
+            }
+            updatedMatches.push(updatedMatch)
+            this.new(updatedMatch, opt, done => {
+              log(`[${i+1}] finished saving match: ${match.gameId}`,'success')
+            })
+          })
+        }
+      })
+      var done = false
+      var times = 0;
+      do {
+        async function checkDone() {
+          await waitFor(100);
+          console.log(updatedMatches.length + " : " + matches.length)
+          if (updatedMatches.length == matches.length) {
+            done = true;
+          } else if (times > 100) {
+            done = true;
+          }
+          times++
+        }
+        await checkDone();
+      } while(!done)
+      callback(updatedMatches)
+    },
     async getLocation(time, type, callback) {
       var location = false;
       var server = false;
@@ -202,7 +247,6 @@ module.exports = (region) => {
     },
     async getAllPlayerMatch(id, queues, callback) {
       var matches = [];
-      var updatedMatches = [];
       await queues.asyncForEach(async queue => {
         var done = false;
         var options = {
@@ -227,53 +271,12 @@ module.exports = (region) => {
           })
         } while(!done)
       })
-      var count = 0;
-      await matches.asyncForEach(async (match, i) => {
-        var found = false;
-        var opt = {
-          epoch: match.timestamp,
-          type: match.queue
-        }
-        await this.getByGameId(match.gameId, opt, matchFound => {
-          if (matchFound) {
-            log(`[${i+1}] Match ID: ${match.gameId} already exists`,'warning')
-            found = true;
-            updatedMatches.push(matchFound)
-          }
-        })
-        if (!found) {
-          RiotMatch.byID(match.gameId, async updatedMatch => {
-            var opt = {
-              epoch: updatedMatch.gameCreation,
-              type: updatedMatch.queueId
-            }
-            updatedMatches.push(updatedMatch)
-            this.new(updatedMatch, opt, done => {
-              log(`[${i+1}] finished saving match: ${match.gameId}`,'success')
-            })
-          })
-        }
+      await this.getMatchesFromLocal(matches, updatedMatches => {
+        callback(updatedMatches);
       })
-      var done = false
-      var times = 0;
-      do {
-        async function checkDone() {
-          await waitFor(100);
-          console.log(updatedMatches.length + " : " + matches.length)
-          if (updatedMatches.length == matches.length) {
-            done = true;
-          } else if (times > 100) {
-            done = true;
-          }
-          times++
-        }
-        await checkDone();
-      } while(!done)
-      callback(updatedMatches);
     },
     async getUnupdatedMatches(id, options, callback) {
       var matches = [];
-      var updatedMatches = [];
       var weeks = options.weeks;
       var queues = options.queues;
       var lastUpdated = options.lastUpdated;
@@ -335,7 +338,49 @@ module.exports = (region) => {
           }
         }
       })
-      callback(matches)
+      await this.getMatchesFromLocal(matches, updatedMatches => {
+        callback(updatedMatches);
+      })
+    },
+    async getRecentRanked(id, options, callback) {
+      var matches = [];
+      var queues = options.queues;
+      var lastUpdated = options.lastUpdated;
+      console.log(options)
+      await queues.asyncForEach(async queue => {
+        var done = false;
+        var options = {
+          accountId: id,
+          query: {
+            season: riot.season,
+            beginIndex: 0,
+            endIndex: 100
+          }
+        }
+        options.query.queue = queue;
+        options.query.beginTime = lastUpdated;
+        options.query.endTime = new Date().getTime();
+        do {
+          await RiotMatch.getMatches(options, async res => {
+            if (!res.matches) {
+              done = true
+            } else {
+              matches = [...matches, ...res.matches]
+              if (res.matches.length != 100) {
+                done = true;
+                options.query.beginIndex = 0;
+                options.query.endIndex = 100;
+              } else {
+                options.query.beginIndex += 100;
+                options.query.endIndex += 100;
+              }
+            }
+          })
+        } while(!done)
+      })
+      await this.getMatchesFromLocal(matches, updatedMatches => {
+        callback(updatedMatches);
+      })
     }
   }
 }

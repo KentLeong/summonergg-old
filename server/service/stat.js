@@ -33,9 +33,9 @@ module.exports = (region) => {
       try {
         var res = await local.put('/stats/', {stat: stat})
         callback(res.data)
-        dev(`Stat was updated for: ${puuid}`, "success")
+        dev(`Stat was updated`, "success")
       } catch (err) {
-        dev(`Stat was not updated for: ${puuid}`, "error")
+        dev(`Stat was not updated`, "error")
       }
     }
   }

@@ -470,19 +470,12 @@ module.exports = (region) => {
       })
       callback(profile)
     },
-    async generateRecentRanked(profile, rankedGames, callback) {
+    async generateRecentRanked(profile, options, callback) {
       var games = [];
       var recent = [];
-      if (rankedGames.length > 0) {
-        await rankedGames.asyncForEach(async game => {
-          var now = new Date().getTime();
-          var played = new Date(game.gameCreation).getTime();
-          var daysAgo = (((((now - played)/1000)/60)/60)/24).toFixed(1);
-          if (daysAgo < 7) {
-            games.push(game);
-          }
-        })
-      }
+      await MatchService.getRecentRanked(profile.summoner.accountId, options, retrievedMatches => {
+        if (retrievedMatches) games = retrievedMatches;
+      })
       if (games.length > 0) {
         var list = {};
         await this.formatMatches(profile.summoner, games, formatedMatches => {
@@ -736,52 +729,54 @@ module.exports = (region) => {
       if (!profile.champions) profile.champions = {};
       profile.champions.total = [];
       var championList = [];
-      if (Object.keys(stat.champions).length > 0) {
-        await Object.keys(stat.champions).asyncForEach(async champion => {
-          var rankedStats = {
-            games: 0,
-            wins: 0,
-            kills: 0,
-            deaths: 0,
-            assists: 0
-          }
-          await Object.keys(stat.champions[champion]).asyncForEach(queue => {
-            if (queue != "norm") {
-              rankedStats = {
-                games: rankedStats.games+stat.champions[champion][queue].games,
-                wins: rankedStats.wins+stat.champions[champion][queue].wins,
-                kills: rankedStats.kills+stat.champions[champion][queue].kills,
-                deaths: rankedStats.deaths+stat.champions[champion][queue].deaths,
-                assists: rankedStats.assists+stat.champions[champion][queue].assists
-              }
+      if (stat) {
+        if (Object.keys(stat.champions).length > 0) {
+          await Object.keys(stat.champions).asyncForEach(async champion => {
+            var rankedStats = {
+              games: 0,
+              wins: 0,
+              kills: 0,
+              deaths: 0,
+              assists: 0
             }
+            await Object.keys(stat.champions[champion]).asyncForEach(queue => {
+              if (queue != "norm") {
+                rankedStats = {
+                  games: rankedStats.games+stat.champions[champion][queue].games,
+                  wins: rankedStats.wins+stat.champions[champion][queue].wins,
+                  kills: rankedStats.kills+stat.champions[champion][queue].kills,
+                  deaths: rankedStats.deaths+stat.champions[champion][queue].deaths,
+                  assists: rankedStats.assists+stat.champions[champion][queue].assists
+                }
+              }
+            })
+            var games = rankedStats.games;
+            var wins = rankedStats.wins;
+            var kills = rankedStats.kills;
+            var deaths = rankedStats.deaths;
+            var assists = rankedStats.assists;
+            var championStat = {
+              id: champion,
+              games: games,
+              kills: (kills/games).toFixed(1),
+              deaths: (deaths/games).toFixed(1),
+              assists: (assists/games).toFixed(1),
+              kda: ((kills+assists)/deaths).toFixed(2),
+              winPercent: Math.round((wins/games).toFixed(2)*100)
+            }
+            championList.push(championStat)
           })
-          var games = rankedStats.games;
-          var wins = rankedStats.wins;
-          var kills = rankedStats.kills;
-          var deaths = rankedStats.deaths;
-          var assists = rankedStats.assists;
-          var championStat = {
-            id: champion,
-            games: games,
-            kills: (kills/games).toFixed(1),
-            deaths: (deaths/games).toFixed(1),
-            assists: (assists/games).toFixed(1),
-            kda: ((kills+assists)/deaths).toFixed(2),
-            winPercent: Math.round((wins/games).toFixed(2)*100)
+          championList.sort((a,b) => {
+            return b.winPercent - a.winPercent;
+          })
+          championList.sort((a,b) => {
+            return b.games - a.games;
+          })
+          if (championList.length <= 5) {
+            profile.champions.total = championList
+          } else {
+            profile.champions.total = championList.slice(0, 5)
           }
-          championList.push(championStat)
-        })
-        championList.sort((a,b) => {
-          return b.winPercent - a.winPercent;
-        })
-        championList.sort((a,b) => {
-          return b.games - a.games;
-        })
-        if (championList.length <= 5) {
-          profile.champions.total = championList
-        } else {
-          profile.champions.total = championList.slice(0, 5)
         }
       }
       await profile.matches.asyncForEach(async match => {

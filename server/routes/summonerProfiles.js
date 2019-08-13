@@ -236,10 +236,10 @@ module.exports = (serverList) => {
         })
 
         // generate recent ranked matches
-        await SummonerProfileService.generateRecentRanked(profile, rankedGames, updatedProfile => {
+        await SummonerProfileService.generateRecentRanked(profile, options, updatedProfile => {
           if (updatedProfile) profile = updatedProfile;
         })
-
+        
         // format profile match and create ranked champion stats
         await SummonerProfileService.format(profile, stat, updatedProfile => {
           profile = updatedProfile;
@@ -358,23 +358,23 @@ module.exports = (serverList) => {
         })
 
         // generate recent ranked matches
-        await SummonerProfileService.generateRecentRanked(profile, rankedGames, updatedProfile => {
+        await SummonerProfileService.generateRecentRanked(profile, options, updatedProfile => {
           if (updatedProfile) profile = updatedProfile;
         })
 
-        // // format profile match and create ranked champion stats
-        // await SummonerProfileService.format(profile, stat, updatedProfile => {
-        //   profile = updatedProfile;
-        // })
-        // // save profile
-        // await SummonerProfileService.update(profile);
+        // format profile match and create ranked champion stats
+        await SummonerProfileService.format(profile, stat, updatedProfile => {
+          profile = updatedProfile;
+        })
+        // update profile
+        await SummonerProfileService.update(profile);
 
-        // // translate profile match
-        // await SummonerProfileService.translate(profile, language, translatedProfile => {
-        //   profile = translatedProfile;
-        // })
-
-        // res.status(200).json(profile)
+        // translate profile match
+        await SummonerProfileService.translate(profile, language, translatedProfile => {
+          profile = translatedProfile;
+        })
+        log('Updated profile for '+profile.summoner.name+"!", "complete")
+        res.status(200).json(profile)
       }
     }
   })
