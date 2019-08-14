@@ -29,18 +29,12 @@ module.exports = (serverList) => {
   // POST Stat
   router.post('/', (req, res) => {
     var newStat = new Stat(req.body.stat)
-    Stat.findOne({puuid: newStat.puuid}, (err, stat) => {
-      if (stat) {
-        res.status(400).json("exists")
+    newStat.lastUpdated = new Date();
+    Stat.findOneAndUpdate({puuid: newStat.puuid}, newStat, {new: true, upsert: true}, (err, stat)=> {
+      if (err) {
+        res.status(500).json(err)
       } else {
-        newStat.lastUpdated = new Date();
-        newStat.save((err, stat) => {
-          if (err) {
-            res.status(500).json(err)
-          } else {
-            res.status(200).json(stat)
-          }
-        })
+        res.status(200).json(stat)
       }
     })
   })
@@ -49,13 +43,14 @@ module.exports = (serverList) => {
   router.put('/', (req, res) => {
     var updatedStat = req.body.stat;
     updatedStat.lastUpdated = new Date();
-    Stat.findOneAndUpdate({puuid: updatedStat.puuid}, updatedStat, {new: true}, (err, stat)=> {
-      if (err) {
-        res.status(500).json(err)
-      } else {
-        res.status(200).json(stat)
-      }
-    })
+    // Stat.findOneAndUpdate({puuid: updatedStat.puuid}, updatedStat, {new: true}, (err, stat)=> {
+    //   if (err) {
+    //     res.status(500).json(err)
+    //   } else {
+    //     res.status(200).json(stat)
+    //   }
+    // })
+    res.status(200).json(updatedStat)
   })
 
   return router

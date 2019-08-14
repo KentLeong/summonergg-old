@@ -35,6 +35,7 @@ module.exports = (region) => {
         callback(res.data)
         dev(`Stat was updated`, "success")
       } catch (err) {
+        callback(false)
         dev(`Stat was not updated`, "error")
       }
     }

@@ -153,14 +153,15 @@ module.exports = (serverList) => {
   router.put('/', (req, res) => {
     var summonerProfile = req.body.summonerProfile
     summonerProfile.lastUpdated = new Date();
-    SummonerProfile.findOneAndUpdate({"summoner.puuid": summonerProfile.summoner.puuid}, 
-                                      summonerProfile, {new: true}, (err, profile) => {
-      if (err) {
-        res.status(500).json(err)
-      } else {
-        res.status(200).json(profile)
-      }
-    })
+    // SummonerProfile.findOneAndUpdate({"summoner.puuid": summonerProfile.summoner.puuid}, 
+    //                                   summonerProfile, {new: true}, (err, profile) => {
+    //   if (err) {
+    //     res.status(500).json(err)
+    //   } else {
+    //     res.status(200).json(profile)
+    //   }
+    // })
+    res.status(200).json(summonerProfile)
   })
   
   // Generate New Profile
@@ -203,7 +204,7 @@ module.exports = (serverList) => {
         beginIndex: 0,
         endIndex: 10
       }
-      await SummonerProfileService.getMatches(profile, query, updatedProfile => {
+      await SummonerProfileService.getRecentMatches(profile, query, updatedProfile => {
         profile = updatedProfile;
       })
       if (profile.matches) {
@@ -213,7 +214,7 @@ module.exports = (serverList) => {
         })
 
         // generate stats
-        await SummonerProfileService.generateStats(profile, updatedProfile => {
+        await SummonerProfileService.generateRecentStats(profile, updatedProfile => {
           if (updatedProfile) profile = updatedProfile
         })
 
@@ -236,7 +237,7 @@ module.exports = (serverList) => {
         })
 
         // generate recent ranked matches
-        await SummonerProfileService.generateRecentRanked(profile, options, updatedProfile => {
+        await SummonerProfileService.generateRecentRanked(profile, {queues: ["420", "440"]}, updatedProfile => {
           if (updatedProfile) profile = updatedProfile;
         })
         
@@ -295,6 +296,7 @@ module.exports = (serverList) => {
         var hours = Math.floor(minutes/60);
         var days = Math.floor(hours/24);
         var weeks = Math.ceil(days/7);
+        if (weeks == 0) weeks = 1;
         var options = {
           weeks: weeks,
           lastUpdated: lastUpdated,
@@ -305,11 +307,26 @@ module.exports = (serverList) => {
           await MatchService.getAllPlayerMatch(profile.summoner.accountId, options.queues, updatedGames => {
             if (updatedGames) rankedGames = [...rankedGames, ...updatedGames]
           })
+          // champion stats
+          await SummonerProfileService.generateChampions(profile, rankedGames, (updatedProfile, updatedStat) => {
+            if (updatedProfile) {
+              profile = updatedProfile;
+              stat = updatedStat;
+            }
+          })
         } else {
           await MatchService.getUnupdatedMatches(profile.summoner.accountId, options, updatedGames => {
             if (updatedGames) rankedGames = [...rankedGames, ...updatedGames]
           })
+          //champions stats
+          await SummonerProfileService.updateChampions(profile, rankedGames, (updatedProfile, updatedStat) => {
+            if (updatedProfile) {
+              profile = updatedProfile;
+              stat = updatedStat;
+            }
+          })
         }
+
         // update last 10 matches
         var query = {
           season: riot.season,
@@ -317,7 +334,7 @@ module.exports = (serverList) => {
           endIndex: 10
         }
   
-        await SummonerProfileService.getMatches(profile, query, updatedProfile => {
+        await SummonerProfileService.getRecentMatches(profile, query, updatedProfile => {
           profile = updatedProfile;
         })
   
@@ -327,26 +344,10 @@ module.exports = (serverList) => {
         })
 
         // generate stats
-        await SummonerProfileService.generateStats(profile, updatedProfile => {
+        await SummonerProfileService.generateRecentStats(profile, updatedProfile => {
           if (updatedProfile) profile = updatedProfile
         })
 
-        // generate champion stats
-        if (hardReset) {
-          await SummonerProfileService.generateChampions(profile, rankedGames, (updatedProfile, updatedStat) => {
-            if (updatedProfile) {
-              profile = updatedProfile;
-              stat = updatedStat;
-            }
-          })
-        } else {
-          await SummonerProfileService.updateChampions(profile, rankedGames, (updatedProfile, updatedStat) => {
-            if (updatedProfile) {
-              profile = updatedProfile;
-              stat = updatedStat;
-            }
-          })
-        }
         // generate recent players
         await SummonerProfileService.generateRecentPlayers(profile, updatedProfile => {
           if (updatedProfile) profile = updatedProfile;
@@ -366,6 +367,7 @@ module.exports = (serverList) => {
         await SummonerProfileService.format(profile, stat, updatedProfile => {
           profile = updatedProfile;
         })
+
         // update profile
         await SummonerProfileService.update(profile);
 

@@ -48,7 +48,6 @@ module.exports = (region) => {
       do {
         async function checkDone() {
           await waitFor(100);
-          console.log(updatedMatches.length + " : " + matches.length)
           if (updatedMatches.length == matches.length) {
             done = true;
           } else if (times > 100) {
@@ -345,8 +344,6 @@ module.exports = (region) => {
     async getRecentRanked(id, options, callback) {
       var matches = [];
       var queues = options.queues;
-      var lastUpdated = options.lastUpdated;
-      console.log(options)
       await queues.asyncForEach(async queue => {
         var done = false;
         var options = {
@@ -358,7 +355,7 @@ module.exports = (region) => {
           }
         }
         options.query.queue = queue;
-        options.query.beginTime = lastUpdated;
+        options.query.beginTime = new Date().getTime() - 604800000;
         options.query.endTime = new Date().getTime();
         do {
           await RiotMatch.getMatches(options, async res => {

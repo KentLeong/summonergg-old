@@ -24,21 +24,24 @@
   &__header {
     display: grid;
     grid-template-columns: 150px auto 300px;
+    grid-template-areas: "logo nav settings";
     padding: 5px;
     width:80%;
     margin: auto;
     &__logo {
+      grid-area: logo;
       margin-top:1.3rem;
       text-decoration: none;
       font-weight: 900;
       font-size: 1.8rem;
       color: white;
-      grid-column-start: 1;
     }
-  
+    &__nav {
+      grid-area: nav;
+    }
     &__settings {
+      grid-area: settings;
       text-align: right;
-      grid-column-start: 3;
     }
   }
 }

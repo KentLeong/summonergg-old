@@ -120,7 +120,7 @@ module.exports = (region) => {
       })
       callback(profile)
     },
-    async getMatches(profile, query, callback) {
+    async getRecentMatches(profile, query, callback) {
       options = {
         accountId: profile.summoner.accountId,
         query: query
@@ -223,25 +223,21 @@ module.exports = (region) => {
     },
     async updateChampions(profile, matches, callback) {
       if (!profile.champions) profile.recent = {};
-      if (matches.length > 0) {
-        var stats;
-        await StatService.get(profile.summoner.puuid, updatedStats => {
-          if (updatedStats) stats = updatedStats;
-        })
-        if (!stats) {
-          callback(profile, false)
-        } else {
-          var champions = stats.champions
+      var stats;
+      await StatService.get(profile.summoner.puuid, updatedStats => {
+        if (updatedStats) stats = updatedStats;
+      })
+      if (!stats) {
+        callback(profile, false)
+      } else {
+        var champions = stats.champions
+        
+        if (matches.length > 0) {
           await matches.asyncForEach(match => {
             if (match.participants) {
               match.participants.some(part => {
                 if (part.currentAccountId == profile.summoner.accountId) {
-                  var queue;
-                  if (match.queueId == "420" || match.queueId == "440") {
-                    queue = match.queueId
-                  } else {
-                    queue = "norm"
-                  }
+                  var queue = match.queueId;
                   if (!champions[part.championId]) {
                     champions[part.championId] = {};
                     champions[part.championId][queue] = {
@@ -250,7 +246,7 @@ module.exports = (region) => {
                       deaths: 0,
                       assists: 0,
                       wins: 0,
-                      losses: 0
+                      losses: 0 
                     };
                   } else if (!champions[part.championId][queue]){
                     champions[part.championId][queue] = {
@@ -278,11 +274,11 @@ module.exports = (region) => {
               })
             }
           })
-          stats.champions = champions;
-          await StatService.update(stats, updatedStat => {
-            callback(profile, updatedStat);
-          })
         }
+        stats.champions = champions;
+        await StatService.update(stats, updatedStat => {
+          callback(profile, updatedStat);
+        }) 
       }
     },
     async generateRecentPlayers(profile, callback) {
@@ -455,7 +451,7 @@ module.exports = (region) => {
       })
       callback(profile)
     },
-    async generateStats(profile, callback) {
+    async generateRecentStats(profile, callback) {
       if (!profile.stats) profile.stats = {};
       if (profile.matches.length > 0) {
         profile.stats.lastPlayed = champions["English"][profile.matches[0].championId].id
@@ -729,6 +725,7 @@ module.exports = (region) => {
       if (!profile.champions) profile.champions = {};
       profile.champions.total = [];
       var championList = [];
+      // update stats
       if (stat) {
         if (Object.keys(stat.champions).length > 0) {
           await Object.keys(stat.champions).asyncForEach(async champion => {
@@ -779,6 +776,7 @@ module.exports = (region) => {
           }
         }
       }
+      // trim matches
       await profile.matches.asyncForEach(async match => {
         delete match.teams;
         delete match.gameVersion;
@@ -802,6 +800,7 @@ module.exports = (region) => {
           delete part.spell2Id;
         })
       })
+      // format leagues
       if (Object.keys(profile.leagues).length > 0) {
         await Object.keys(profile.leagues).asyncForEach(league => {
           delete profile.leagues[league].summonerName;
@@ -901,6 +900,9 @@ module.exports = (region) => {
         totalLosses: totalLosses,
         totalPart: Math.round(totalPart/totalMatches),
         kda: ((totalKills+totalAssists)/totalDeaths).toFixed(2)
+      }
+      if (totalDeaths == 0) {
+        stats.kda = "PERFECT";
       }
       profile.stats = {...profile.stats, ...stats};
       callback(profile)
