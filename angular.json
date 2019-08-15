@@ -135,7 +135,7 @@
   "defaultProject": "summonergg",
   "schematics": {
     "@schematics/angular:component": {
-      "styleext": "sscss"
+      "styleext": "scss"
     }
   }
 }

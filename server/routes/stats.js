@@ -43,14 +43,13 @@ module.exports = (serverList) => {
   router.put('/', (req, res) => {
     var updatedStat = req.body.stat;
     updatedStat.lastUpdated = new Date();
-    // Stat.findOneAndUpdate({puuid: updatedStat.puuid}, updatedStat, {new: true}, (err, stat)=> {
-    //   if (err) {
-    //     res.status(500).json(err)
-    //   } else {
-    //     res.status(200).json(stat)
-    //   }
-    // })
-    res.status(200).json(updatedStat)
+    Stat.findOneAndUpdate({puuid: updatedStat.puuid}, updatedStat, {new: true}, (err, stat)=> {
+      if (err) {
+        res.status(500).json(err)
+      } else {
+        res.status(200).json(stat)
+      }
+    })
   })
 
   return router

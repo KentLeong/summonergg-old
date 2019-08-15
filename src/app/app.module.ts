@@ -10,6 +10,10 @@ import { SummonerComponent } from './summoner/summoner.component';
 import { SummonerSearchComponent } from './summoner-search/summoner-search.component';
 import { SummonerMatchHistoryComponent } from './summoner/summoner-match-history/summoner-match-history.component';
 import { SummonerDetailComponent } from './summoner/summoner-detail/summoner-detail.component';
+import { InhouseComponent } from './inhouse/inhouse.component';
+import { TftComponent } from './tft/tft.component';
+import { ChampionComponent } from './champion/champion.component';
+import { TournamentComponent } from './tournament/tournament.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +22,11 @@ import { SummonerDetailComponent } from './summoner/summoner-detail/summoner-det
     SummonerComponent,
     SummonerSearchComponent,
     SummonerMatchHistoryComponent,
-    SummonerDetailComponent
+    SummonerDetailComponent,
+    InhouseComponent,
+    TftComponent,
+    ChampionComponent,
+    TournamentComponent
   ],
   imports: [
     BrowserModule,

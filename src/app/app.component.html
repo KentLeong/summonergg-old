@@ -1,8 +1,13 @@
 <nav class="nav">
   <div class="nav__header">
     <a routerLink="/" class="nav__header__logo">SummonerGG</a>
-    <div class="nav_header__nav">
-      nav
+    <div class="nav__header__nav">
+      <div class="nav-group">
+        <div class="nav-link" routerLink="/champions/">Champions</div>
+        <div class="nav-link" routerLink="/tft/">TFT</div>
+        <div class="nav-link" routerLink="/inhouses/">Inhouses</div>
+        <div class="nav-link" routerLink="/tournaments/">Tournaments</div>
+      </div>
     </div>
     <div class="nav__header__settings">
       <app-summoner-search *ngIf="showSearch" class="nav-menu__summoner-search"></app-summoner-search>

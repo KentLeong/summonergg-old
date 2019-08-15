@@ -449,6 +449,9 @@ module.exports = (region) => {
       profile.recent.roles.sort((a,b) => {
         return b.total - a.total;
       })
+      await profile.recent.champions.asyncForEach((champ, i) => {
+        if (champ.deaths == 0) profile.recent.champions[i].kda = "Perfect";
+      })
       callback(profile)
     },
     async generateRecentStats(profile, callback) {
@@ -587,7 +590,7 @@ module.exports = (region) => {
             // kda
             matches[i].kda = ((part.stats.kills+part.stats.assists)/part.stats.deaths).toFixed(2)
             if (part.stats.deaths == 0) {
-              matches[i].kda = "PERFECT"
+              matches[i].kda = "Perfect"
             }
             // part
             var t1TotalKills = 0
@@ -761,6 +764,7 @@ module.exports = (region) => {
               kda: ((kills+assists)/deaths).toFixed(2),
               winPercent: Math.round((wins/games).toFixed(2)*100)
             }
+            if (deaths == 0) championStat.kda = "Perfect"
             championList.push(championStat)
           })
           championList.sort((a,b) => {
@@ -902,7 +906,7 @@ module.exports = (region) => {
         kda: ((totalKills+totalAssists)/totalDeaths).toFixed(2)
       }
       if (totalDeaths == 0) {
-        stats.kda = "PERFECT";
+        stats.kda = "Perfect";
       }
       profile.stats = {...profile.stats, ...stats};
       callback(profile)

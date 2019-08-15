@@ -153,15 +153,14 @@ module.exports = (serverList) => {
   router.put('/', (req, res) => {
     var summonerProfile = req.body.summonerProfile
     summonerProfile.lastUpdated = new Date();
-    // SummonerProfile.findOneAndUpdate({"summoner.puuid": summonerProfile.summoner.puuid}, 
-    //                                   summonerProfile, {new: true}, (err, profile) => {
-    //   if (err) {
-    //     res.status(500).json(err)
-    //   } else {
-    //     res.status(200).json(profile)
-    //   }
-    // })
-    res.status(200).json(summonerProfile)
+    SummonerProfile.findOneAndUpdate({"summoner.puuid": summonerProfile.summoner.puuid}, 
+                                      summonerProfile, {new: true}, (err, profile) => {
+      if (err) {
+        res.status(500).json(err)
+      } else {
+        res.status(200).json(profile)
+      }
+    })
   })
   
   // Generate New Profile

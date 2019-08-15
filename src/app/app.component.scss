@@ -38,6 +38,21 @@
     }
     &__nav {
       grid-area: nav;
+      .nav-group {
+        width: 35rem;
+        margin: auto;
+        margin-top: .4rem;
+        .nav-link {
+          font-size: 1.4rem;
+          display: inline-block;
+          padding: .3rem;
+          margin: .7rem;
+        }
+        .nav-link:hover {
+          cursor: pointer;
+          border-bottom: .3rem solid white;
+        }
+      }
     }
     &__settings {
       grid-area: settings;

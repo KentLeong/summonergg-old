@@ -312,7 +312,7 @@ export class SummonerService {
     callback(played)
   }
   kdaColor(kda, callback) {
-    if (kda >= 4) {
+    if (kda >= 4 || isNaN(kda)) {
       callback("#c9721b");
     } else if (kda >= 3) {
       callback("#634ac7");
