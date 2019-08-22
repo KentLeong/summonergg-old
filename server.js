@@ -56,7 +56,7 @@ var connnect = (async () => {
       log('Connection to '+endpoints[endPoint].name+" match database failed", 'error');
     }
     try {
-      serverList[endPoint].match = await mongoose.createConnection(endpoints[endPoint].inhouse+"/sgg_"+endPoint+"_inhouse", {useNewUrlParser: true})
+      serverList[endPoint].inhouse = await mongoose.createConnection(endpoints[endPoint].inhouse+"/sgg_"+endPoint+"_inhouse", {useNewUrlParser: true})
       log("Connected to "+endpoints[endPoint].name+" inhouse database", 'success')
     } catch(err) {
       log('Connection to '+endpoints[endPoint].name+" inhouse database failed", 'error');

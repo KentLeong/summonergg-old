@@ -20,7 +20,7 @@ module.exports = (serverList) => {
         res.status(500).json(err)
       } else if (!stat) {
         res.status(200).json("not found")
-      } else {
+      } else  {
         res.status(200).json(stat)
       }
     })

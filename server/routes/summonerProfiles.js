@@ -39,7 +39,8 @@ module.exports = (serverList) => {
     //services
     MatchService = require('../service/match')(region);
     SummonerProfileService = require('../service/summonerProfile')(region);
-  
+    StatService = require('../service/stat')(region);
+
     //riot
     RiotSummoner = require("../riot/summoner")(region);
     RiotLeague = require('../riot/league')(region);
@@ -369,6 +370,15 @@ module.exports = (serverList) => {
 
         // update profile
         await SummonerProfileService.update(profile);
+
+        // update stats
+        if (hardReset) {
+          await StatService.new(stats, updatedStat => {
+          })
+        } else {
+          await StatService.update(stats, updatedStat => {
+          })
+        }
 
         // translate profile match
         await SummonerProfileService.translate(profile, language, translatedProfile => {

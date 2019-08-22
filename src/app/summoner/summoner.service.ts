@@ -78,7 +78,7 @@ export class SummonerService {
         'filter': "hue-rotate(-80deg)"
       }
     }
-    this.timePlayed(this.profile.lastUpdated, updated => {
+    this.timePlayed(this.profile.lastUpdated, null, updated => {
       this.styles.update.updated = updated
     })
   }
@@ -178,7 +178,7 @@ export class SummonerService {
         }
       })
       // set game played
-      this.timePlayed(match.gameCreation, played => {
+      this.timePlayed(match.gameCreation, match.gameDuration, played => {
         this.profile.matches[i].played = played
       })
 
@@ -275,9 +275,14 @@ export class SummonerService {
     }
     callback(recent)
   }
-  timePlayed(gameCreation, callback) {
+  timePlayed(gameCreation, gameDuration, callback) {
     var lastPlayed = new Date(gameCreation).getTime();
-    let playedMinutes = Math.floor(((new Date()).getTime() - lastPlayed)/60000);
+    if (gameDuration) {
+      gameDuration = gameDuration/60
+    } else {
+      gameDuration = 0;
+    }
+    let playedMinutes = Math.floor((((new Date()).getTime() - lastPlayed)/60000) - gameDuration);
     var played = "";
     if (playedMinutes < 1) {
       played = `few seconds ago`

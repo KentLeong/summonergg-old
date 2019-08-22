@@ -210,15 +210,10 @@ module.exports = (region) => {
             })
           }
         })
-        await StatService.new({
+        callback(profile, {
           puuid: profile.summoner.puuid,
           champions: champions
-        }, updatedStat => {
-          callback(profile, {
-            puuid: profile.summoner.puuid,
-            champions: champions
-          });
-        })
+        });
       }
     },
     async updateChampions(profile, matches, callback) {
@@ -276,9 +271,7 @@ module.exports = (region) => {
           })
         }
         stats.champions = champions;
-        await StatService.update(stats, updatedStat => {
-          callback(profile, updatedStat);
-        }) 
+        callback(profile, stats);
       }
     },
     async generateRecentPlayers(profile, callback) {
