@@ -1,12 +1,16 @@
 const express = require("express");
 const path = require("path");
-const http = require("http");
+const https = require("https");
+const http = require('http');
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const log = require('./server/config/log');
 
 const riot = require('./server/config/riot');
+const config = require('./config');
 const app = express();
+
+var forceSSL = require('express-force-ssl');
 
 var mongoose = require('mongoose');
 mongoose.set('useNewUrlParser', true);
@@ -21,6 +25,9 @@ Array.prototype.asyncForEach = async function(cb) {
 
 var endpoints = riot.endpoints
 var languages = riot.languages
+
+// force https
+app.use(forceSSL);
 // Parsers for POST data
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
@@ -55,12 +62,12 @@ var connnect = (async () => {
     } catch(err) {
       log('Connection to '+endpoints[endPoint].name+" match database failed", 'error');
     }
-    try {
-      serverList[endPoint].inhouse = await mongoose.createConnection(endpoints[endPoint].inhouse+"/sgg_"+endPoint+"_inhouse", {useNewUrlParser: true})
-      log("Connected to "+endpoints[endPoint].name+" inhouse database", 'success')
-    } catch(err) {
-      log('Connection to '+endpoints[endPoint].name+" inhouse database failed", 'error');
-    }
+    // try {
+    //   serverList[endPoint].inhouse = await mongoose.createConnection(endpoints[endPoint].inhouse+"/sgg_"+endPoint+"_inhouse", {useNewUrlParser: true})
+    //   log("Connected to "+endpoints[endPoint].name+" inhouse database", 'success')
+    // } catch(err) {
+    //   log('Connection to '+endpoints[endPoint].name+" inhouse database failed", 'error');
+    // }
   })
 
   fs.readdir("./server/routes", (err, files) => {
@@ -76,11 +83,16 @@ var connnect = (async () => {
       res.sendFile(path.join(__dirname, 'dist/index.html'));
     })
   
-    const port = process.env.PORT || '80';
+    const port = process.env.PORT || '443';
     app.set('port', port)
-  
-    const server = http.createServer(app);
-    server.listen(port, () => log("API runnning on localhost:"+port, "complete"))
+    const ssl = config.dev ? "localhost" : "server";
+    const httpsServer = https.createServer({
+      key: fs.readFileSync('./certification/'+ssl+'.key').toString(),
+      cert: fs.readFileSync('./certification/'+ssl+'.cert').toString()
+    }, app);
+    const httpServer = http.createServer(app);
+    httpsServer.listen(port, () => log("API runnning on localhost:"+port, "complete"))
+    httpServer.listen(8080);
   }, 500)
 })();
 

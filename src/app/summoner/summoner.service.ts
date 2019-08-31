@@ -24,7 +24,7 @@ const httpOptions = {
 
 export class SummonerService {
   region: string = window.location.hostname.split(".")[0];
-  protocal: string = config.protocal+this.region+"."+config.host;
+  protocal: string = config.protocal+this.region+"."+(config.dev ? config.devHost : config.host);
   profile: SummonerProfile;
   styles: ProfileStyle;
 
