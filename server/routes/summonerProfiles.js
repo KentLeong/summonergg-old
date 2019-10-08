@@ -3,11 +3,7 @@ const dev = require('../config/dev');
 const rate = require('../service/rate')();
 const riot = require('../config/riot');
 const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
-module.exports = (serverList) => {
-  var express = require('express');
-  var router = express.Router();
-  
-  
+module.exports = (serverList) => {  
   String.prototype.capitalize = () => {
     return this.charAt(0).toUpperCase() + this.slice(1);
   }
@@ -47,6 +43,7 @@ module.exports = (serverList) => {
     RiotMatch = require('../riot/match')(region);
     next();
   })
+  
   // GET all SummonerProfile
   router.get('/', (req, res) => {
     SummonerProfile.find().limit(+req.query.limit).sort('-lastUpdated').select("summoner").exec((err, profiles) => {
