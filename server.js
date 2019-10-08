@@ -16,6 +16,7 @@ var mongoose = require('mongoose');
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
 Array.prototype.asyncForEach = async function(cb) {
   for(let i=0; i<this.length; i++) {
     await cb(this[i], i, this)
@@ -86,6 +87,7 @@ var connnect = (async () => {
     const port = process.env.PORT || '443';
     app.set('port', port)
     const ssl = config.dev ? "localhost" : "server";
+    
     const httpsServer = https.createServer({
       key: fs.readFileSync('./certification/'+ssl+'.key').toString(),
       cert: fs.readFileSync('./certification/'+ssl+'.cert').toString()
