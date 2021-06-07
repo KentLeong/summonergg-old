@@ -46,23 +46,23 @@ var connnect = (async () => {
   var serverList = {};
   // connect to region mongo db
   await Object.keys(endpoints).asyncForEach(async (endPoint, i) => {
-    log("Connecting to "+endpoints[endPoint].name+" enpoints..", 'info')
-    serverList[endPoint] = {
-      main: "",
-      match: ""
-    }
-    try {
-      serverList[endPoint].main = await mongoose.createConnection(endpoints[endPoint].main+"/sgg_"+endPoint+"_main", {useNewUrlParser: true})
-      log("Connected to "+endpoints[endPoint].name+" main database", 'success')
-    } catch(err) {
-      log('Connection to '+endpoints[endPoint].name+" main database failed", 'error');
-    }
-    try {
-      serverList[endPoint].match = await mongoose.createConnection(endpoints[endPoint].match+"/sgg_"+endPoint+"_match", {useNewUrlParser: true})
-      log("Connected to "+endpoints[endPoint].name+" match database", 'success')
-    } catch(err) {
-      log('Connection to '+endpoints[endPoint].name+" match database failed", 'error');
-    }
+    // log("Connecting to "+endpoints[endPoint].name+" enpoints..", 'info')
+    // serverList[endPoint] = {
+    //   main: "",
+    //   match: ""
+    // }
+    // try {
+    //   serverList[endPoint].main = await mongoose.createConnection(endpoints[endPoint].main+"/sgg_"+endPoint+"_main", {useNewUrlParser: true})
+    //   log("Connected to "+endpoints[endPoint].name+" main database", 'success')
+    // } catch(err) {
+    //   log('Connection to '+endpoints[endPoint].name+" main database failed", 'error');
+    // }
+    // try {
+    //   serverList[endPoint].match = await mongoose.createConnection(endpoints[endPoint].match+"/sgg_"+endPoint+"_match", {useNewUrlParser: true})
+    //   log("Connected to "+endpoints[endPoint].name+" match database", 'success')
+    // } catch(err) {
+    //   log('Connection to '+endpoints[endPoint].name+" match database failed", 'error');
+    // }
     // try {
     //   serverList[endPoint].inhouse = await mongoose.createConnection(endpoints[endPoint].inhouse+"/sgg_"+endPoint+"_inhouse", {useNewUrlParser: true})
     //   log("Connected to "+endpoints[endPoint].name+" inhouse database", 'success')
@@ -89,9 +89,10 @@ var connnect = (async () => {
     const ssl = config.dev ? "localhost" : "server";
     
     const httpsServer = https.createServer({
-      key: fs.readFileSync('./certification/'+ssl+'.key').toString(),
-      cert: fs.readFileSync('./certification/'+ssl+'.cert').toString()
-    }, app);
+      key: fs.readFileSync("./certification/cert.key"),
+      cert: fs.readFileSync("./certification/cert.pem")
+    }, app)
+
     const httpServer = http.createServer(app);
     httpsServer.listen(port, () => log("API runnning on localhost:"+port, "complete"))
     httpServer.listen(8080);

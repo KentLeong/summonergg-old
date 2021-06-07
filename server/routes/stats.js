@@ -44,11 +44,8 @@ module.exports = (serverList) => {
     var updatedStat = req.body.stat;
     updatedStat.lastUpdated = new Date();
     Stat.findOneAndUpdate({puuid: updatedStat.puuid}, updatedStat, {new: true}, (err, stat)=> {
-      if (err) {
-        res.status(500).json(err)
-      } else {
-        res.status(200).json(stat)
-      }
+      if (err) return res.status(500).json(err);
+      res.status(200).json(stat)
     })
   })
 

@@ -1,5 +1,5 @@
-var login = "leong:E93c841k675";
-var main = "68.5.243.142"
+var login = "leong:ec257816";
+var main = "136.52.119.67"
 var Bottleneck = require("bottleneck/es5")
 const limiter = new Bottleneck({
   minTime: 21
@@ -46,8 +46,8 @@ module.exports = {
       name: "North America",
       riot: "na1",
       main: "mongodb://"+login+"@"+main+":27017",
-      match: "mongodb://"+login+"@"+main+":27018",
-      inhouse: "mongodb://"+login+"@"+main+":27019",
+      match: "mongodb://"+login+"@"+main+":27017",
+      // inhouse: "mongodb://"+login+"@"+main+":27019",
     },
     // "oce": {
     //   name: "Oceanic",
